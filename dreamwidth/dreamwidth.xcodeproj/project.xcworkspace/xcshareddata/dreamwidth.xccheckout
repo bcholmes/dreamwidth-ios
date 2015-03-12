@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>97194772-8D61-4386-A631-1397BC4E7C60</string>
+	<key>IDESourceControlProjectName</key>
+	<string>dreamwidth</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>032D02D58A2B7764C2F8746482ADB77CF2A53761</key>
+		<string>https://github.com/bcholmes/dreamwidth-ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>dreamwidth/dreamwidth.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>032D02D58A2B7764C2F8746482ADB77CF2A53761</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/bcholmes/dreamwidth-ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>032D02D58A2B7764C2F8746482ADB77CF2A53761</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>032D02D58A2B7764C2F8746482ADB77CF2A53761</string>
+			<key>IDESourceControlWCCName</key>
+			<string>dreamwidth-ios</string>
+		</dict>
+	</array>
+</dict>
+</plist>
