@@ -14,6 +14,7 @@
 		D8EA84F91AB1E6BD00B71DC4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8EA84F81AB1E6BD00B71DC4 /* Images.xcassets */; };
 		D8EA84FC1AB1E6BD00B71DC4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8EA84FA1AB1E6BD00B71DC4 /* LaunchScreen.xib */; };
 		D8EA85081AB1E6BD00B71DC4 /* dreamwidthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA85071AB1E6BD00B71DC4 /* dreamwidthTests.m */; };
+		D8F233D11AB20E4D00F61C25 /* DreamwidthApi.m in Sources */ = {isa = PBXBuildFile; fileRef = D8F233D01AB20E4D00F61C25 /* DreamwidthApi.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		D8EA85011AB1E6BD00B71DC4 /* dreamwidthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dreamwidthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8EA85061AB1E6BD00B71DC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D8EA85071AB1E6BD00B71DC4 /* dreamwidthTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dreamwidthTests.m; sourceTree = "<group>"; };
+		D8F233CF1AB20E4D00F61C25 /* DreamwidthApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DreamwidthApi.h; sourceTree = "<group>"; };
+		D8F233D01AB20E4D00F61C25 /* DreamwidthApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DreamwidthApi.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,8 @@
 				D8EA84F81AB1E6BD00B71DC4 /* Images.xcassets */,
 				D8EA84FA1AB1E6BD00B71DC4 /* LaunchScreen.xib */,
 				D8EA84EB1AB1E6BD00B71DC4 /* Supporting Files */,
+				D8F233CF1AB20E4D00F61C25 /* DreamwidthApi.h */,
+				D8F233D01AB20E4D00F61C25 /* DreamwidthApi.m */,
 			);
 			path = dreamwidth;
 			sourceTree = "<group>";
@@ -220,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8EA84F41AB1E6BD00B71DC4 /* ViewController.m in Sources */,
+				D8F233D11AB20E4D00F61C25 /* DreamwidthApi.m in Sources */,
 				D8EA84F11AB1E6BD00B71DC4 /* AppDelegate.m in Sources */,
 				D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */,
 			);
@@ -346,6 +352,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = dreamwidth/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -356,6 +363,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = dreamwidth/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -414,6 +422,7 @@
 				D8EA850D1AB1E6BD00B71DC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D8EA850E1AB1E6BD00B71DC4 /* Build configuration list for PBXNativeTarget "dreamwidthTests" */ = {
 			isa = XCConfigurationList;
@@ -422,6 +431,7 @@
 				D8EA85101AB1E6BD00B71DC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

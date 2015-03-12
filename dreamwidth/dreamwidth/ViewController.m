@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "DreamwidthApi.h"
 
 @interface ViewController ()
 
@@ -16,7 +17,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(doTheThing)];
+    self.navigationItem.rightBarButtonItem = button;
+
+}
+
+-(void) doTheThing {
+    NSLog(@"We did the thing");
+    DreamwidthApi* api = [[DreamwidthApi alloc] init];
+    [api loginWithUser:@"fred" password:@"wilma" andCompletion:^(BOOL success, NSError* error) {
+        NSLog(@"Did the thing!");
+    }];
+    
 }
 
 - (void)didReceiveMemoryWarning {
