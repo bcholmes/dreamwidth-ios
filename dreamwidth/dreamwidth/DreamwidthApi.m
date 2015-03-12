@@ -39,22 +39,34 @@
     return dictionary;
 }
 
--(NSDictionary*) getChallengeMap {
+-(NSString*) convertToString:(NSDictionary*) requestParameters {
+    NSMutableString* output = [[NSMutableString alloc] init];
+    for (NSString* key in requestParameters.allKeys) {
+        NSString* value = [requestParameters objectForKey:key];
+        if (output.length > 0) {
+            [output appendString:@"&"];
+        }
+        [output appendString:key];
+        [output appendString:@"="];
+        [output appendString:[value stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    }
+    return output;
+}
+
+-(NSDictionary*) postHttpRequest:(NSDictionary*) requestParameters {
     NSMutableURLRequest* post = [NSMutableURLRequest requestWithURL:DREAMWIDTH_URL];
     [post setHTTPMethod: @"POST"];
-    NSString* params = @"mode=getchallenge&ver=1";
-    [post setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [post setHTTPBody:[[self convertToString:requestParameters] dataUsingEncoding:NSUTF8StringEncoding]];
     
-
     NSURLResponse* response;
     NSError* error;
     NSData *data = [NSURLConnection sendSynchronousRequest:post returningResponse:&response error:&error];
     if (data != nil) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        NSLog(@"http status code: %lu", (unsigned long)httpResponse.statusCode);
+        NSLog(@"http status code for request mode %@: %lu", [requestParameters objectForKey:@"mode"], (unsigned long)httpResponse.statusCode);
         NSLog(@"http content type: %@", [httpResponse.allHeaderFields objectForKey:@"Content-Type"]);
         if (httpResponse.statusCode == 200) {
-
+            
             return [self createResponseMap:data];
         } else {
             return nil;
@@ -67,7 +79,11 @@
     }
 }
 
--(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(BOOL, NSError*)) callback {
+-(NSDictionary*) getChallengeMap {
+    return [self postHttpRequest:@{ @"mode" : @"getchallenge", @"ver" : @"1" }];
+}
+
+-(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError*)) callback {
     if ([NSThread isMainThread]) {
 
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
@@ -75,7 +91,26 @@
         });
     } else {
         NSDictionary* challengeMap = [self getChallengeMap];
-        NSLog(@"Result is %@", [challengeMap objectForKey:@"success"]);
+        if (challengeMap != nil) {
+            NSLog(@"Result is %@", [challengeMap objectForKey:@"success"]);
+            NSString* challenge = [challengeMap objectForKey:@"challenge"];
+            NSString* encodedPassword = [self md5:password];
+            NSString* response = [self md5:[encodedPassword stringByAppendingString:challenge]];
+            
+            NSDictionary* parameters = @{ @"mode": @"login",
+                                                 @"user": userid,
+                                                 @"auth_method": @"challenge",
+                                                 @"auth_challenge": challenge,
+                                                 @"auth_response": response};
+            
+            NSDictionary* result = [self postHttpRequest:parameters];
+            NSLog(@"Result is %@", result);
+            
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}]);
+            });
+        }
     }
     
 }

@@ -10,7 +10,7 @@
 
 @interface DreamwidthApi : NSObject
 
--(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(BOOL, NSError*)) callback;
+-(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError*)) callback;
 
 
 @end
