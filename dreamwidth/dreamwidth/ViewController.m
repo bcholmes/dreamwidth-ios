@@ -25,7 +25,7 @@
 -(void) doTheThing {
     NSLog(@"We did the thing");
     DreamwidthApi* api = [[DreamwidthApi alloc] init];
-    [api loginWithUser:@"fred" password:@"wilma" andCompletion:^(NSError* error) {
+    [api loginWithUser:@"myverysecretuserid" password:@"myverysecretpassword" andCompletion:^(NSError* error) {
         if (error != nil) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error occurred"
                                                             message:@"There was a problem communicating with Dreamwidth"

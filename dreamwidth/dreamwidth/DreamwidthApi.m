@@ -94,8 +94,9 @@
         if (challengeMap != nil) {
             NSLog(@"Result is %@", [challengeMap objectForKey:@"success"]);
             NSString* challenge = [challengeMap objectForKey:@"challenge"];
+            NSLog(@"challenge is : %@", challenge);
             NSString* encodedPassword = [self md5:password];
-            NSString* response = [self md5:[encodedPassword stringByAppendingString:challenge]];
+            NSString* response = [self md5:[challenge stringByAppendingString:encodedPassword]];
             
             NSDictionary* parameters = @{ @"mode": @"login",
                                                  @"user": userid,
