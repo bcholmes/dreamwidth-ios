@@ -87,7 +87,11 @@
     if ([NSThread isMainThread]) {
 
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-            [self loginWithUser:userid password:password andCompletion:callback];
+            [self loginWithUser:userid password:password andCompletion:^(NSError* error) {
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    callback(error);
+                });
+            }];
         });
     } else {
         NSDictionary* challengeMap = [self getChallengeMap];
@@ -98,19 +102,23 @@
             NSString* encodedPassword = [self md5:password];
             NSString* response = [self md5:[challenge stringByAppendingString:encodedPassword]];
             
+            NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+            
             NSDictionary* parameters = @{ @"mode": @"login",
-                                                 @"user": userid,
-                                                 @"auth_method": @"challenge",
-                                                 @"auth_challenge": challenge,
-                                                 @"auth_response": response};
+                                            @"user": userid,
+                                            @"auth_method": @"challenge",
+                                            @"auth_challenge": challenge,
+                                            @"auth_response": response,
+                                            @"getpickws": @"1",
+                                            @"getpickwurls": @"1",
+                                            @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", version]
+                                          };
             
             NSDictionary* result = [self postHttpRequest:parameters];
             NSLog(@"Result is %@", result);
             
         } else {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}]);
-            });
+            callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}]);
         }
     }
     
