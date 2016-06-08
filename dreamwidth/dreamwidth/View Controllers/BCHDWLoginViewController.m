@@ -6,6 +6,7 @@
 //  Copyright © 2016 Ayizan Studios. All rights reserved.
 //
 
+#import <SVProgressHUD/SVProgressHUD.h>
 #import "BCHDWLoginViewController.h"
 #import "DreamwidthApi.h"
 
@@ -28,26 +29,51 @@
 
 
 -(IBAction) login:(id)sender {
-    NSLog(@"Login");
-    
     NSString* username = self.usernameField.text;
     NSString* password = self.passwordField.text;
     
     DreamwidthApi* api = [[DreamwidthApi alloc] init];
-    [api loginWithUser:username password:password andCompletion:^(NSError* error) {
-        if (error != nil) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error occurred"
-                                                            message:@"There was a problem communicating with Dreamwidth"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-            
-        } else {
-            NSLog(@"Did the thing!");
-        }
-    }];
-    
+    [SVProgressHUD show];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        [api loginWithUser:username password:password andCompletion:^(NSError* error, BCHDWUser* user) {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [SVProgressHUD dismiss];
+                if (error != nil) {
+                    [[[UIAlertView alloc] initWithTitle:@"Error occurred"
+                                                message:@"There was a problem communicating with Dreamwidth"
+                                               delegate:nil
+                                      cancelButtonTitle:@"OK"
+                                      otherButtonTitles:nil] show];
+                } else {
+                    NSLog(@"Logged in as user %@", user.name);
+                    
+                    [self getEntries:user];
+                }
+            });
+        }];
+    });
+}
+
+-(void) getEntries:(BCHDWUser*) user {
+    DreamwidthApi* api = [[DreamwidthApi alloc] init];
+    [SVProgressHUD show];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        [api getEvents:user completion:^(NSError* error, NSArray* events) {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [SVProgressHUD dismiss];
+                if (error != nil) {
+                    [[[UIAlertView alloc] initWithTitle:@"Error occurred"
+                                                message:@"There was a problem communicating with Dreamwidth"
+                                               delegate:nil
+                                      cancelButtonTitle:@"OK"
+                                      otherButtonTitles:nil] show];
+                } else {
+                    NSLog(@"entries found");
+                
+                }
+            });
+        }];
+    });
 }
 
 /*

@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BCHDWUser.h"
 
 @interface DreamwidthApi : NSObject
 
--(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError*)) callback;
-
+-(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback;
+-(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback;
 
 @end

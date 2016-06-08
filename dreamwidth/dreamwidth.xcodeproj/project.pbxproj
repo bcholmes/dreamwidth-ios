@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E8C5FA2DB9D8FDD88254A4E /* libPods-dreamwidth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */; };
 		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
+		D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C31D08C11300529654 /* BCHDWAvatar.m */; };
+		D81603C71D08C28400529654 /* BCHDWUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C61D08C28400529654 /* BCHDWUser.m */; };
 		D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84ED1AB1E6BD00B71DC4 /* main.m */; };
 		D8EA84F11AB1E6BD00B71DC4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84F01AB1E6BD00B71DC4 /* AppDelegate.m */; };
 		D8EA84F41AB1E6BD00B71DC4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84F31AB1E6BD00B71DC4 /* ViewController.m */; };
@@ -29,8 +32,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		49AD58356687206523B0ECAB /* Pods-dreamwidth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dreamwidth.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth.debug.xcconfig"; sourceTree = "<group>"; };
+		51BFDFAC6C72A146B79155E1 /* Pods-dreamwidth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dreamwidth.release.xcconfig"; path = "../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth.release.xcconfig"; sourceTree = "<group>"; };
+		731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dreamwidth.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWLoginViewController.h; sourceTree = "<group>"; };
 		D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWLoginViewController.m; sourceTree = "<group>"; };
+		D81603C21D08C11300529654 /* BCHDWAvatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWAvatar.h; sourceTree = "<group>"; };
+		D81603C31D08C11300529654 /* BCHDWAvatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWAvatar.m; sourceTree = "<group>"; };
+		D81603C51D08C28400529654 /* BCHDWUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWUser.h; sourceTree = "<group>"; };
+		D81603C61D08C28400529654 /* BCHDWUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWUser.m; sourceTree = "<group>"; };
 		D8EA84E81AB1E6BD00B71DC4 /* dreamwidth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dreamwidth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8EA84EC1AB1E6BD00B71DC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D8EA84ED1AB1E6BD00B71DC4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -53,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E8C5FA2DB9D8FDD88254A4E /* libPods-dreamwidth.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +77,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		751AD287C0483B0A8F3DC418 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		844B99DEF0C24CEE25ED5303 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				49AD58356687206523B0ECAB /* Pods-dreamwidth.debug.xcconfig */,
+				51BFDFAC6C72A146B79155E1 /* Pods-dreamwidth.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		D81603BD1D08B1E500529654 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -75,12 +103,25 @@
 			path = "View Controllers";
 			sourceTree = "<group>";
 		};
+		D81603C11D08C0EC00529654 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D81603C21D08C11300529654 /* BCHDWAvatar.h */,
+				D81603C31D08C11300529654 /* BCHDWAvatar.m */,
+				D81603C51D08C28400529654 /* BCHDWUser.h */,
+				D81603C61D08C28400529654 /* BCHDWUser.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		D8EA84DF1AB1E6BD00B71DC4 = {
 			isa = PBXGroup;
 			children = (
 				D8EA84EA1AB1E6BD00B71DC4 /* dreamwidth */,
 				D8EA85041AB1E6BD00B71DC4 /* dreamwidthTests */,
 				D8EA84E91AB1E6BD00B71DC4 /* Products */,
+				844B99DEF0C24CEE25ED5303 /* Pods */,
+				751AD287C0483B0A8F3DC418 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,6 +137,7 @@
 		D8EA84EA1AB1E6BD00B71DC4 /* dreamwidth */ = {
 			isa = PBXGroup;
 			children = (
+				D81603C11D08C0EC00529654 /* Model */,
 				D81603BD1D08B1E500529654 /* View Controllers */,
 				D8EA84EF1AB1E6BD00B71DC4 /* AppDelegate.h */,
 				D8EA84F01AB1E6BD00B71DC4 /* AppDelegate.m */,
@@ -144,9 +186,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D8EA850B1AB1E6BD00B71DC4 /* Build configuration list for PBXNativeTarget "dreamwidth" */;
 			buildPhases = (
+				031EA789B553294D34BF55BA /* 📦 Check Pods Manifest.lock */,
 				D8EA84E41AB1E6BD00B71DC4 /* Sources */,
 				D8EA84E51AB1E6BD00B71DC4 /* Frameworks */,
 				D8EA84E61AB1E6BD00B71DC4 /* Resources */,
+				E2EBC0DF2242E47FEF950DC2 /* 📦 Embed Pods Frameworks */,
+				1F9AF32B8AD46B6EE2B51E13 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -232,14 +277,64 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		031EA789B553294D34BF55BA /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		1F9AF32B8AD46B6EE2B51E13 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E2EBC0DF2242E47FEF950DC2 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		D8EA84E41AB1E6BD00B71DC4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D81603C71D08C28400529654 /* BCHDWUser.m in Sources */,
 				D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */,
 				D8EA84F41AB1E6BD00B71DC4 /* ViewController.m in Sources */,
 				D8F233D11AB20E4D00F61C25 /* DreamwidthApi.m in Sources */,
+				D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */,
 				D8EA84F11AB1E6BD00B71DC4 /* AppDelegate.m in Sources */,
 				D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */,
 			);
@@ -363,6 +458,7 @@
 		};
 		D8EA850C1AB1E6BD00B71DC4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 49AD58356687206523B0ECAB /* Pods-dreamwidth.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = dreamwidth/Info.plist;
@@ -374,6 +470,7 @@
 		};
 		D8EA850D1AB1E6BD00B71DC4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BFDFAC6C72A146B79155E1 /* Pods-dreamwidth.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = dreamwidth/Info.plist;

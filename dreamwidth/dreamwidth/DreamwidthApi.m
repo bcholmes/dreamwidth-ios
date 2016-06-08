@@ -11,7 +11,17 @@
 
 #define DREAMWIDTH_URL [NSURL URLWithString:@"http://www.dreamwidth.org/interface/flat"]
 
+@interface DreamwidthApi()
+
+@property (nonatomic, readonly) NSString* version;
+
+@end
+
 @implementation DreamwidthApi
+
+-(NSString*) version {
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+}
 
 - (NSString *) md5:(NSString *) input {
     const char *cStr = [input UTF8String];
@@ -83,45 +93,61 @@
     return [self postHttpRequest:@{ @"mode" : @"getchallenge", @"ver" : @"1" }];
 }
 
--(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError*)) callback {
-    if ([NSThread isMainThread]) {
-
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-            [self loginWithUser:userid password:password andCompletion:^(NSError* error) {
-                dispatch_sync(dispatch_get_main_queue(), ^{
-                    callback(error);
-                });
-            }];
-        });
+-(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback {
+    NSDictionary* challengeMap = [self getChallengeMap];
+    if (challengeMap != nil) {
+        NSLog(@"Result is %@", [challengeMap objectForKey:@"success"]);
+        NSString* challenge = [challengeMap objectForKey:@"challenge"];
+        NSLog(@"challenge is : %@", challenge);
+        NSString* encodedPassword = [self md5:password];
+        NSString* response = [self md5:[challenge stringByAppendingString:encodedPassword]];
+        
+        NSDictionary* parameters = @{ @"mode": @"login",
+                                        @"user": userid,
+                                        @"auth_method": @"challenge",
+                                        @"auth_challenge": challenge,
+                                        @"auth_response": response,
+                                        @"getpickws": @"1",
+                                        @"getpickwurls": @"1",
+                                        @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version]
+                                      };
+        
+        NSDictionary* result = [self postHttpRequest:parameters];
+        NSLog(@"Result is %@", result);
+        BCHDWUser* user = [BCHDWUser parseMap:result];
+        user.username = userid;
+        user.encodedPassword = encodedPassword;
+        callback(nil, user);
+        
     } else {
-        NSDictionary* challengeMap = [self getChallengeMap];
-        if (challengeMap != nil) {
-            NSLog(@"Result is %@", [challengeMap objectForKey:@"success"]);
-            NSString* challenge = [challengeMap objectForKey:@"challenge"];
-            NSLog(@"challenge is : %@", challenge);
-            NSString* encodedPassword = [self md5:password];
-            NSString* response = [self md5:[challenge stringByAppendingString:encodedPassword]];
-            
-            NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-            
-            NSDictionary* parameters = @{ @"mode": @"login",
-                                            @"user": userid,
-                                            @"auth_method": @"challenge",
-                                            @"auth_challenge": challenge,
-                                            @"auth_response": response,
-                                            @"getpickws": @"1",
-                                            @"getpickwurls": @"1",
-                                            @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", version]
-                                          };
-            
-            NSDictionary* result = [self postHttpRequest:parameters];
-            NSLog(@"Result is %@", result);
-            
-        } else {
-            callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}]);
-        }
+        callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
     }
-    
+}
+
+-(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback {
+    NSDictionary* challengeMap = [self getChallengeMap];
+    if (challengeMap != nil) {
+        NSString* challenge = [challengeMap objectForKey:@"challenge"];
+        NSString* response = [self md5:[challenge stringByAppendingString:user.encodedPassword]];
+        
+        NSDictionary* parameters = @{ @"mode": @"getevents",
+                                      @"user": user.username,
+                                      @"auth_method": @"challenge",
+                                      @"auth_challenge": challenge,
+                                      @"auth_response": response,
+                                      @"selecttype": @"lastn",
+                                      @"howmany": @"20",
+                                      @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version],
+                                      @"ver": @"1"
+                                      };
+        
+        NSDictionary* result = [self postHttpRequest:parameters];
+        NSLog(@"Result is %@", result);
+        callback(nil, nil);
+        
+    } else {
+        callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+    }
 }
 
 @end
