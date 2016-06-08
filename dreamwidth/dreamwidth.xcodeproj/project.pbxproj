@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
 		D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84ED1AB1E6BD00B71DC4 /* main.m */; };
 		D8EA84F11AB1E6BD00B71DC4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84F01AB1E6BD00B71DC4 /* AppDelegate.m */; };
 		D8EA84F41AB1E6BD00B71DC4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84F31AB1E6BD00B71DC4 /* ViewController.m */; };
@@ -28,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWLoginViewController.h; sourceTree = "<group>"; };
+		D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWLoginViewController.m; sourceTree = "<group>"; };
 		D8EA84E81AB1E6BD00B71DC4 /* dreamwidth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dreamwidth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8EA84EC1AB1E6BD00B71DC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D8EA84ED1AB1E6BD00B71DC4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -63,6 +66,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D81603BD1D08B1E500529654 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */,
+				D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
 		D8EA84DF1AB1E6BD00B71DC4 = {
 			isa = PBXGroup;
 			children = (
@@ -84,6 +96,7 @@
 		D8EA84EA1AB1E6BD00B71DC4 /* dreamwidth */ = {
 			isa = PBXGroup;
 			children = (
+				D81603BD1D08B1E500529654 /* View Controllers */,
 				D8EA84EF1AB1E6BD00B71DC4 /* AppDelegate.h */,
 				D8EA84F01AB1E6BD00B71DC4 /* AppDelegate.m */,
 				D8EA84F21AB1E6BD00B71DC4 /* ViewController.h */,
@@ -224,6 +237,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */,
 				D8EA84F41AB1E6BD00B71DC4 /* ViewController.m in Sources */,
 				D8F233D11AB20E4D00F61C25 /* DreamwidthApi.m in Sources */,
 				D8EA84F11AB1E6BD00B71DC4 /* AppDelegate.m in Sources */,

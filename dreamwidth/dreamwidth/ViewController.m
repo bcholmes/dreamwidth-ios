@@ -32,6 +32,7 @@
                                                            delegate:nil
                                                   cancelButtonTitle:@"OK"
                                                   otherButtonTitles:nil];
+            [alert show];
             
         } else {
             NSLog(@"Did the thing!");
