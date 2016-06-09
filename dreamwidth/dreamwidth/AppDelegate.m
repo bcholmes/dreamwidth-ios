@@ -14,9 +14,14 @@
 
 @implementation AppDelegate
 
++(AppDelegate*) instance {
+    return (AppDelegate*) [[UIApplication sharedApplication] delegate];
+}
+
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    self.dreamwidthApi = [DreamwidthApi new];
     return YES;
 }
 

@@ -13,5 +13,6 @@
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback;
 -(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback;
+-(void) getReadingList:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback;
 
 @end

@@ -8,12 +8,14 @@
 
 #import <CommonCrypto/CommonDigest.h>
 #import "DreamwidthApi.h"
+#import "BCHDWEntry.h"
 
 #define DREAMWIDTH_URL [NSURL URLWithString:@"http://www.dreamwidth.org/interface/flat"]
 
 @interface DreamwidthApi()
 
 @property (nonatomic, readonly) NSString* version;
+@property (nonatomic, strong) BCHDWUser* currentUser;
 
 @end
 
@@ -117,26 +119,52 @@
         BCHDWUser* user = [BCHDWUser parseMap:result];
         user.username = userid;
         user.encodedPassword = encodedPassword;
+        self.currentUser = user;
         callback(nil, user);
+        
+    } else {
+        self.currentUser = nil;
+        callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+    }
+}
+
+-(void) getEvents:(BCHDWUser*) notUsed completion:(void (^)(NSError* error, NSArray* entries)) callback {
+    NSDictionary* challengeMap = [self getChallengeMap];
+    if (challengeMap != nil) {
+        NSString* challenge = [challengeMap objectForKey:@"challenge"];
+        NSString* response = [self md5:[challenge stringByAppendingString:self.currentUser.encodedPassword]];
+        
+        NSDictionary* parameters = @{ @"mode": @"getevents",
+                                      @"user": self.currentUser.username,
+                                      @"auth_method": @"challenge",
+                                      @"auth_challenge": challenge,
+                                      @"auth_response": response,
+                                      @"selecttype": @"lastn",
+                                      @"howmany": @"20",
+                                      @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version],
+                                      @"ver": @"1"
+                                      };
+        
+        NSDictionary* result = [self postHttpRequest:parameters];
+        NSLog(@"Result is %@", result);
+        callback(nil, [BCHDWEntry parseMap:result]);
         
     } else {
         callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
     }
 }
 
--(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback {
+-(void) getReadingList:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback {
     NSDictionary* challengeMap = [self getChallengeMap];
     if (challengeMap != nil) {
         NSString* challenge = [challengeMap objectForKey:@"challenge"];
         NSString* response = [self md5:[challenge stringByAppendingString:user.encodedPassword]];
         
-        NSDictionary* parameters = @{ @"mode": @"getevents",
+        NSDictionary* parameters = @{ @"mode": @"syncitems",
                                       @"user": user.username,
                                       @"auth_method": @"challenge",
                                       @"auth_challenge": challenge,
                                       @"auth_response": response,
-                                      @"selecttype": @"lastn",
-                                      @"howmany": @"20",
                                       @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version],
                                       @"ver": @"1"
                                       };
