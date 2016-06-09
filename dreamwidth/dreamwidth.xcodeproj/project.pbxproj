@@ -16,7 +16,6 @@
 		D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603CF1D09E8C400529654 /* BCHDWEntry.m */; };
 		D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84ED1AB1E6BD00B71DC4 /* main.m */; };
 		D8EA84F11AB1E6BD00B71DC4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84F01AB1E6BD00B71DC4 /* AppDelegate.m */; };
-		D8EA84F41AB1E6BD00B71DC4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84F31AB1E6BD00B71DC4 /* ViewController.m */; };
 		D8EA84F71AB1E6BD00B71DC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8EA84F51AB1E6BD00B71DC4 /* Main.storyboard */; };
 		D8EA84F91AB1E6BD00B71DC4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8EA84F81AB1E6BD00B71DC4 /* Images.xcassets */; };
 		D8EA84FC1AB1E6BD00B71DC4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8EA84FA1AB1E6BD00B71DC4 /* LaunchScreen.xib */; };
@@ -55,8 +54,6 @@
 		D8EA84ED1AB1E6BD00B71DC4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D8EA84EF1AB1E6BD00B71DC4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D8EA84F01AB1E6BD00B71DC4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D8EA84F21AB1E6BD00B71DC4 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		D8EA84F31AB1E6BD00B71DC4 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		D8EA84F61AB1E6BD00B71DC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D8EA84F81AB1E6BD00B71DC4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D8EA84FB1AB1E6BD00B71DC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -156,8 +153,6 @@
 				D81603BD1D08B1E500529654 /* View Controllers */,
 				D8EA84EF1AB1E6BD00B71DC4 /* AppDelegate.h */,
 				D8EA84F01AB1E6BD00B71DC4 /* AppDelegate.m */,
-				D8EA84F21AB1E6BD00B71DC4 /* ViewController.h */,
-				D8EA84F31AB1E6BD00B71DC4 /* ViewController.m */,
 				D8EA84F51AB1E6BD00B71DC4 /* Main.storyboard */,
 				D8EA84F81AB1E6BD00B71DC4 /* Images.xcassets */,
 				D8EA84FA1AB1E6BD00B71DC4 /* LaunchScreen.xib */,
@@ -347,7 +342,6 @@
 			files = (
 				D81603C71D08C28400529654 /* BCHDWUser.m in Sources */,
 				D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */,
-				D8EA84F41AB1E6BD00B71DC4 /* ViewController.m in Sources */,
 				D8F233D11AB20E4D00F61C25 /* DreamwidthApi.m in Sources */,
 				D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */,
 				D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */,

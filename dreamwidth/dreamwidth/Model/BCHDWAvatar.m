@@ -16,6 +16,8 @@
     for (NSInteger i = 1; i <= count; i++) {
         BCHDWAvatar* avatar = [BCHDWAvatar new];
         avatar.keywords = [map objectForKey:[NSString stringWithFormat:@"pickw_%ld", i]];
+        avatar.url = [map objectForKey:[NSString stringWithFormat:@"pickwurl_%ld", i]];
+        [result addObject:avatar];
     }
     
     return [NSArray arrayWithArray:result];

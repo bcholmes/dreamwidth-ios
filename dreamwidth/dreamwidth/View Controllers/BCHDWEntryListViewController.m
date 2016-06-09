@@ -6,6 +6,7 @@
 //  Copyright © 2016 Ayizan Studios. All rights reserved.
 //
 
+#import <SDWebImage/UIImageView+WebCache.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 
 #import "BCHDWEntryListViewController.h"
@@ -86,6 +87,18 @@
     BCHDWEntryTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"entryCell"];
     BCHDWEntry* entry = self.entries[indexPath.row];
     cell.subjectLabel.text = entry.subject;
+    cell.posterLabel.text = entry.poster;
+
+    if (entry.pictureKeyword != nil) {
+        BCHDWUser* user = [AppDelegate instance].dreamwidthApi.currentUser;
+        BCHDWAvatar* avatar = [user avatarByKeyword:entry.pictureKeyword];
+        if (avatar != nil) {
+            [cell.avatarImageView sd_setImageWithURL:[NSURL URLWithString:avatar.url] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        }
+    } else {
+        cell.avatarImageView.image = nil;
+    }
+    
     return cell;
 }
 

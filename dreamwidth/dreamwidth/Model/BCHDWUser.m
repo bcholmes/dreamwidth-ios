@@ -7,7 +7,6 @@
 //
 
 #import "BCHDWUser.h"
-#import "BCHDWAvatar.h"
 
 @implementation BCHDWUser
 
@@ -15,6 +14,17 @@
     BCHDWUser* result = [BCHDWUser new];
     result.name = [map objectForKey:@"name"];
     result.avatars = [BCHDWAvatar parseMap:map];
+    return result;
+}
+
+-(BCHDWAvatar*) avatarByKeyword:(NSString*) keyword {
+    BCHDWAvatar* result = nil;
+    for (BCHDWAvatar* avatar in self.avatars) {
+        if ([avatar.keywords isEqualToString:keyword]) {
+            result = avatar;
+            break;
+        }
+    }
     return result;
 }
 

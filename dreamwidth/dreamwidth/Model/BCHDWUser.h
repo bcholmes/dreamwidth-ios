@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BCHDWAvatar.h"
 
 @interface BCHDWUser : NSObject
 
@@ -16,5 +17,7 @@
 @property (nonatomic, strong) NSString* encodedPassword;
 
 +(BCHDWUser*) parseMap:(NSDictionary*) map;
+
+-(BCHDWAvatar*) avatarByKeyword:(NSString*) keyword;
 
 @end

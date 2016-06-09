@@ -10,7 +10,9 @@
 
 @interface BCHDWEntryTableViewCell : UITableViewCell
 
+@property (nonatomic, weak) IBOutlet UIView* cardView;
 @property (nonatomic, weak) IBOutlet UIImageView* avatarImageView;
+@property (nonatomic, weak) IBOutlet UILabel* posterLabel;
 @property (nonatomic, weak) IBOutlet UILabel* subjectLabel;
 
 @end

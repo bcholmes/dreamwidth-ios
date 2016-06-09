@@ -15,7 +15,6 @@
 @interface DreamwidthApi()
 
 @property (nonatomic, readonly) NSString* version;
-@property (nonatomic, strong) BCHDWUser* currentUser;
 
 @end
 
@@ -147,7 +146,7 @@
         
         NSDictionary* result = [self postHttpRequest:parameters];
         NSLog(@"Result is %@", result);
-        callback(nil, [BCHDWEntry parseMap:result]);
+        callback(nil, [BCHDWEntry parseMap:result user:self.currentUser.username]);
         
     } else {
         callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
