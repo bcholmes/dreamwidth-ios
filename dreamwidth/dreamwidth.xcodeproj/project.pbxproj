@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		6332FBFE1E157F7900E11A49 /* UIViewController+Menu.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FBFD1E157F7900E11A49 /* UIViewController+Menu.m */; };
+		6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC001E15938200E11A49 /* BCHDWMenuViewController.m */; };
+		6332FC041E1594D300E11A49 /* WSEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC031E1594D300E11A49 /* WSEnum.m */; };
+		6332FC071E1595B200E11A49 /* BCHDWMenuOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC061E1595B200E11A49 /* BCHDWMenuOption.m */; };
 		9E8C5FA2DB9D8FDD88254A4E /* libPods-dreamwidth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */; };
 		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
 		D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C31D08C11300529654 /* BCHDWAvatar.m */; };
@@ -39,6 +42,12 @@
 		51BFDFAC6C72A146B79155E1 /* Pods-dreamwidth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dreamwidth.release.xcconfig"; path = "../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth.release.xcconfig"; sourceTree = "<group>"; };
 		6332FBFC1E157F7900E11A49 /* UIViewController+Menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Menu.h"; sourceTree = "<group>"; };
 		6332FBFD1E157F7900E11A49 /* UIViewController+Menu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Menu.m"; sourceTree = "<group>"; };
+		6332FBFF1E15938200E11A49 /* BCHDWMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWMenuViewController.h; sourceTree = "<group>"; };
+		6332FC001E15938200E11A49 /* BCHDWMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWMenuViewController.m; sourceTree = "<group>"; };
+		6332FC021E1594D300E11A49 /* WSEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WSEnum.h; sourceTree = "<group>"; };
+		6332FC031E1594D300E11A49 /* WSEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WSEnum.m; sourceTree = "<group>"; };
+		6332FC051E1595B200E11A49 /* BCHDWMenuOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWMenuOption.h; sourceTree = "<group>"; };
+		6332FC061E1595B200E11A49 /* BCHDWMenuOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWMenuOption.m; sourceTree = "<group>"; };
 		731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dreamwidth.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWLoginViewController.h; sourceTree = "<group>"; };
 		D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWLoginViewController.m; sourceTree = "<group>"; };
@@ -91,6 +100,8 @@
 			children = (
 				6332FBFC1E157F7900E11A49 /* UIViewController+Menu.h */,
 				6332FBFD1E157F7900E11A49 /* UIViewController+Menu.m */,
+				6332FC021E1594D300E11A49 /* WSEnum.h */,
+				6332FC031E1594D300E11A49 /* WSEnum.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -115,12 +126,14 @@
 		D81603BD1D08B1E500529654 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */,
-				D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */,
 				D81603C81D09DCC300529654 /* BCHDWEntryListViewController.h */,
 				D81603C91D09DCC300529654 /* BCHDWEntryListViewController.m */,
 				D81603CB1D09DFE200529654 /* BCHDWEntryTableViewCell.h */,
 				D81603CC1D09DFE200529654 /* BCHDWEntryTableViewCell.m */,
+				D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */,
+				D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */,
+				6332FBFF1E15938200E11A49 /* BCHDWMenuViewController.h */,
+				6332FC001E15938200E11A49 /* BCHDWMenuViewController.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -132,6 +145,8 @@
 				D81603C31D08C11300529654 /* BCHDWAvatar.m */,
 				D81603CE1D09E8C400529654 /* BCHDWEntry.h */,
 				D81603CF1D09E8C400529654 /* BCHDWEntry.m */,
+				6332FC051E1595B200E11A49 /* BCHDWMenuOption.h */,
+				6332FC061E1595B200E11A49 /* BCHDWMenuOption.m */,
 				D81603C51D08C28400529654 /* BCHDWUser.h */,
 				D81603C61D08C28400529654 /* BCHDWUser.m */,
 			);
@@ -353,6 +368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6332FC071E1595B200E11A49 /* BCHDWMenuOption.m in Sources */,
 				D81603C71D08C28400529654 /* BCHDWUser.m in Sources */,
 				6332FBFE1E157F7900E11A49 /* UIViewController+Menu.m in Sources */,
 				D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */,
@@ -363,6 +379,8 @@
 				D81603CD1D09DFE200529654 /* BCHDWEntryTableViewCell.m in Sources */,
 				D81603CA1D09DCC300529654 /* BCHDWEntryListViewController.m in Sources */,
 				D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */,
+				6332FC041E1594D300E11A49 /* WSEnum.m in Sources */,
+				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
