@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSArray* avatars;
 @property (nonatomic, strong) NSString* username;
 @property (nonatomic, strong) NSString* encodedPassword;
+@property (nonatomic, readonly) BCHDWAvatar* defaultAvatar;
 
 +(BCHDWUser*) parseMap:(NSDictionary*) map;
 

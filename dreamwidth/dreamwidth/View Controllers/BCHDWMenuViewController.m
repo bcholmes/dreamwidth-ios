@@ -8,9 +8,11 @@
 
 #import "BCHDWMenuViewController.h"
 
+#import <SDWebImage/UIImageView+WebCache.h>
+
 #import "AppDelegate.h"
 #import "BCHDWMenuOption.h"
-
+#import "BCHDWUserTableViewCell.h"
 
 @interface BCHDWMenuViewController ()
 
@@ -34,9 +36,8 @@
     return 2;
 }
 
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
-    return section == 0 ? 0 : self.menuItems.count;
+    return section == 0 ? 1 : self.menuItems.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -49,8 +50,26 @@
         cell.backgroundColor = [AppDelegate instance].theme.menuColor;
         return cell;
     } else {
-        return nil;
+        static NSString* userCellIdentifier = @"userCell";
+        BCHDWUserTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:userCellIdentifier];
+        BCHDWUser* user = [AppDelegate instance].dreamwidthApi.currentUser;
+        
+        cell.nameLabel.text = user.name;
+        cell.nameLabel.textColor = [UIColor whiteColor];
+        cell.usernameLabel.text = user.username;
+        cell.usernameLabel.textColor = [UIColor whiteColor];
+        cell.backgroundColor = [AppDelegate instance].theme.menuColor;
+        BCHDWAvatar* avatar = user.defaultAvatar;
+        if (avatar != nil) {
+            [cell.avatarView sd_setImageWithURL:[NSURL URLWithString:avatar.url] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        }
+        
+        return cell;
     }
+}
+
+-(CGFloat) tableView:(UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath*) indexPath {
+    return indexPath.section == 0 ? 100.0 : 40.0;
 }
 
 @end

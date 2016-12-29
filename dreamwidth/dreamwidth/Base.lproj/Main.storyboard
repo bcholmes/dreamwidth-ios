@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -51,6 +52,48 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" rowHeight="100" id="SjX-BS-dEF" customClass="BCHDWUserTableViewCell">
+                                <rect key="frame" x="0.0" y="72" width="375" height="100"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SjX-BS-dEF" id="vtS-nf-sB0">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TPD-M1-20S">
+                                            <rect key="frame" x="8" y="20" width="60" height="60"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="60" id="35x-4l-dWK"/>
+                                                <constraint firstAttribute="width" constant="60" id="UPF-RK-a6n"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xNk-qm-SiG">
+                                            <rect key="frame" x="76" y="20" width="66.5" height="33.5"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9i-bt-nhG">
+                                            <rect key="frame" x="76" y="53.5" width="42" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="TPD-M1-20S" firstAttribute="centerY" secondItem="vtS-nf-sB0" secondAttribute="centerY" id="8YZ-7m-gUf"/>
+                                        <constraint firstItem="m9i-bt-nhG" firstAttribute="top" secondItem="xNk-qm-SiG" secondAttribute="bottom" id="J0f-b7-pZs"/>
+                                        <constraint firstItem="m9i-bt-nhG" firstAttribute="leading" secondItem="xNk-qm-SiG" secondAttribute="leading" id="gIv-4y-0Pv"/>
+                                        <constraint firstItem="TPD-M1-20S" firstAttribute="leading" secondItem="vtS-nf-sB0" secondAttribute="leadingMargin" id="hJs-pc-WRw"/>
+                                        <constraint firstItem="xNk-qm-SiG" firstAttribute="top" secondItem="TPD-M1-20S" secondAttribute="top" id="okn-k1-afo"/>
+                                        <constraint firstItem="xNk-qm-SiG" firstAttribute="leading" secondItem="TPD-M1-20S" secondAttribute="trailing" constant="8" id="wW4-H4-PLV"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="avatarView" destination="TPD-M1-20S" id="6xG-RH-0bR"/>
+                                    <outlet property="nameLabel" destination="xNk-qm-SiG" id="T4X-yz-SN5"/>
+                                    <outlet property="usernameLabel" destination="m9i-bt-nhG" id="FKU-oN-cz5"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
