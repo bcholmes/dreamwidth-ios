@@ -11,6 +11,7 @@
 		6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC001E15938200E11A49 /* BCHDWMenuViewController.m */; };
 		6332FC041E1594D300E11A49 /* WSEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC031E1594D300E11A49 /* WSEnum.m */; };
 		6332FC071E1595B200E11A49 /* BCHDWMenuOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC061E1595B200E11A49 /* BCHDWMenuOption.m */; };
+		6332FC0A1E159A8100E11A49 /* BCHDWTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC091E159A8100E11A49 /* BCHDWTheme.m */; };
 		9E8C5FA2DB9D8FDD88254A4E /* libPods-dreamwidth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */; };
 		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
 		D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C31D08C11300529654 /* BCHDWAvatar.m */; };
@@ -48,6 +49,8 @@
 		6332FC031E1594D300E11A49 /* WSEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WSEnum.m; sourceTree = "<group>"; };
 		6332FC051E1595B200E11A49 /* BCHDWMenuOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWMenuOption.h; sourceTree = "<group>"; };
 		6332FC061E1595B200E11A49 /* BCHDWMenuOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWMenuOption.m; sourceTree = "<group>"; };
+		6332FC081E159A8100E11A49 /* BCHDWTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWTheme.h; sourceTree = "<group>"; };
+		6332FC091E159A8100E11A49 /* BCHDWTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWTheme.m; sourceTree = "<group>"; };
 		731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dreamwidth.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWLoginViewController.h; sourceTree = "<group>"; };
 		D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWLoginViewController.m; sourceTree = "<group>"; };
@@ -187,6 +190,8 @@
 				D8EA84EB1AB1E6BD00B71DC4 /* Supporting Files */,
 				D8F233CF1AB20E4D00F61C25 /* DreamwidthApi.h */,
 				D8F233D01AB20E4D00F61C25 /* DreamwidthApi.m */,
+				6332FC081E159A8100E11A49 /* BCHDWTheme.h */,
+				6332FC091E159A8100E11A49 /* BCHDWTheme.m */,
 			);
 			path = dreamwidth;
 			sourceTree = "<group>";
@@ -380,6 +385,7 @@
 				D81603CA1D09DCC300529654 /* BCHDWEntryListViewController.m in Sources */,
 				D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */,
 				6332FC041E1594D300E11A49 /* WSEnum.m in Sources */,
+				6332FC0A1E159A8100E11A49 /* BCHDWTheme.m in Sources */,
 				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

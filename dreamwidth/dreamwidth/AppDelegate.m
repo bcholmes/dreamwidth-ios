@@ -43,6 +43,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.dreamwidthApi = [DreamwidthApi new];
+    self.theme = [BCHDWTheme new];
+    [self.theme configure];
     [self setUpRevealController];
     return YES;
 }

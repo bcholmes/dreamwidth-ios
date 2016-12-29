@@ -8,7 +8,9 @@
 
 #import "BCHDWMenuViewController.h"
 
+#import "AppDelegate.h"
 #import "BCHDWMenuOption.h"
+
 
 @interface BCHDWMenuViewController ()
 
@@ -22,6 +24,7 @@
     [super viewDidLoad];
     
     self.menuItems = [BCHDWMenuOption enumValues];
+    self.tableView.backgroundColor = [AppDelegate instance].theme.menuColor;
 }
 
 
@@ -42,6 +45,8 @@
         UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:menuItemCellIdentifier];
         BCHDWMenuOption* menuOption = self.menuItems[indexPath.row];
         cell.textLabel.text = menuOption.text;
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.backgroundColor = [AppDelegate instance].theme.menuColor;
         return cell;
     } else {
         return nil;
