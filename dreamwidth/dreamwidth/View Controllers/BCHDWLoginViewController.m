@@ -22,6 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [AppDelegate instance].theme.loginScreenColor;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -10,7 +10,7 @@
 #import "DreamwidthApi.h"
 #import "BCHDWEntry.h"
 
-#define DREAMWIDTH_URL [NSURL URLWithString:@"http://www.dreamwidth.org/interface/flat"]
+#define DREAMWIDTH_URL [NSURL URLWithString:@"https://www.dreamwidth.org/interface/flat"]
 
 @interface DreamwidthApi()
 
@@ -128,7 +128,7 @@
         
     } else {
         self.currentUser = nil;
-        callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
     }
 }
 
@@ -154,7 +154,7 @@
         callback(nil, [BCHDWEntry parseMap:result user:self.currentUser.username]);
         
     } else {
-        callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
     }
 }
 
@@ -178,7 +178,7 @@
         callback(nil, nil);
         
     } else {
-        callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
     }
 }
 

@@ -15,5 +15,6 @@
 + (BCHDWMenuOption*) PROFILE;
 
 @property (nonatomic, readonly) NSString* text;
+@property (nonatomic, readonly) NSString* storyboardId;
 
 @end

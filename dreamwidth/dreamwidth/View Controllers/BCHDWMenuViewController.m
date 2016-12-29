@@ -9,6 +9,7 @@
 #import "BCHDWMenuViewController.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <SWRevealViewController/SWRevealViewController.h>
 
 #import "AppDelegate.h"
 #import "BCHDWMenuOption.h"
@@ -30,7 +31,7 @@
 }
 
 
-#pragma marl - UITableView Data Source
+#pragma mark - UITableView Data Source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
@@ -65,6 +66,20 @@
         }
         
         return cell;
+    }
+}
+
+#pragma mark - UITableView Delegate
+
+- (void)tableView:(UITableView*) tableView didSelectRowAtIndexPath:(NSIndexPath*) indexPath {
+    if (indexPath.section == 0) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    } else {
+        BCHDWMenuOption* menu = (BCHDWMenuOption*) self.menuItems[indexPath.row];
+        SWRevealViewController* revealController = self.revealViewController;
+        
+        UIViewController* newFrontController = [self.storyboard instantiateViewControllerWithIdentifier:menu.storyboardId];
+        [revealController pushFrontViewController:newFrontController animated:YES];
     }
 }
 

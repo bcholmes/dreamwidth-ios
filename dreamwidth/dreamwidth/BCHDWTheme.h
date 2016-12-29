@@ -12,6 +12,8 @@
 
 -(void) configure;
 
+@property (nonatomic, strong) UIColor* primaryColor;
 @property (nonatomic, strong) UIColor* menuColor;
+@property (nonatomic, strong) UIColor* loginScreenColor;
 
 @end

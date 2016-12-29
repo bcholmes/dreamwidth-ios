@@ -14,6 +14,9 @@
 		6332FC0A1E159A8100E11A49 /* BCHDWTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC091E159A8100E11A49 /* BCHDWTheme.m */; };
 		6332FC0E1E15A8DF00E11A49 /* BCHDWDreamwidthService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC0D1E15A8DF00E11A49 /* BCHDWDreamwidthService.m */; };
 		6332FC111E15AB4100E11A49 /* BCHDWUserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC101E15AB4100E11A49 /* BCHDWUserTableViewCell.m */; };
+		6332FC141E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC131E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m */; };
+		6332FC171E15C30B00E11A49 /* BCHDWProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC161E15C30B00E11A49 /* BCHDWProfileTableViewController.m */; };
+		6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC191E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m */; };
 		9E8C5FA2DB9D8FDD88254A4E /* libPods-dreamwidth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */; };
 		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
 		D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C31D08C11300529654 /* BCHDWAvatar.m */; };
@@ -57,6 +60,12 @@
 		6332FC0D1E15A8DF00E11A49 /* BCHDWDreamwidthService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWDreamwidthService.m; sourceTree = "<group>"; };
 		6332FC0F1E15AB4100E11A49 /* BCHDWUserTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWUserTableViewCell.h; sourceTree = "<group>"; };
 		6332FC101E15AB4100E11A49 /* BCHDWUserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWUserTableViewCell.m; sourceTree = "<group>"; };
+		6332FC121E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWSimpleTableViewCell.h; sourceTree = "<group>"; };
+		6332FC131E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWSimpleTableViewCell.m; sourceTree = "<group>"; };
+		6332FC151E15C30B00E11A49 /* BCHDWProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWProfileTableViewController.h; sourceTree = "<group>"; };
+		6332FC161E15C30B00E11A49 /* BCHDWProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWProfileTableViewController.m; sourceTree = "<group>"; };
+		6332FC181E15C49000E11A49 /* BCHDWProfileMainTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWProfileMainTableViewCell.h; sourceTree = "<group>"; };
+		6332FC191E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWProfileMainTableViewCell.m; sourceTree = "<group>"; };
 		731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dreamwidth.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWLoginViewController.h; sourceTree = "<group>"; };
 		D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWLoginViewController.m; sourceTree = "<group>"; };
@@ -152,6 +161,12 @@
 				D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */,
 				6332FBFF1E15938200E11A49 /* BCHDWMenuViewController.h */,
 				6332FC001E15938200E11A49 /* BCHDWMenuViewController.m */,
+				6332FC181E15C49000E11A49 /* BCHDWProfileMainTableViewCell.h */,
+				6332FC191E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m */,
+				6332FC151E15C30B00E11A49 /* BCHDWProfileTableViewController.h */,
+				6332FC161E15C30B00E11A49 /* BCHDWProfileTableViewController.m */,
+				6332FC121E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.h */,
+				6332FC131E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m */,
 				6332FC0F1E15AB4100E11A49 /* BCHDWUserTableViewCell.h */,
 				6332FC101E15AB4100E11A49 /* BCHDWUserTableViewCell.m */,
 			);
@@ -405,8 +420,11 @@
 				D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */,
 				6332FC041E1594D300E11A49 /* WSEnum.m in Sources */,
 				6332FC111E15AB4100E11A49 /* BCHDWUserTableViewCell.m in Sources */,
+				6332FC171E15C30B00E11A49 /* BCHDWProfileTableViewController.m in Sources */,
 				6332FC0A1E159A8100E11A49 /* BCHDWTheme.m in Sources */,
 				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
+				6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */,
+				6332FC141E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,4 +18,8 @@ WS_ENUM(BCHDWMenuOption, PROFILE)
     return [words capitalizedString];
 }
 
+-(NSString*) storyboardId {
+    return [self.name lowercaseString];
+}
+
 @end
