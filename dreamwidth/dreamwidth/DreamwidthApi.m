@@ -115,11 +115,16 @@
         
         NSDictionary* result = [self postHttpRequest:parameters];
         NSLog(@"Result is %@", result);
-        BCHDWUser* user = [BCHDWUser parseMap:result];
-        user.username = userid;
-        user.encodedPassword = encodedPassword;
-        self.currentUser = user;
-        callback(nil, user);
+        NSString* success = [result objectForKey:@"success"];
+        if ([success isEqualToString:@"OK"]) {
+            BCHDWUser* user = [BCHDWUser parseMap:result];
+            user.username = userid;
+            user.encodedPassword = encodedPassword;
+            self.currentUser = user;
+            callback(nil, user);
+        } else {
+            callback([NSError errorWithDomain:DWErrorDomain code:DWAuthenticationFailedError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
+        }
         
     } else {
         self.currentUser = nil;
@@ -175,6 +180,10 @@
     } else {
         callback([[NSError alloc] initWithDomain:@"org.ayizan.http" code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
     }
+}
+
+-(BOOL) isLoggedIn {
+    return self.currentUser != nil;
 }
 
 @end

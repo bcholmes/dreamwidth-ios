@@ -40,8 +40,9 @@
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [SVProgressHUD dismiss];
                 if (error != nil) {
-                    [[[UIAlertView alloc] initWithTitle:@"Error occurred"
-                                                message:@"There was a problem communicating with Dreamwidth"
+                    NSString* message = error.localizedDescription;
+                    [[[UIAlertView alloc] initWithTitle:@"Oopsie"
+                                                message:message ? message : @"There was a problem communicating with Dreamwidth"
                                                delegate:nil
                                       cancelButtonTitle:@"OK"
                                       otherButtonTitles:nil] show];

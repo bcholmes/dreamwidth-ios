@@ -31,12 +31,18 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
 
-    [self loadEntries];
+    DreamwidthApi* api = [AppDelegate instance].dreamwidthApi;
+    if ([api isLoggedIn]) {
+        [self loadEntries];
+    }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    DreamwidthApi* api = [AppDelegate instance].dreamwidthApi;
+    if (![api isLoggedIn]) {
+        [self performSegueWithIdentifier:@"login" sender:nil];
+    }
 }
 
 -(void) loadEntries {
@@ -63,21 +69,22 @@
 }
 
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    UIViewController* popup = segue.destinationViewController;
+ 
+    popup.providesPresentationContextTransitionStyle = YES;
+    popup.definesPresentationContext = YES;
+    
+    [popup setModalPresentationStyle:UIModalPresentationOverCurrentContext];
 }
-*/
 
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
     if (self.entries == nil) {
-        return 3;
+        return 0;
     } else {
         return self.entries.count;
     }
@@ -101,5 +108,6 @@
     
     return cell;
 }
+
 
 @end

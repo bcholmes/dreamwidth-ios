@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "BCHDWUser.h"
 
+typedef NS_ENUM(NSInteger, DWErrorCodes) {
+    DWAuthenticationFailedError = 1000
+};
+
+#define DWErrorDomain @"org.dreamwidth"
+
+
 @interface DreamwidthApi : NSObject
 
 @property (nonatomic, strong) BCHDWUser* currentUser;
@@ -16,5 +23,6 @@
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback;
 -(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback;
 -(void) getReadingList:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback;
+-(BOOL) isLoggedIn;
 
 @end

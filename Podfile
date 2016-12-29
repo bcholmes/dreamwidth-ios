@@ -5,6 +5,7 @@ project 'dreamwidth/dreamwidth'
 
 target 'dreamwidth' do
 
+pod 'SWRevealViewController'
 pod 'SVProgressHUD'
 pod 'SDWebImage', '~>3.7'
 
