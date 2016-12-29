@@ -32,6 +32,7 @@
     self.tableView.dataSource = self;
 
     DreamwidthApi* api = [AppDelegate instance].dreamwidthApi;
+    [api addObserver:self forKeyPath:@"currentUser" options:NSKeyValueObservingOptionNew context:nil];
     if ([api isLoggedIn]) {
         [self loadEntries];
     }
@@ -43,6 +44,10 @@
     if (![api isLoggedIn]) {
         [self performSegueWithIdentifier:@"login" sender:nil];
     }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    [self loadEntries];
 }
 
 -(void) loadEntries {

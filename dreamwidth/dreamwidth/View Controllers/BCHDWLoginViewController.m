@@ -48,7 +48,7 @@
                                       otherButtonTitles:nil] show];
                 } else {
                     NSLog(@"Logged in as user %@", user.name);
-                    [self performSegueWithIdentifier:@"entryList" sender:nil];
+                    [self dismissViewControllerAnimated:YES completion:nil];
                 }
             });
         }];
