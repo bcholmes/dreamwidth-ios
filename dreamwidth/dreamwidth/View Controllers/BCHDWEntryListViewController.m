@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "BCHDWEntryTableViewCell.h"
 #import "BCHDWEntry.h"
+#import "UIViewController+Menu.h"
 
 @interface BCHDWEntryListViewController ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -27,6 +28,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self initializeMenuButton];
 
     self.tableView.delegate = self;
     self.tableView.dataSource = self;

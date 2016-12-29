@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Ayizan Studios. All rights reserved.
 //
 
+#import <SWRevealViewController/SWRevealViewController.h>
+
 #import "AppDelegate.h"
 
 @interface AppDelegate ()
@@ -19,9 +21,29 @@
 }
 
 
+-(void) setUpRevealController {
+    UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window = window;
+    
+
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UIViewController* menuViewController = [storyboard instantiateViewControllerWithIdentifier:@"menu"];
+
+    UINavigationController* rootNavigationController = [storyboard instantiateInitialViewController];
+    
+    SWRevealViewController* revealController = [[SWRevealViewController alloc]
+                                                initWithRearViewController:menuViewController frontViewController:rootNavigationController];
+//    revealController.delegate = self;
+    
+    [self.window setRootViewController:revealController];
+    [self.window makeKeyAndVisible];
+    
+}
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.dreamwidthApi = [DreamwidthApi new];
+    [self setUpRevealController];
     return YES;
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6332FBFE1E157F7900E11A49 /* UIViewController+Menu.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FBFD1E157F7900E11A49 /* UIViewController+Menu.m */; };
 		9E8C5FA2DB9D8FDD88254A4E /* libPods-dreamwidth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */; };
 		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
 		D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C31D08C11300529654 /* BCHDWAvatar.m */; };
@@ -36,6 +37,8 @@
 /* Begin PBXFileReference section */
 		49AD58356687206523B0ECAB /* Pods-dreamwidth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dreamwidth.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth.debug.xcconfig"; sourceTree = "<group>"; };
 		51BFDFAC6C72A146B79155E1 /* Pods-dreamwidth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dreamwidth.release.xcconfig"; path = "../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth.release.xcconfig"; sourceTree = "<group>"; };
+		6332FBFC1E157F7900E11A49 /* UIViewController+Menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Menu.h"; sourceTree = "<group>"; };
+		6332FBFD1E157F7900E11A49 /* UIViewController+Menu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Menu.m"; sourceTree = "<group>"; };
 		731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dreamwidth.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWLoginViewController.h; sourceTree = "<group>"; };
 		D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWLoginViewController.m; sourceTree = "<group>"; };
@@ -83,6 +86,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6332FBFB1E157F3600E11A49 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				6332FBFC1E157F7900E11A49 /* UIViewController+Menu.h */,
+				6332FBFD1E157F7900E11A49 /* UIViewController+Menu.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		751AD287C0483B0A8F3DC418 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +161,7 @@
 		D8EA84EA1AB1E6BD00B71DC4 /* dreamwidth */ = {
 			isa = PBXGroup;
 			children = (
+				6332FBFB1E157F3600E11A49 /* Utilities */,
 				D81603C11D08C0EC00529654 /* Model */,
 				D81603BD1D08B1E500529654 /* View Controllers */,
 				D8EA84EF1AB1E6BD00B71DC4 /* AppDelegate.h */,
@@ -341,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D81603C71D08C28400529654 /* BCHDWUser.m in Sources */,
+				6332FBFE1E157F7900E11A49 /* UIViewController+Menu.m in Sources */,
 				D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */,
 				D8F233D11AB20E4D00F61C25 /* DreamwidthApi.m in Sources */,
 				D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */,
