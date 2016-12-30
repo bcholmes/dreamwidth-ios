@@ -232,7 +232,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kia-B1-vV5">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kia-B1-vV5">
                                             <rect key="frame" x="8" y="8" width="50" height="50"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="50" id="917-vh-Hbk"/>
@@ -283,10 +283,67 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Profile" id="vU3-ni-dlX"/>
+                    <connections>
+                        <segue destination="G9c-2g-dec" kind="show" identifier="avatarList" id="hnn-M2-AOf"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zbw-eI-I6q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="890" y="-342"/>
+        </scene>
+        <!--Avatar Table View Controller-->
+        <scene sceneID="2Gx-HE-XBB">
+            <objects>
+                <tableViewController id="G9c-2g-dec" customClass="BCHDWAvatarTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="JXB-Lv-XzL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="avatarCell" rowHeight="120" id="YKw-Dt-X3T" customClass="BCHDWAvatarTableViewCell">
+                                <rect key="frame" x="0.0" y="28" width="375" height="120"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YKw-Dt-X3T" id="pud-fl-Fj7">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="119"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="K0F-0D-S9u">
+                                            <rect key="frame" x="8" y="10" width="100" height="100"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="100" id="AML-ZA-zsH"/>
+                                                <constraint firstAttribute="height" constant="100" id="xnY-ZC-1Lp"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4pa-XH-LOW">
+                                            <rect key="frame" x="116" y="50" width="243" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="4pa-XH-LOW" firstAttribute="centerY" secondItem="pud-fl-Fj7" secondAttribute="centerY" id="2pY-3Y-A2J"/>
+                                        <constraint firstItem="K0F-0D-S9u" firstAttribute="leading" secondItem="pud-fl-Fj7" secondAttribute="leading" constant="8" id="Dmg-Ga-Ege"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="4pa-XH-LOW" secondAttribute="trailing" constant="8" id="Gn0-f4-DTc"/>
+                                        <constraint firstItem="4pa-XH-LOW" firstAttribute="leading" secondItem="K0F-0D-S9u" secondAttribute="trailing" constant="8" id="Kt8-vb-BC5"/>
+                                        <constraint firstItem="K0F-0D-S9u" firstAttribute="centerY" secondItem="pud-fl-Fj7" secondAttribute="centerY" id="WrP-qh-Cgq"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="avatarImageView" destination="K0F-0D-S9u" id="7ji-X0-uY3"/>
+                                    <outlet property="avatarKeywordsLabel" destination="4pa-XH-LOW" id="K7e-1r-1rj"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="G9c-2g-dec" id="dul-o8-LO9"/>
+                            <outlet property="delegate" destination="G9c-2g-dec" id="WJg-ng-Jto"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9CA-hj-38M" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2128.8000000000002" y="-684.10794602698661"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dcY-4Y-Ile">

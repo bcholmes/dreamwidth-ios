@@ -13,6 +13,7 @@
 
 #import "AppDelegate.h"
 #import "BCHDWAvatarTableViewCell.h"
+#import "BCHDWAvatarTableViewController.h"
 #import "BCHDWProfileMainTableViewCell.h"
 #import "UIViewController+Menu.h"
 
@@ -106,14 +107,22 @@
 }
 
 
-/*
+- (void) tableView:(UITableView*) tableView didSelectRowAtIndexPath:(NSIndexPath*) indexPath {
+    if (indexPath.section == 1 && indexPath.row == MAX_RECORDS) {
+        [self performSegueWithIdentifier:@"avatarList" sender:nil];
+    } else {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+}
+
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([[segue identifier] isEqualToString:@"avatarList"]) {
+        BCHDWAvatarTableViewController* controller = [segue destinationViewController];
+        controller.user = self.user;
+    }
+
 }
-*/
 
 @end
