@@ -8,6 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+#import "DreamwidthApi.h"
+#import "BCHDWUser.h"
+
 @interface BCHDWDreamwidthService : NSObject
+
+-(instancetype) initWithApi:(DreamwidthApi*) api;
+-(BOOL) isLoggedIn;
+
+-(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback;
+
 
 @end

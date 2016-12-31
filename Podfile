@@ -9,5 +9,6 @@ pod 'SWRevealViewController'
 pod 'SVProgressHUD'
 pod 'SDWebImage', '~>3.7'
 pod 'UIColor-HexRGB', '~>1.0'
+pod 'UYLPasswordManager', '~> 1.1'
 
 end

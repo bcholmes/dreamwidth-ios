@@ -9,12 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "DreamwidthApi.h"
 #import "BCHDWTheme.h"
+#import "BCHDWDreamwidthService.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, strong) DreamwidthApi* dreamwidthApi;
+@property (nonatomic, strong) BCHDWDreamwidthService* dreamwidthService;
 @property (nonatomic, strong) BCHDWTheme* theme;
 
 +(AppDelegate*) instance;

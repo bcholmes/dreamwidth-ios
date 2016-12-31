@@ -34,10 +34,10 @@
     NSString* username = self.usernameField.text;
     NSString* password = self.passwordField.text;
     
-    DreamwidthApi* api = [AppDelegate instance].dreamwidthApi;
+    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
     [SVProgressHUD show];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        [api loginWithUser:username password:password andCompletion:^(NSError* error, BCHDWUser* user) {
+        [service loginWithUser:username password:password andCompletion:^(NSError* error, BCHDWUser* user) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [SVProgressHUD dismiss];
                 if (error != nil) {

@@ -451,7 +451,9 @@
                             <constraint firstAttribute="trailing" secondItem="q4a-7c-rec" secondAttribute="trailing" id="PWo-Wj-JUO"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="TaR-DN-jnm"/>
+                    <navigationItem key="navigationItem" id="TaR-DN-jnm">
+                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="RgS-SO-PoX"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="q4a-7c-rec" id="JiD-1w-6HT"/>
                         <segue destination="3Uv-Yq-2oK" kind="presentation" identifier="login" modalTransitionStyle="crossDissolve" id="9sR-HG-bDm"/>
