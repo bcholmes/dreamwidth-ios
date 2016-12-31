@@ -69,7 +69,10 @@
                                        NSForegroundColorAttributeName: [UIColor whiteColor]
                                        }];
     [barProxy setTintColor:[UIColor whiteColor]];
-    
+
+    // remove bottom separator line from navigation bar
+    [barProxy setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+    [barProxy setShadowImage:[[UIImage alloc] init]];
 }
 
 @end
