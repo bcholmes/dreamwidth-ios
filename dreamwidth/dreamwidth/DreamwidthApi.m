@@ -197,7 +197,7 @@
                                       @"auth_response": response,
                                       @"subject": @"A test post",
                                       @"event": entryText,
-                                      @"picture_keyword": @"i had an accident",
+                                      @"prop_picture_keyword": @"i had an accident",
                                       @"year": [NSString stringWithFormat:@"%ld", [dateComponents year]],
                                       @"mon": [NSString stringWithFormat:@"%ld", [dateComponents month]],
                                       @"day": [NSString stringWithFormat:@"%ld", [dateComponents day]],
