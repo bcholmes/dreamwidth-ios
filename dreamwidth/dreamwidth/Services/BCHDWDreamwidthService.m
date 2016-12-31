@@ -49,7 +49,6 @@
 }
 
 -(void) postEntry:(NSString*) entryText completion:(void (^)(NSError* error, NSString* url)) callback {
-    NSLog(@"post");
     [self.api postEntry:entryText asUser:self.api.currentUser completion:callback];
 }
 @end

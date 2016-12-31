@@ -187,6 +187,8 @@
     if (challengeMap != nil) {
         NSString* challenge = [challengeMap objectForKey:@"challenge"];
         NSString* response = [self md5:[challenge stringByAppendingString:user.encodedPassword]];
+        NSDate* now = [NSDate new];
+        NSDateComponents* dateComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute fromDate:now];
         
         NSDictionary* parameters = @{ @"mode": @"postevent",
                                       @"user": self.currentUser.username,
@@ -194,16 +196,18 @@
                                       @"auth_challenge": challenge,
                                       @"auth_response": response,
                                       @"subject": @"A test post",
-                                      @"event": @"A test post",
-                                      @"year": @"2016",
-                                      @"mon": @"12",
-                                      @"day": @"31",
-                                      @"hour": @"0",
-                                      @"min": @"3",
+                                      @"event": entryText,
+                                      @"picture_keyword": @"i had an accident",
+                                      @"year": [NSString stringWithFormat:@"%ld", [dateComponents year]],
+                                      @"mon": [NSString stringWithFormat:@"%ld", [dateComponents month]],
+                                      @"day": [NSString stringWithFormat:@"%ld", [dateComponents day]],
+                                      @"hour": [NSString stringWithFormat:@"%ld", [dateComponents hour]],
+                                      @"min": [NSString stringWithFormat:@"%ld", [dateComponents minute]],
                                       @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version],
                                       @"ver": @"1"
                                       };
         
+        NSLog(@"parameters: %@", parameters);
         NSDictionary* result = [self postHttpRequest:parameters];
         NSLog(@"Result is %@", result);
         if ([@"OK" isEqualToString:[result objectForKey:@"success"]]) {

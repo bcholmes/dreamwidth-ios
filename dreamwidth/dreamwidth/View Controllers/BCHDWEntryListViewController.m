@@ -117,27 +117,8 @@
     return cell;
 }
 
--(IBAction) postEntry:(id)sender {
-    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
-    [SVProgressHUD show];
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        [service postEntry:@"This is my entry" completion:^(NSError *error, NSString *url) {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [SVProgressHUD dismiss];
-                if (error != nil) {
-                    [[[UIAlertView alloc] initWithTitle:@"Error occurred"
-                                                message:@"There was a problem communicating with Dreamwidth"
-                                               delegate:nil
-                                      cancelButtonTitle:@"OK"
-                                      otherButtonTitles:nil] show];
-                } else {
-                    NSLog(@"post thing happened");
-
-                
-                }
-            });
-        }];
-    });
+-(IBAction) showEditScreen:(id)sender {
+    
 }
 
 @end
