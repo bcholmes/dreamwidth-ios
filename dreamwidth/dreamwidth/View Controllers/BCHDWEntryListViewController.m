@@ -34,17 +34,18 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
 
-    DreamwidthApi* api = [AppDelegate instance].dreamwidthApi;
-    [api addObserver:self forKeyPath:@"currentUser" options:NSKeyValueObservingOptionNew context:nil];
-    if ([api isLoggedIn]) {
+    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
+    if ([service isLoggedIn]) {
         [self loadEntries];
+    } else {
+        [service addObserver:self forKeyPath:@"currentUser" options:NSKeyValueObservingOptionNew context:nil];
     }
 }
 
 -(void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    DreamwidthApi* api = [AppDelegate instance].dreamwidthApi;
-    if (![api isLoggedIn]) {
+    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
+    if (![service isLoggedIn]) {
         [self performSegueWithIdentifier:@"login" sender:nil];
     }
 }
@@ -54,10 +55,10 @@
 }
 
 -(void) loadEntries {
-    DreamwidthApi* api = [AppDelegate instance].dreamwidthApi;
+    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
     [SVProgressHUD show];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        [api getEvents:nil completion:^(NSError* error, NSArray* events) {
+        [service getEvents:^(NSError* error, NSArray* events) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [SVProgressHUD dismiss];
                 if (error != nil) {
@@ -115,10 +116,6 @@
     }
     
     return cell;
-}
-
--(IBAction) showEditScreen:(id)sender {
-    
 }
 
 @end

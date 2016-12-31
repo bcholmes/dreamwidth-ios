@@ -132,14 +132,14 @@
     }
 }
 
--(void) getEvents:(BCHDWUser*) notUsed completion:(void (^)(NSError* error, NSArray* entries)) callback {
+-(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback {
     NSDictionary* challengeMap = [self getChallengeMap];
     if (challengeMap != nil) {
         NSString* challenge = [challengeMap objectForKey:@"challenge"];
-        NSString* response = [self md5:[challenge stringByAppendingString:self.currentUser.encodedPassword]];
+        NSString* response = [self md5:[challenge stringByAppendingString:user.encodedPassword]];
         
         NSDictionary* parameters = @{ @"mode": @"getevents",
-                                      @"user": self.currentUser.username,
+                                      @"user": user.username,
                                       @"auth_method": @"challenge",
                                       @"auth_challenge": challenge,
                                       @"auth_response": response,
@@ -151,7 +151,7 @@
         
         NSDictionary* result = [self postHttpRequest:parameters];
         NSLog(@"Result is %@", result);
-        callback(nil, [BCHDWEntry parseMap:result user:self.currentUser.username]);
+        callback(nil, [BCHDWEntry parseMap:result user:user.username]);
         
     } else {
         callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
