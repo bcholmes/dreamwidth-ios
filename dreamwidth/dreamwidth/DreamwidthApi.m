@@ -182,6 +182,43 @@
     }
 }
 
+-(void) postEntry:(NSString*) entryText asUser:(BCHDWUser*) user completion:(void (^)(NSError* error, NSString* url)) callback {
+    NSDictionary* challengeMap = [self getChallengeMap];
+    if (challengeMap != nil) {
+        NSString* challenge = [challengeMap objectForKey:@"challenge"];
+        NSString* response = [self md5:[challenge stringByAppendingString:user.encodedPassword]];
+        
+        NSDictionary* parameters = @{ @"mode": @"postevent",
+                                      @"user": self.currentUser.username,
+                                      @"auth_method": @"challenge",
+                                      @"auth_challenge": challenge,
+                                      @"auth_response": response,
+                                      @"subject": @"A test post",
+                                      @"event": @"A test post",
+                                      @"year": @"2016",
+                                      @"mon": @"12",
+                                      @"day": @"31",
+                                      @"hour": @"0",
+                                      @"min": @"3",
+                                      @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version],
+                                      @"ver": @"1"
+                                      };
+        
+        NSDictionary* result = [self postHttpRequest:parameters];
+        NSLog(@"Result is %@", result);
+        if ([@"OK" isEqualToString:[result objectForKey:@"success"]]) {
+            callback(nil, nil);
+        } else {
+            NSLog(@"Error: %@", [result objectForKey:@"errmsg"]);
+            callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"fail fail."}], nil);
+        }
+    } else {
+        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+    }
+    
+}
+
+
 -(BOOL) isLoggedIn {
     return self.currentUser != nil;
 }

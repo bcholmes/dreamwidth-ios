@@ -6,9 +6,10 @@
 //  Copyright © 2016 Ayizan Studios. All rights reserved.
 //
 
-#import <SVProgressHUD/SVProgressHUD.h>
 #import "BCHDWLoginViewController.h"
-#import "DreamwidthApi.h"
+
+#import <SVProgressHUD/SVProgressHUD.h>
+
 #import "AppDelegate.h"
 
 @interface BCHDWLoginViewController ()

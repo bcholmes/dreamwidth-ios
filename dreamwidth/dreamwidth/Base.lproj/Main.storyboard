@@ -452,7 +452,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="TaR-DN-jnm">
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="RgS-SO-PoX"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="RgS-SO-PoX">
+                            <connections>
+                                <action selector="postEntry:" destination="L9X-in-gG0" id="RBf-QV-r36"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="q4a-7c-rec" id="JiD-1w-6HT"/>

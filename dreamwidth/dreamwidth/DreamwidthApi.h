@@ -24,5 +24,6 @@ typedef NS_ENUM(NSInteger, DWErrorCodes) {
 -(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback;
 -(void) getReadingList:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback;
 -(BOOL) isLoggedIn;
+-(void) postEntry:(NSString*) entryText asUser:(BCHDWUser*) user completion:(void (^)(NSError* error, NSString* url)) callback;
 
 @end
