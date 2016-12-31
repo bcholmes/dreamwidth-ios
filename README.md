@@ -21,6 +21,15 @@ Here are some screenshots of work-in-progress:
 
 ![entries](etc/screenshots/entries.png "Entries") ![menu](etc/screenshots/menu.png "Menu") ![profile](etc/screenshots/profile.png "Profile")
 
+## Building the Code
+
+If you want to build this code, you'll need to:
+
+1. Install [CocoaPods](https://cocoapods.org/)
+2. Clone this code
+3. Run `pod install` in the code source directory
+4. Open the dreamwidth.xcworkspace file in XCode (**not** the dreamwidth/dreamwidth.xcodeproj)
+
 ## Ancient History
 
 The original intention of this codebase was to serve as an implementation of the 
