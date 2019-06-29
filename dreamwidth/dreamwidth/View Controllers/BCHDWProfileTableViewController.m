@@ -10,8 +10,7 @@
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
-
-#import "AppDelegate.h"
+#import "BCHDWAppDelegate.h"
 #import "BCHDWAvatarTableViewCell.h"
 #import "BCHDWAvatarTableViewController.h"
 #import "BCHDWProfileMainTableViewCell.h"
@@ -34,7 +33,7 @@
     [self initializeMenuButton];
     
     self.tableView.backgroundColor = [BCHDWTheme instance].primaryColor;
-    self.user = [AppDelegate instance].dreamwidthApi.currentUser;
+    self.user = [BCHDWAppDelegate instance].dreamwidthApi.currentUser;
 
 }
 

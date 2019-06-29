@@ -7,8 +7,8 @@ target 'dreamwidth' do
 
   pod 'AFNetworking', '~> 3.1'
   pod 'BlocksKit'
-  pod 'UYLPasswordManager', '~> 1.1'
   pod 'Colours'
+  pod 'HTMLKit', '~> 2.1'
   pod 'MaterialComponents/AppBar', '~> 84.0'
   pod 'MaterialComponents/BottomSheet', '~> 84.0'
   pod 'MaterialComponents/ButtonBar', '~> 84.0'
@@ -24,6 +24,8 @@ target 'dreamwidth' do
   pod 'SWRevealViewController'
   pod 'SDWebImage', '~>3.7'
   pod 'UIColor-HexRGB', '~>1.0'
+  pod 'NSDate-Additions'
   pod 'UIColor-HexString'
+  pod 'UYLPasswordManager', '~> 1.1'
 
 end

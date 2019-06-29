@@ -10,7 +10,7 @@
 
 #import <SVProgressHUD/SVProgressHUD.h>
 
-#import "AppDelegate.h"
+#import "BCHDWAppDelegate.h"
 
 @interface BCHDWComposeEntryViewController ()
 
@@ -37,7 +37,7 @@
     NSString* text = self.entryText.text;
     if (text.length > 0) {
     
-        BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
+        BCHDWDreamwidthService* service = [BCHDWAppDelegate instance].dreamwidthService;
         [SVProgressHUD show];
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
             [service postEntry:text completion:^(NSError *error, NSString *url) {

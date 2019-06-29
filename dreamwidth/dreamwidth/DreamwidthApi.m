@@ -6,19 +6,54 @@
 //  Copyright (c) 2015 Ayizan Studios. All rights reserved.
 //
 
-#import <CommonCrypto/CommonDigest.h>
 #import "DreamwidthApi.h"
+
+#import <AFNetworking/AFNetworking.h>
+#import <CommonCrypto/CommonDigest.h>
+#import <NSDate-Additions/NSDate+Additions.h>
+
 #import "BCHDWEntry.h"
 
+#define DREAMWIDTH_FLAT_API_URL @"https://www.dreamwidth.org/interface/flat"
 #define DREAMWIDTH_URL [NSURL URLWithString:@"https://www.dreamwidth.org/interface/flat"]
+
+@interface BCHDWSession : NSObject
+
+@property (nonatomic, strong) NSString* sessionId;
+@property (nonatomic, strong) NSDate* expiry;
+@property (nonatomic, readonly) BOOL isExpired;
+
+@end
+
+@implementation BCHDWSession
+
+-(BOOL) isExpired {
+    return [[NSDate new] isLaterThanDate:self.expiry];
+}
+
+@end
 
 @interface DreamwidthApi()
 
 @property (nonatomic, readonly) NSString* version;
+@property (nonatomic, strong) BCHDWSession* session;
+@property (nonnull, nonatomic, strong) AFHTTPSessionManager* manager;
 
 @end
 
 @implementation DreamwidthApi
+
+-(instancetype) init {
+    if (self = [super init]) {
+        self.manager = [AFHTTPSessionManager manager];
+        self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+        [self.manager.requestSerializer setValue:@"application/x-www-form-urlencoded; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
+        self.manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        self.manager.responseSerializer.acceptableContentTypes = [self.manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
+        self.manager.completionQueue = dispatch_queue_create("org.ayizan.dreamballoon.flat", DISPATCH_QUEUE_SERIAL);
+    }
+    return self;
+}
 
 -(NSString*) version {
     return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
@@ -59,7 +94,7 @@
         }
         [output appendString:key];
         [output appendString:@"="];
-        [output appendString:[value stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        [output appendString:[value stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
     }
     return output;
 }
@@ -90,8 +125,64 @@
     }
 }
 
+-(void) performFunctionWithWebSession:(void (^)(NSError*, NSString*)) callback {
+    if (self.session != nil && !self.session.isExpired) {
+        callback(nil, self.session.sessionId);
+    } else {
+        [self performWithChallenge:^(NSError* error, NSString* challenge) {
+            if (error == nil) {
+                NSDate* now = [NSDate new];
+                NSDictionary* parameters = @{ @"mode": @"sessiongenerate",
+                                              @"user": self.currentUser.username,
+                                              @"auth_method": @"challenge",
+                                              @"auth_challenge": challenge,
+                                              @"auth_response": [self generateChallengeResponse:challenge user:self.currentUser],
+                                              @"expiration": @"short",
+                                              @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
+                                              @"ver": @"1"
+                                              };
+                
+                [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                    
+                    NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
+                    NSString* success = [result objectForKey:@"success"];
+                    if ([success isEqualToString:@"OK"]) {
+                        BCHDWSession* session = [BCHDWSession new];
+                        session.expiry = [now dateByAddingHours:22]; // "short" expiration is good for 24 hours. Let's be conservative.
+                        session.sessionId = [result objectForKey:@"ljsession"];
+                        self.session = session;
+                        callback(nil, session.sessionId);
+                    } else {
+                        callback([NSError errorWithDomain:DWErrorDomain code:DWSessionError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
+                    }
+                    
+                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                    callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"sessiongenerate failed."}], nil);
+                }];
+            } else {
+                callback(error, nil);
+            }
+        }];
+    }
+}
+
 -(NSDictionary*) getChallengeMap {
     return [self postHttpRequest:@{ @"mode" : @"getchallenge", @"ver" : @"1" }];
+}
+
+-(void) performWithChallenge:(void (^) (NSError* error, NSString* challenge)) callback {
+    [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:@{ @"mode" : @"getchallenge", @"ver" : @"1" } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
+        if (result != nil) {
+            callback(nil, [result objectForKey:@"challenge"]);
+        } else {
+            callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+        }
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+    }];
 }
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback {
@@ -110,7 +201,7 @@
                                         @"auth_response": response,
                                         @"getpickws": @"1",
                                         @"getpickwurls": @"1",
-                                        @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version]
+                                        @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version]
                                       };
         
         NSDictionary* result = [self postHttpRequest:parameters];
@@ -132,20 +223,23 @@
     }
 }
 
+- (NSString*) generateChallengeResponse:(NSString*) challenge user:(BCHDWUser*) user {
+    return [self md5:[challenge stringByAppendingString:user.encodedPassword]];
+}
+
 -(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback {
     NSDictionary* challengeMap = [self getChallengeMap];
     if (challengeMap != nil) {
         NSString* challenge = [challengeMap objectForKey:@"challenge"];
-        NSString* response = [self md5:[challenge stringByAppendingString:user.encodedPassword]];
         
         NSDictionary* parameters = @{ @"mode": @"getevents",
                                       @"user": user.username,
                                       @"auth_method": @"challenge",
                                       @"auth_challenge": challenge,
-                                      @"auth_response": response,
+                                      @"auth_response": [self generateChallengeResponse:challenge user:user],
                                       @"selecttype": @"lastn",
                                       @"howmany": @"20",
-                                      @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version],
+                                      @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
                                       @"ver": @"1"
                                       };
         
@@ -158,28 +252,42 @@
     }
 }
 
--(void) getReadingList:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback {
-    NSDictionary* challengeMap = [self getChallengeMap];
-    if (challengeMap != nil) {
-        NSString* challenge = [challengeMap objectForKey:@"challenge"];
-        NSString* response = [self md5:[challenge stringByAppendingString:user.encodedPassword]];
-        
-        NSDictionary* parameters = @{ @"mode": @"syncitems",
-                                      @"user": user.username,
-                                      @"auth_method": @"challenge",
-                                      @"auth_challenge": challenge,
-                                      @"auth_response": response,
-                                      @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version],
-                                      @"ver": @"1"
-                                      };
-        
-        NSDictionary* result = [self postHttpRequest:parameters];
-        NSLog(@"Result is %@", result);
-        callback(nil, nil);
-        
-    } else {
-        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
-    }
+-(void) getReadingList:(void (^)(NSError* error, NSArray* entries)) callback {
+    [self performWithChallenge:^(NSError* error, NSString* challenge) {
+        if (error == nil) {
+            NSDictionary* parameters = @{ @"mode": @"syncitems",
+                                          @"user": self.currentUser.username,
+                                          @"auth_method": @"challenge",
+                                          @"auth_challenge": challenge,
+                                          @"auth_response": [self generateChallengeResponse:challenge user:self.currentUser],
+                                          @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
+                                          @"ver": @"1"
+                                          };
+            
+            [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                
+                NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
+                NSString* success = [result objectForKey:@"success"];
+                if ([success isEqualToString:@"OK"]) {
+
+                    NSLog(@"sync items result: %@", result);
+                    callback(nil, nil);
+
+                } else {
+                    callback([NSError errorWithDomain:DWErrorDomain code:DWSessionError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
+                }
+                
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"sessiongenerate failed."}], nil);
+            }];
+            NSDictionary* result = [self postHttpRequest:parameters];
+            NSLog(@"Result is %@", result);
+            callback(nil, nil);
+            
+        } else {
+            callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+        }
+    }];
 }
 
 -(void) postEntry:(NSString*) entryText asUser:(BCHDWUser*) user completion:(void (^)(NSError* error, NSString* url)) callback {
@@ -203,7 +311,7 @@
                                       @"day": [NSString stringWithFormat:@"%ld", [dateComponents day]],
                                       @"hour": [NSString stringWithFormat:@"%ld", [dateComponents hour]],
                                       @"min": [NSString stringWithFormat:@"%ld", [dateComponents minute]],
-                                      @"clientversion": [NSString stringWithFormat:@"IosApiTest/%@", self.version],
+                                      @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
                                       @"ver": @"1"
                                       };
         

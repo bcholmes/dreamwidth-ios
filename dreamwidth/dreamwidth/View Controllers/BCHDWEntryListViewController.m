@@ -11,7 +11,7 @@
 
 #import "BCHDWEntryListViewController.h"
 
-#import "AppDelegate.h"
+#import "BCHDWAppDelegate.h"
 #import "BCHDWEntryTableViewCell.h"
 #import "BCHDWEntry.h"
 #import "UIViewController+Menu.h"
@@ -34,7 +34,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
 
-    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
+    BCHDWDreamwidthService* service = [BCHDWAppDelegate instance].dreamwidthService;
     if ([service isLoggedIn]) {
         [self loadEntries];
     } else {
@@ -44,7 +44,7 @@
 
 -(void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
+    BCHDWDreamwidthService* service = [BCHDWAppDelegate instance].dreamwidthService;
     if (![service isLoggedIn]) {
         [self performSegueWithIdentifier:@"login" sender:nil];
     }
@@ -55,7 +55,7 @@
 }
 
 -(void) loadEntries {
-    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
+    BCHDWDreamwidthService* service = [BCHDWAppDelegate instance].dreamwidthService;
     [SVProgressHUD show];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         [service getEvents:^(NSError* error, NSArray* events) {
@@ -71,6 +71,8 @@
                     NSLog(@"entries found");
                     self.entries = events;
                     [self.tableView reloadData];
+
+                    [service fetchRecentReadingPageActivity];
                 }
             });
         }];
@@ -106,7 +108,7 @@
     cell.posterLabel.text = entry.poster;
 
     if (entry.pictureKeyword != nil) {
-        BCHDWUser* user = [AppDelegate instance].dreamwidthApi.currentUser;
+        BCHDWUser* user = [BCHDWAppDelegate instance].dreamwidthApi.currentUser;
         BCHDWAvatar* avatar = [user avatarByKeyword:entry.pictureKeyword];
         if (avatar != nil) {
             [cell.avatarImageView sd_setImageWithURL:[NSURL URLWithString:avatar.url] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];

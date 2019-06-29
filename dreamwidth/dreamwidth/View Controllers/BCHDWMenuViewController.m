@@ -11,7 +11,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SWRevealViewController/SWRevealViewController.h>
 
-#import "AppDelegate.h"
+#import "BCHDWAppDelegate.h"
 #import "BCHDWMenuOption.h"
 #import "BCHDWTheme.h"
 #import "BCHDWUserTableViewCell.h"
@@ -54,7 +54,7 @@
     } else {
         static NSString* userCellIdentifier = @"userCell";
         BCHDWUserTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:userCellIdentifier];
-        BCHDWUser* user = [AppDelegate instance].dreamwidthApi.currentUser;
+        BCHDWUser* user = [BCHDWAppDelegate instance].dreamwidthApi.currentUser;
         
         cell.nameLabel.text = user.name;
         cell.nameLabel.textColor = [UIColor whiteColor];

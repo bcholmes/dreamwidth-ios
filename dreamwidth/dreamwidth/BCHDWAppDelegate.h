@@ -7,17 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
+
 #import "DreamwidthApi.h"
 #import "BCHDWDreamwidthService.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface BCHDWAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, strong) DreamwidthApi* dreamwidthApi;
 @property (nonatomic, strong) BCHDWDreamwidthService* dreamwidthService;
+@property (nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 
-+(AppDelegate*) instance;
++(BCHDWAppDelegate*) instance;
 
 @end
 

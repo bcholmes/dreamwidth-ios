@@ -8,17 +8,20 @@
 
 #import <SWRevealViewController/SWRevealViewController.h>
 
-#import "AppDelegate.h"
+#import "BCHDWAppDelegate.h"
 #import "BCHDWTheme.h"
 
-@interface AppDelegate ()
+@interface BCHDWAppDelegate ()
+
+@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 
-@implementation AppDelegate
+@implementation BCHDWAppDelegate
 
-+(AppDelegate*) instance {
-    return (AppDelegate*) [[UIApplication sharedApplication] delegate];
++(BCHDWAppDelegate*) instance {
+    return (BCHDWAppDelegate*) [[UIApplication sharedApplication] delegate];
 }
 
 
@@ -70,6 +73,61 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark CoreData
+
+- (NSManagedObjectModel*) managedObjectModel {
+    
+    if (_managedObjectModel != nil) {
+        return _managedObjectModel;
+    }
+    _managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+    return _managedObjectModel;
+}
+
+
+- (NSManagedObjectContext*) managedObjectContext {
+    if (_managedObjectContext == nil) {
+        NSPersistentStoreCoordinator *coordinator = self.persistentStoreCoordinator;
+        if (coordinator != nil) {
+            _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+            _managedObjectContext.persistentStoreCoordinator = coordinator;
+        }
+    }
+    return _managedObjectContext;
+}
+
+/**
+ Returns the URL to the application's documents directory.
+ */
+- (NSURL *)applicationDocumentsDirectory {
+    return [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].lastObject;
+}
+
+- (NSPersistentStoreCoordinator*) persistentStoreCoordinator {
+    
+    if (_persistentStoreCoordinator != nil) {
+        return _persistentStoreCoordinator;
+    } else {
+        NSString *documentsStorePath = [[self applicationDocumentsDirectory].path stringByAppendingPathComponent:@"Dreamwidth.sqlite"];
+        _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
+        
+        // Add the default store to our coordinator.
+        NSError *error;
+        NSURL *defaultStoreURL = [NSURL fileURLWithPath:documentsStorePath];
+        NSDictionary* options = @{NSMigratePersistentStoresAutomaticallyOption: @YES, NSInferMappingModelAutomaticallyOption: @YES};
+        if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                       configuration:nil
+                                                                 URL:defaultStoreURL
+                                                             options:options
+                                                               error:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, error.userInfo);
+            abort();
+        }
+        
+        return _persistentStoreCoordinator;
+    }
 }
 
 @end

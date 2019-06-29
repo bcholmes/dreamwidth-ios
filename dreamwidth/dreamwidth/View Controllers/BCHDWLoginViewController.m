@@ -14,7 +14,7 @@
 #import <MaterialComponents/MaterialTextFields.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 
-#import "AppDelegate.h"
+#import "BCHDWAppDelegate.h"
 #import "BCHDWTheme.h"
 
 @interface BCHDWLoginViewController ()
@@ -55,7 +55,7 @@
     NSString* password = self.passwordField.text;
     
     if (self.usernameField.text.length > 0 && self.passwordField.text.length > 0) {
-        BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
+        BCHDWDreamwidthService* service = [BCHDWAppDelegate instance].dreamwidthService;
         [SVProgressHUD show];
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
             [service loginWithUser:username password:password andCompletion:^(NSError* error, BCHDWUser* user) {
