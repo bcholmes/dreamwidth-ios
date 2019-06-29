@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MaterialComponents/MaterialTextFields.h>
 
 @interface BCHDWTheme : NSObject
 
@@ -15,5 +16,9 @@
 @property (nonatomic, strong) UIColor* primaryColor;
 @property (nonatomic, strong) UIColor* menuColor;
 @property (nonatomic, strong) UIColor* loginScreenColor;
+
+-(void) applyTheme:(MDCTextInputControllerBase*) textInputController;
+
++(instancetype) instance;
 
 @end

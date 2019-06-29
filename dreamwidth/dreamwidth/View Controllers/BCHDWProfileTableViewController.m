@@ -15,6 +15,7 @@
 #import "BCHDWAvatarTableViewCell.h"
 #import "BCHDWAvatarTableViewController.h"
 #import "BCHDWProfileMainTableViewCell.h"
+#import "BCHDWTheme.h"
 #import "UIViewController+Menu.h"
 
 #define MAX_RECORDS 10
@@ -32,7 +33,7 @@
     [super viewDidLoad];
     [self initializeMenuButton];
     
-    self.tableView.backgroundColor = [AppDelegate instance].theme.primaryColor;
+    self.tableView.backgroundColor = [BCHDWTheme instance].primaryColor;
     self.user = [AppDelegate instance].dreamwidthApi.currentUser;
 
 }

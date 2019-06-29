@@ -8,14 +8,24 @@
 
 #import "BCHDWLoginViewController.h"
 
+#import <AFNetworking/AFNetworking.h>
+#import <AudioToolbox/AudioServices.h>
+#import <MaterialComponents/MaterialSnackbar.h>
+#import <MaterialComponents/MaterialTextFields.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 
 #import "AppDelegate.h"
+#import "BCHDWTheme.h"
 
 @interface BCHDWLoginViewController ()
 
-@property (nonatomic, weak) IBOutlet UITextField* usernameField;
-@property (nonatomic, weak) IBOutlet UITextField* passwordField;
+@property (nonatomic, weak) IBOutlet MDCTextField* usernameField;
+@property (nonatomic, weak) IBOutlet MDCTextField* passwordField;
+
+@property (nonatomic, nullable, strong) MDCTextInputControllerUnderline* usernameFieldController;
+@property (nonatomic, nullable, strong) MDCTextInputControllerUnderline* passwordFieldController;
+
+@property (nonatomic, nullable, weak) IBOutlet UIScrollView* scrollView;
 
 @end
 
@@ -23,7 +33,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [AppDelegate instance].theme.loginScreenColor;
+    self.view.backgroundColor = [BCHDWTheme instance].loginScreenColor;
+    
+    [self.usernameField addTarget:self action:@selector(login:) forControlEvents:UIControlEventEditingDidEndOnExit];
+    [self.passwordField addTarget:self action:@selector(login:) forControlEvents:UIControlEventEditingDidEndOnExit];
+    
+    self.passwordFieldController = [[MDCTextInputControllerUnderline alloc] initWithTextInput:self.passwordField];
+    [[BCHDWTheme instance] applyTheme:self.passwordFieldController];
+    self.usernameFieldController = [[MDCTextInputControllerUnderline alloc] initWithTextInput:self.usernameField];
+    [[BCHDWTheme instance] applyTheme:self.usernameFieldController];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -35,26 +54,32 @@
     NSString* username = self.usernameField.text;
     NSString* password = self.passwordField.text;
     
-    BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
-    [SVProgressHUD show];
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        [service loginWithUser:username password:password andCompletion:^(NSError* error, BCHDWUser* user) {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [SVProgressHUD dismiss];
-                if (error != nil) {
-                    NSString* message = error.localizedDescription;
-                    [[[UIAlertView alloc] initWithTitle:@"Oopsie"
-                                                message:message ? message : @"There was a problem communicating with Dreamwidth"
-                                               delegate:nil
-                                      cancelButtonTitle:@"OK"
-                                      otherButtonTitles:nil] show];
-                } else {
-                    NSLog(@"Logged in as user %@", user.name);
-                    [self dismissViewControllerAnimated:YES completion:nil];
-                }
-            });
-        }];
-    });
+    if (self.usernameField.text.length > 0 && self.passwordField.text.length > 0) {
+        BCHDWDreamwidthService* service = [AppDelegate instance].dreamwidthService;
+        [SVProgressHUD show];
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+            [service loginWithUser:username password:password andCompletion:^(NSError* error, BCHDWUser* user) {
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    [SVProgressHUD dismiss];
+                    if (error != nil) {
+                        NSUInteger statusCode = [[error.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];
+                        MDCSnackbarMessage* message = [[MDCSnackbarMessage alloc] init];
+                        if (statusCode != 401) {
+                            message.text = @"There might be a problem logging in to the server. Try again later?";
+                        } else {
+                            message.text = @"That login did not go the way we wanted it to. Double-check your userid/password.";
+                        }
+                        [MDCSnackbarManager showMessage:message];
+                    } else {
+                        NSLog(@"Logged in as user %@", user.name);
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    }
+                });
+            }];
+        });
+    } else {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    }
 }
 
 /*

@@ -13,6 +13,7 @@
 
 #import "AppDelegate.h"
 #import "BCHDWMenuOption.h"
+#import "BCHDWTheme.h"
 #import "BCHDWUserTableViewCell.h"
 
 @interface BCHDWMenuViewController ()
@@ -27,7 +28,7 @@
     [super viewDidLoad];
     
     self.menuItems = [BCHDWMenuOption enumValues];
-    self.tableView.backgroundColor = [AppDelegate instance].theme.menuColor;
+    self.tableView.backgroundColor = [BCHDWTheme instance].menuColor;
 }
 
 
@@ -48,7 +49,7 @@
         BCHDWMenuOption* menuOption = self.menuItems[indexPath.row];
         cell.textLabel.text = menuOption.text;
         cell.textLabel.textColor = [UIColor whiteColor];
-        cell.backgroundColor = [AppDelegate instance].theme.menuColor;
+        cell.backgroundColor = [BCHDWTheme instance].menuColor;
         return cell;
     } else {
         static NSString* userCellIdentifier = @"userCell";
@@ -59,7 +60,7 @@
         cell.nameLabel.textColor = [UIColor whiteColor];
         cell.usernameLabel.text = user.username;
         cell.usernameLabel.textColor = [UIColor whiteColor];
-        cell.backgroundColor = [AppDelegate instance].theme.menuColor;
+        cell.backgroundColor = [BCHDWTheme instance].menuColor;
         BCHDWAvatar* avatar = user.defaultAvatar;
         if (avatar != nil) {
             [cell.avatarView sd_setImageWithURL:[NSURL URLWithString:avatar.url] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];

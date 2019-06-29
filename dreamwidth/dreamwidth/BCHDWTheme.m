@@ -8,6 +8,8 @@
 
 #import "BCHDWTheme.h"
 
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponents/MaterialTextFields.h>
 #import <UIColor-HexRGB/UIColor+HexRGB.h>
 
 #import "BCHDWSimpleTableViewCell.h"
@@ -33,11 +35,22 @@
     return self;
 }
 
++(instancetype) instance {
+    static BCHDWTheme* sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[BCHDWTheme alloc] init];
+        [sharedInstance configure];
+    });
+    return sharedInstance;
+}
+
 -(void) configure {
     [self configureNavigationBars];
     [self configureButtons];
     [self configureSimpleCell];
     [self configureProfileMainCell];
+    [self configureFlatButton];
 }
 
 -(void) configureButtons {
@@ -75,4 +88,19 @@
     [barProxy setShadowImage:[[UIImage alloc] init]];
 }
 
+-(void) configureFlatButton {
+    MDCFlatButton* proxy = [MDCFlatButton appearance];
+    proxy.tintColor = [UIColor whiteColor];
+    proxy.inkColor = [[UIColor whiteColor] colorWithAlphaComponent:0.32];
+    proxy.disabledAlpha = 1.0;
+    proxy.uppercaseTitle = NO;
+    [proxy setBackgroundColor:self.dreamwidthRed forState:UIControlStateNormal];
+    [proxy setBackgroundColor:[UIColor colorWithHex:@"888888"] forState:UIControlStateDisabled];
+    [proxy setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+}
+
+-(void) applyTheme:(MDCTextInputControllerBase*) textInputController {
+    textInputController.errorColor = [UIColor colorWithHex:@"#D0021B"];
+    textInputController.activeColor = self.dreamwidthRed;
+}
 @end
