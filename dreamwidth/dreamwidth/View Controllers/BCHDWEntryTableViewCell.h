@@ -14,5 +14,6 @@
 @property (nonatomic, weak) IBOutlet UIImageView* avatarImageView;
 @property (nonatomic, weak) IBOutlet UILabel* posterLabel;
 @property (nonatomic, weak) IBOutlet UILabel* subjectLabel;
+@property (nonatomic, weak) IBOutlet UILabel* commentCountLabel;
 
 @end

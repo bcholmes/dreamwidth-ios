@@ -401,6 +401,12 @@
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yru-Wg-Swl">
+                                                            <rect key="frame" x="306" y="107.5" width="31" height="14.5"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
@@ -408,7 +414,9 @@
                                                         <constraint firstItem="MOK-yj-VHW" firstAttribute="leading" secondItem="Eol-f8-bDS" secondAttribute="leading" constant="8" id="E2i-iw-1RV"/>
                                                         <constraint firstAttribute="trailing" secondItem="ty9-kP-Dki" secondAttribute="trailing" constant="12" id="Fyn-zA-IRY"/>
                                                         <constraint firstItem="ty9-kP-Dki" firstAttribute="top" secondItem="Eol-f8-bDS" secondAttribute="top" constant="8" id="NNl-10-LZ9"/>
+                                                        <constraint firstAttribute="bottom" secondItem="yru-Wg-Swl" secondAttribute="bottom" constant="8" id="REE-8n-iEH"/>
                                                         <constraint firstItem="hEI-Xp-3GE" firstAttribute="top" secondItem="MOK-yj-VHW" secondAttribute="bottom" constant="2" id="bAy-G1-rvk"/>
+                                                        <constraint firstAttribute="trailing" secondItem="yru-Wg-Swl" secondAttribute="trailing" constant="8" id="f4N-Cr-K9A"/>
                                                         <constraint firstItem="hEI-Xp-3GE" firstAttribute="centerX" secondItem="MOK-yj-VHW" secondAttribute="centerX" id="ydU-TH-Pih"/>
                                                         <constraint firstItem="MOK-yj-VHW" firstAttribute="top" secondItem="Eol-f8-bDS" secondAttribute="top" constant="8" id="zOn-zW-xgP"/>
                                                     </constraints>
@@ -425,6 +433,7 @@
                                         <connections>
                                             <outlet property="avatarImageView" destination="MOK-yj-VHW" id="SeA-Ey-xKZ"/>
                                             <outlet property="cardView" destination="Eol-f8-bDS" id="8tR-G0-Slo"/>
+                                            <outlet property="commentCountLabel" destination="yru-Wg-Swl" id="Db9-GE-U7B"/>
                                             <outlet property="posterLabel" destination="hEI-Xp-3GE" id="jXx-sp-P9B"/>
                                             <outlet property="subjectLabel" destination="ty9-kP-Dki" id="e39-4a-Eq8"/>
                                         </connections>

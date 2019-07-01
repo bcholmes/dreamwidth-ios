@@ -107,6 +107,14 @@
         cell.avatarImageView.image = nil;
     }
     
+    if ([entry.numberOfComments integerValue] == 0) {
+        cell.commentCountLabel.text = @"";
+    } else if ([entry.numberOfComments integerValue] == 1) {
+        cell.commentCountLabel.text = @"1 comment";
+    } else {
+        cell.commentCountLabel.text = [NSString stringWithFormat:@"%@ comments", entry.numberOfComments];
+    }
+    
     return cell;
 }
 
@@ -116,10 +124,7 @@
     if (self.fetchedResultsController == nil) {
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:managedObjectContext];
-        
-        NSSortDescriptor *sortDescriptor1 = [[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:YES];
-        fetchRequest.sortDescriptors = @[ sortDescriptor1 ];//, sortDescriptor2 ];
-        
+        fetchRequest.sortDescriptors = @[ [[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:NO] ];
         
         NSFetchedResultsController* aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         aFetchedResultsController.delegate = self;

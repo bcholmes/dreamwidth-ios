@@ -24,19 +24,21 @@
 }
 
 -(BCHDWEntry*) entryByUrl:(NSString*) url {
-    NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Entry"];
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"url == %@", url];
-    NSError* error = nil;
-    NSArray* results = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    if (error == nil && results.count != 0) {
-        NSLog(@"Entry record id=%@ found.", url);
-        return (BCHDWEntry*) results[0];
-    } else {
-        NSLog(@"Creating new Entry record for url=%@.", url);
-        BCHDWEntry* result = [NSEntityDescription insertNewObjectForEntityForName:@"Entry" inManagedObjectContext:self.managedObjectContext];
-        result.url = url;
-        return result;
-    }
+    NSMutableArray* result = [NSMutableArray new];
+    [self.managedObjectContext performBlockAndWait:^{
+        NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Entry"];
+        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"url == %@", url];
+        NSError* error = nil;
+        NSArray* results = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        if (error == nil && results.count != 0) {
+            [result addObject:(BCHDWEntry*) results[0]];
+        } else {
+            BCHDWEntry* entry = [NSEntityDescription insertNewObjectForEntityForName:@"Entry" inManagedObjectContext:self.managedObjectContext];
+            entry.url = url;
+            [result addObject:entry];
+        }
+    }];
+    return result[0];
 }
 
 -(BCHDWComment*) commentById:(NSString*) commentId author:(NSString*) author {
@@ -45,10 +47,8 @@
     NSError* error = nil;
     NSArray* results = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (error == nil && results.count != 0) {
-        NSLog(@"Comment record id=%@ found.", commentId);
         return (BCHDWComment*) results[0];
     } else {
-        NSLog(@"Creating new Comment record for commentId=%@.", commentId);
         BCHDWComment* result = [NSEntityDescription insertNewObjectForEntityForName:@"Comment" inManagedObjectContext:self.managedObjectContext];
         result.commentId = commentId;
         result.author = author;

@@ -30,7 +30,6 @@
 @property (nonatomic, strong) BCHDWPersistenceService* persistenceService;
 @property (nonnull, nonatomic, strong) AFHTTPSessionManager* htmlManager;
 @property (nonnull, strong) NSDateFormatter* dateFormatter;
-@property (nonatomic, strong, nullable) dispatch_queue_t pageQueue;
 @end
 
 @implementation BCHDWDreamwidthService
@@ -44,8 +43,6 @@
         self.dateFormatter.dateFormat = @"yyyy-MM-dd hh:mm a";
         self.dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
         
-        self.pageQueue = dispatch_queue_create("org.ayizan.dreamballoon.page", DISPATCH_QUEUE_SERIAL);
-
         self.htmlManager = [AFHTTPSessionManager manager];
         self.htmlManager.requestSerializer = [AFHTTPRequestSerializer serializer];
         [self.htmlManager.requestSerializer setValue:@"application/x-www-form-urlencoded; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
@@ -66,20 +63,6 @@
     return userid != nil && password != nil;
 }
 
--(NSString*) cookiesAsHeader:(NSDictionary*) cookies {
-    NSMutableString* result = [NSMutableString new];
-    for (NSString* key in cookies.allKeys) {
-        if (result.length > 0) {
-            [result appendString:@";"];
-        }
-        [result appendString:key];
-        [result appendString:@"="];
-        NSString* value = [cookies objectForKey:key];
-        [result appendString:[value stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-    }
-    return [NSString stringWithString:result];
-}
-
 - (void) setAuthenticationCookie:(NSString * _Nullable) session {
     NSString* loggedIn = session;
     NSRange first = [session rangeOfString:@":"];
@@ -94,21 +77,16 @@
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:[NSHTTPCookie cookieWithProperties:@{NSHTTPCookieDomain: @".dreamwidth.org", NSHTTPCookiePath: @"/", NSHTTPCookieName: @"BMLschemepref", NSHTTPCookieValue: @"tropo-red" }]];
 }
 
-- (void) fetchReadingPageLight:(NSUInteger) skip friends:(NSMutableDictionary*) friendSet {
+- (void) fetchReadingPageLight:(NSUInteger) skip friends:(NSMutableSet*) friendSet {
     [self.htmlManager GET:[NSString stringWithFormat:@"https://www.dreamwidth.org/mobile/read?skip=%lu", skip] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
-        for (NSHTTPCookie* cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
-            NSLog(@"Cookie: %@ -> %@ (%@)", cookie.name, cookie.value, cookie.domain);
-        }
-        
-        [self findAllFriends:(NSData*) responseObject friends:friendSet];
+        NSArray* urls = [self findAllFriends:(NSData*) responseObject friends:friendSet];
         
         if (skip == 0) {
             [self fetchReadingPageLight:50 friends:friendSet];
-        } else {
-            BCHDWEntryHandle* handle = [BCHDWEntryHandle new];
-            handle.url = @"https://bcholmes.dreamwidth.org/811674.html";
-            [self fetchEntry:handle];
+        }
+        for (NSString* url in urls) {
+            [self fetchEntry:url];
         }
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
@@ -116,8 +94,9 @@
     }];
 }
 
--(void) findAllFriends:(NSData*) htmlData friends:(NSMutableDictionary*) friendSet {
+-(NSArray*) findAllFriends:(NSData*) htmlData friends:(NSMutableSet*) friendSet {
 
+    NSMutableArray* result = [NSMutableArray new];
     HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding]];
     HTMLDocument* document = [parser parseDocument];
     NSArray* links = [document querySelectorAll:@"a"];
@@ -127,28 +106,33 @@
             BCHDWEntryHandle* handle = [BCHDWEntryHandle new];
             handle.text = anchor.textContent;
             handle.url = [href substringToIndex:[href rangeOfString:@"?"].location];
-            [friendSet setObject:handle forKey:handle.url];
-            NSLog(@"anchor: %@ -> %@", handle.url, handle.text);
+            if (![friendSet containsObject:handle.url]) {
+                [friendSet addObject:handle.url];
+                [result addObject:handle.url];
+            }
         }
     }
+    return [NSArray arrayWithArray:result];
 }
 
--(void) fetchEntry:(BCHDWEntryHandle*) entryHandle {
-    [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryHandle.url] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
+-(void) fetchEntry:(NSString*) entryUrl {
+    [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryUrl] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
         HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
         HTMLDocument* document = [parser parseDocument];
         
         NSString* author = [document querySelector:@".poster-info .ljuser"].textContent;
         if (author != nil && author.length > 0) {
-            BCHDWEntry* entry = [self.persistenceService entryByUrl:entryHandle.url];
+            BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
             [entry.managedObjectContext performBlock:^{
                 entry.subject = [document querySelector:@".entry-title"].textContent;
                 HTMLElement* avatarAnchor = [document querySelector:@".userpic img"];
                 entry.avatarUrl = avatarAnchor.attributes[@"src"];
                 entry.author = author;
 
-                NSLog(@"entry author: %@, avatarUrl: %@", entry.author, entry.avatarUrl);
+                NSString* entryDate = [document querySelector:@".poster-info .datetime"].textContent;
+                entry.creationDate = [self.dateFormatter dateFromString:entryDate];
+                NSLog(@"Creation date: %@", entry.creationDate);
                 
                 NSArray* comments = [document querySelectorAll:@".comment-thread"];
                 NSUInteger count = 0;
@@ -159,7 +143,6 @@
                     }
                     
                     NSString* author = [comment querySelector:@".ljuser"].textContent;
-                    NSLog(@"Comment -> %@, Author -> %@",  commentId, author);
                     BCHDWComment* commentRecord = [self.persistenceService commentById:commentId author:author];
                     commentRecord.entry = entry;
                     
@@ -193,7 +176,7 @@
                 [entry.managedObjectContext save:nil];
             }];
         } else {
-            NSLog(@"HTML >>>> %@", [[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]);
+ //           NSLog(@"HTML >>>> %@", [[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]);
         }
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"fetch entry: %@", error);
@@ -204,7 +187,7 @@
     [self.api performFunctionWithWebSession:^(NSError * _Nullable error, NSString * _Nullable session) {
         if (error == nil) {
             [self setAuthenticationCookie:session];
-            [self fetchReadingPageLight:0 friends:[NSMutableDictionary new]];
+            [self fetchReadingPageLight:0 friends:[NSMutableSet new]];
         } else {
             NSLog(@"session error: %@", error);
         }
