@@ -9,13 +9,14 @@
 #import <Foundation/Foundation.h>
 
 #import "DreamwidthApi.h"
+#import "BCHDWPersistenceService.h"
 #import "BCHDWUser.h"
 
 @interface BCHDWDreamwidthService : NSObject
 
 @property (nonatomic, strong) BCHDWUser* currentUser;
 
--(instancetype) initWithApi:(DreamwidthApi*) api;
+-(instancetype) initWithApi:(DreamwidthApi*) api persistence:(BCHDWPersistenceService*) persistenceService;
 -(BOOL) isLoggedIn;
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback;

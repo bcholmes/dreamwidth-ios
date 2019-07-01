@@ -10,11 +10,13 @@
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWTheme.h"
+#import "BCHDWPersistenceService.h"
 
 @interface BCHDWAppDelegate ()
 
-@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong) NSManagedObjectModel* managedObjectModel;
+@property (nonatomic, strong) NSPersistentStoreCoordinator* persistentStoreCoordinator;
+@property (nonatomic, strong) BCHDWPersistenceService* persistentService;
 
 @end
 
@@ -47,7 +49,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.dreamwidthApi = [DreamwidthApi new];
-    self.dreamwidthService = [[BCHDWDreamwidthService alloc] initWithApi:self.dreamwidthApi];
+    self.persistentService = [[BCHDWPersistenceService alloc] initWithManagedObjectContext:self.managedObjectContext];
+    self.dreamwidthService = [[BCHDWDreamwidthService alloc] initWithApi:self.dreamwidthApi persistence:self.persistentService];
     [BCHDWTheme instance];
     [self setUpRevealController];
     return YES;

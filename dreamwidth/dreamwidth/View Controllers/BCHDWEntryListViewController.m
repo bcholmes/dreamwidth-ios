@@ -13,7 +13,7 @@
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWEntryTableViewCell.h"
-#import "BCHDWEntry.h"
+#import "BCHDWEntryOld.h"
 #import "UIViewController+Menu.h"
 
 @interface BCHDWEntryListViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -103,7 +103,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     BCHDWEntryTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"entryCell"];
-    BCHDWEntry* entry = self.entries[indexPath.row];
+    BCHDWEntryOld* entry = self.entries[indexPath.row];
     cell.subjectLabel.text = entry.subject;
     cell.posterLabel.text = entry.poster;
 

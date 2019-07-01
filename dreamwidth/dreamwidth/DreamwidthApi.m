@@ -12,7 +12,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <NSDate-Additions/NSDate+Additions.h>
 
-#import "BCHDWEntry.h"
+#import "BCHDWEntryOld.h"
 
 #define DREAMWIDTH_FLAT_API_URL @"https://www.dreamwidth.org/interface/flat"
 #define DREAMWIDTH_URL [NSURL URLWithString:@"https://www.dreamwidth.org/interface/flat"]
@@ -137,7 +137,7 @@
                                               @"auth_method": @"challenge",
                                               @"auth_challenge": challenge,
                                               @"auth_response": [self generateChallengeResponse:challenge user:self.currentUser],
-                                              @"expiration": @"short",
+                                              @"expiration": @"long",
                                               @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
                                               @"ver": @"1"
                                               };
@@ -148,7 +148,7 @@
                     NSString* success = [result objectForKey:@"success"];
                     if ([success isEqualToString:@"OK"]) {
                         BCHDWSession* session = [BCHDWSession new];
-                        session.expiry = [now dateByAddingHours:22]; // "short" expiration is good for 24 hours. Let's be conservative.
+                        session.expiry = [now dateByAddingDays:27];
                         session.sessionId = [result objectForKey:@"ljsession"];
                         self.session = session;
                         callback(nil, session.sessionId);
@@ -245,7 +245,7 @@
         
         NSDictionary* result = [self postHttpRequest:parameters];
         NSLog(@"Result is %@", result);
-        callback(nil, [BCHDWEntry parseMap:result user:user.username]);
+        callback(nil, [BCHDWEntryOld parseMap:result user:user.username]);
         
     } else {
         callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
