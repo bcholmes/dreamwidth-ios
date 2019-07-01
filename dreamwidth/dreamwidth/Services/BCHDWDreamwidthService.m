@@ -29,11 +29,8 @@
 @property (nonatomic, strong) DreamwidthApi* api;
 @property (nonatomic, strong) BCHDWPersistenceService* persistenceService;
 @property (nonnull, nonatomic, strong) AFHTTPSessionManager* htmlManager;
-@property (nonnull, nonatomic, strong) AFHTTPSessionManager* pageManager;
-@property (nonnull, strong) NSMutableDictionary* listCookies;
-@property (nonnull, strong) NSMutableDictionary* pageCookies;
 @property (nonnull, strong) NSDateFormatter* dateFormatter;
-
+@property (nonatomic, strong, nullable) dispatch_queue_t pageQueue;
 @end
 
 @implementation BCHDWDreamwidthService
@@ -47,19 +44,13 @@
         self.dateFormatter.dateFormat = @"yyyy-MM-dd hh:mm a";
         self.dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
         
-        self.listCookies = [NSMutableDictionary new];
-        self.pageCookies = [NSMutableDictionary new];
+        self.pageQueue = dispatch_queue_create("org.ayizan.dreamballoon.page", DISPATCH_QUEUE_SERIAL);
+
         self.htmlManager = [AFHTTPSessionManager manager];
         self.htmlManager.requestSerializer = [AFHTTPRequestSerializer serializer];
         [self.htmlManager.requestSerializer setValue:@"application/x-www-form-urlencoded; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
         self.htmlManager.responseSerializer = [AFHTTPResponseSerializer serializer];
         self.htmlManager.completionQueue = dispatch_queue_create("org.ayizan.dreamballoon.html", DISPATCH_QUEUE_SERIAL);
-
-        self.pageManager = [AFHTTPSessionManager manager];
-        self.pageManager.requestSerializer = [AFHTTPRequestSerializer serializer];
-        [self.pageManager.requestSerializer setValue:@"application/x-www-form-urlencoded; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
-        self.pageManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        self.pageManager.completionQueue = dispatch_queue_create("org.ayizan.dreamballoon.page", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -98,35 +89,18 @@
         loggedIn = [session substringWithRange:NSMakeRange(first.location + 1, last.location - first.location - 1)];
     }
     
-    [self.listCookies removeAllObjects];
-    [self.listCookies setObject:session forKey:@"ljmastersession"];
-    [self.listCookies setObject:session forKey:@"ljloggedin"];
-
-    [self.htmlManager.requestSerializer setValue:[self cookiesAsHeader:self.listCookies]  forHTTPHeaderField:@"Cookie"];
-}
-
--(void) savePageCookies:(NSURLResponse*) response {
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) response;
-    NSString* cookieHeader = httpResponse.allHeaderFields[@"Set-Cookie"];
-    if (cookieHeader != nil) {
-        if ([cookieHeader rangeOfString:@";"].location != NSNotFound) {
-            cookieHeader = [cookieHeader substringToIndex:[cookieHeader rangeOfString:@";"].location];
-        }
-
-        NSRange range = [cookieHeader rangeOfString:@"="];
-        if (range.location != NSNotFound) {
-            NSString* name = [cookieHeader substringToIndex:range.location];
-            NSString* value = [cookieHeader substringFromIndex:range.location + 1];
-            [self.pageCookies setObject:[value stringByRemovingPercentEncoding] forKey:name];
-            [self.pageManager.requestSerializer setValue:[self cookiesAsHeader:self.pageCookies]  forHTTPHeaderField:@"Cookie"];
-        }
-    }
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:[NSHTTPCookie cookieWithProperties:@{NSHTTPCookieDomain: @"www.dreamwidth.org", NSHTTPCookiePath: @"/", NSHTTPCookieName: @"ljmastersession", NSHTTPCookieValue: session }]];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:[NSHTTPCookie cookieWithProperties:@{NSHTTPCookieDomain: @".dreamwidth.org", NSHTTPCookiePath: @"/", NSHTTPCookieName: @"ljloggedin", NSHTTPCookieValue: loggedIn }]];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:[NSHTTPCookie cookieWithProperties:@{NSHTTPCookieDomain: @".dreamwidth.org", NSHTTPCookiePath: @"/", NSHTTPCookieName: @"BMLschemepref", NSHTTPCookieValue: @"tropo-red" }]];
 }
 
 - (void) fetchReadingPageLight:(NSUInteger) skip friends:(NSMutableDictionary*) friendSet {
     [self.htmlManager GET:[NSString stringWithFormat:@"https://www.dreamwidth.org/mobile/read?skip=%lu", skip] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
-        [self savePageCookies:task.response];
 
+        for (NSHTTPCookie* cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
+            NSLog(@"Cookie: %@ -> %@ (%@)", cookie.name, cookie.value, cookie.domain);
+        }
+        
         [self findAllFriends:(NSData*) responseObject friends:friendSet];
         
         if (skip == 0) {
@@ -160,63 +134,67 @@
 }
 
 -(void) fetchEntry:(BCHDWEntryHandle*) entryHandle {
-    [self.pageManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryHandle.url] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
+    [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryHandle.url] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
-        NSLog(@"HTML >>>> %@", [[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]);
         HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
         HTMLDocument* document = [parser parseDocument];
         
-        BCHDWEntry* entry = [self.persistenceService entryByUrl:entryHandle.url];
-        [entry.managedObjectContext performBlock:^{
-            entry.subject = entryHandle.text;
-            HTMLElement* avatarAnchor = [document querySelector:@".userpic img"];
-            entry.avatarUrl = avatarAnchor.attributes[@"src"];
-            entry.author = [document querySelector:@".poster-info .ljuser"].textContent;
+        NSString* author = [document querySelector:@".poster-info .ljuser"].textContent;
+        if (author != nil && author.length > 0) {
+            BCHDWEntry* entry = [self.persistenceService entryByUrl:entryHandle.url];
+            [entry.managedObjectContext performBlock:^{
+                entry.subject = [document querySelector:@".entry-title"].textContent;
+                HTMLElement* avatarAnchor = [document querySelector:@".userpic img"];
+                entry.avatarUrl = avatarAnchor.attributes[@"src"];
+                entry.author = author;
 
-            NSLog(@"entry author: %@, avatarUrl: %@", entry.author, entry.avatarUrl);
-            
-            NSArray* comments = [document querySelectorAll:@".comment-thread"];
-            NSUInteger count = 0;
-            for (HTMLElement* comment in comments) {
-                NSString* commentId = [comment querySelector:@".dwexpcomment"].attributes[@"id"];
-                if (commentId != nil && [commentId rangeOfString:@"cmt"].location == 0) {
-                    commentId = [commentId substringFromIndex:3];
-                }
+                NSLog(@"entry author: %@, avatarUrl: %@", entry.author, entry.avatarUrl);
                 
-                NSString* author = [comment querySelector:@".ljuser"].textContent;
-                NSLog(@"Comment -> %@, Author -> %@",  commentId, author);
-                BCHDWComment* commentRecord = [self.persistenceService commentById:commentId author:author];
-                commentRecord.entry = entry;
-                
-                NSString* depth = comment.attributes[@"class"];
-                NSRange depthRange = [depth rangeOfString:@"comment-depth-"];
-                if (depth != nil && depthRange.location != NSNotFound) {
-                    depth = [depth substringFromIndex:depthRange.location + depthRange.length];
-                }
-                commentRecord.depth = [NSNumber numberWithInteger:[depth integerValue]];
-                
-                NSString* date = [comment querySelector:@".comment-date-text"].textContent;
-                if ([date rangeOfString:@" (local)"].location != NSNotFound) {
-                    date = [date substringToIndex:[date rangeOfString:@" (local)"].location];
-                }
-                commentRecord.creationDate = [self.dateFormatter dateFromString:date];
+                NSArray* comments = [document querySelectorAll:@".comment-thread"];
+                NSUInteger count = 0;
+                for (HTMLElement* comment in comments) {
+                    NSString* commentId = [comment querySelector:@".dwexpcomment"].attributes[@"id"];
+                    if (commentId != nil && [commentId rangeOfString:@"cmt"].location == 0) {
+                        commentId = [commentId substringFromIndex:3];
+                    }
+                    
+                    NSString* author = [comment querySelector:@".ljuser"].textContent;
+                    NSLog(@"Comment -> %@, Author -> %@",  commentId, author);
+                    BCHDWComment* commentRecord = [self.persistenceService commentById:commentId author:author];
+                    commentRecord.entry = entry;
+                    
+                    NSString* depth = comment.attributes[@"class"];
+                    NSRange depthRange = [depth rangeOfString:@"comment-depth-"];
+                    if (depth != nil && depthRange.location != NSNotFound) {
+                        depth = [depth substringFromIndex:depthRange.location + depthRange.length];
+                    }
+                    commentRecord.depth = [NSNumber numberWithInteger:[depth integerValue]];
+                    
+                    NSString* date = [comment querySelector:@".comment-date-text"].textContent;
+                    if ([date rangeOfString:@" (local)"].location != NSNotFound) {
+                        date = [date substringToIndex:[date rangeOfString:@" (local)"].location];
+                    }
+                    commentRecord.creationDate = [self.dateFormatter dateFromString:date];
 
-                HTMLElement* title = [comment querySelector:@".comment-title span"];
-                NSString* titleClass = title.attributes[@"class"];
-                if ([titleClass rangeOfString:@"invisible"].location == NSNotFound) {
-                    commentRecord.subject = title.textContent;
+                    HTMLElement* title = [comment querySelector:@".comment-title span"];
+                    NSString* titleClass = title.attributes[@"class"];
+                    if ([titleClass rangeOfString:@"invisible"].location == NSNotFound) {
+                        commentRecord.subject = title.textContent;
+                    }
+                    
+                    // BCH: - this is wrong if there's any formatting, but let's just stick with it for now
+                    commentRecord.commentText = [comment querySelector:@".comment-content"].textContent;
+                    
+                    count++;
                 }
                 
-                // BCH: - this is wrong if there's any formatting, but let's just stick with it for now
-                commentRecord.commentText = [comment querySelector:@".comment-content"].textContent;
+                entry.numberOfComments = [NSNumber numberWithUnsignedInteger:count];
                 
-                count++;
-            }
-            entry.numberOfComments = [NSNumber numberWithUnsignedInteger:count];
-            
-            [entry.managedObjectContext save:nil];
-        }];
-        
+                [entry.managedObjectContext save:nil];
+            }];
+        } else {
+            NSLog(@"HTML >>>> %@", [[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]);
+        }
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"fetch entry: %@", error);
     }];

@@ -16,11 +16,11 @@
 #import "BCHDWEntryOld.h"
 #import "UIViewController+Menu.h"
 
-@interface BCHDWEntryListViewController ()<UITableViewDelegate, UITableViewDataSource>
+@interface BCHDWEntryListViewController ()<UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UITableView* tableView;
 
-@property (nonatomic, strong) NSArray* entries;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
 @end
 
@@ -40,6 +40,7 @@
     } else {
         [service addObserver:self forKeyPath:@"currentUser" options:NSKeyValueObservingOptionNew context:nil];
     }
+    [self queryData:[BCHDWAppDelegate instance].managedObjectContext];
 }
 
 -(void) viewDidAppear:(BOOL)animated {
@@ -69,9 +70,6 @@
                                       otherButtonTitles:nil] show];
                 } else {
                     NSLog(@"entries found");
-                    self.entries = events;
-                    [self.tableView reloadData];
-
                     [service fetchRecentReadingPageActivity];
                 }
             });
@@ -94,30 +92,48 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
-    if (self.entries == nil) {
-        return 0;
-    } else {
-        return self.entries.count;
-    }
+    return self.fetchedResultsController.fetchedObjects.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     BCHDWEntryTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"entryCell"];
-    BCHDWEntryOld* entry = self.entries[indexPath.row];
+    BCHDWEntry* entry = self.fetchedResultsController.fetchedObjects[indexPath.row];
     cell.subjectLabel.text = entry.subject;
-    cell.posterLabel.text = entry.poster;
+    cell.posterLabel.text = entry.author;
 
-    if (entry.pictureKeyword != nil) {
-        BCHDWUser* user = [BCHDWAppDelegate instance].dreamwidthApi.currentUser;
-        BCHDWAvatar* avatar = [user avatarByKeyword:entry.pictureKeyword];
-        if (avatar != nil) {
-            [cell.avatarImageView sd_setImageWithURL:[NSURL URLWithString:avatar.url] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-        }
+    if (entry.avatarUrl != nil) {
+        [cell.avatarImageView sd_setImageWithURL:[NSURL URLWithString:entry.avatarUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     } else {
         cell.avatarImageView.image = nil;
     }
     
     return cell;
+}
+
+- (void) queryData:(NSManagedObjectContext*) managedObjectContext {
+    
+    // Set up the fetched results controller if needed.
+    if (self.fetchedResultsController == nil) {
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:managedObjectContext];
+        
+        NSSortDescriptor *sortDescriptor1 = [[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:YES];
+        fetchRequest.sortDescriptors = @[ sortDescriptor1 ];//, sortDescriptor2 ];
+        
+        
+        NSFetchedResultsController* aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        aFetchedResultsController.delegate = self;
+        self.fetchedResultsController = aFetchedResultsController;
+        
+        NSError* error;
+        if (![self.fetchedResultsController performFetch:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, error.userInfo);
+        }
+    }
+}
+
+- (void) controllerDidChangeContent:(NSFetchedResultsController*) controller {
+    [self.tableView reloadData];
 }
 
 @end
