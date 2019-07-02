@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6302C73D22CB8A9200346552 /* BCHDWEntryDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */; };
+		6302C74022CB8E3500346552 /* BCHDWMetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */; };
 		631FA59422C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59222C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld */; };
 		631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59622C8D09C00FA83C8 /* BCHDWComment.m */; };
 		631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59922C8D18600FA83C8 /* BCHDWPersistenceService.m */; };
@@ -53,6 +55,10 @@
 /* Begin PBXFileReference section */
 		49AD58356687206523B0ECAB /* Pods-dreamwidth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dreamwidth.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth.debug.xcconfig"; sourceTree = "<group>"; };
 		51BFDFAC6C72A146B79155E1 /* Pods-dreamwidth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dreamwidth.release.xcconfig"; path = "../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth.release.xcconfig"; sourceTree = "<group>"; };
+		6302C73B22CB8A9200346552 /* BCHDWEntryDetailController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryDetailController.h; sourceTree = "<group>"; };
+		6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntryDetailController.m; sourceTree = "<group>"; };
+		6302C73E22CB8E3500346552 /* BCHDWMetaDataTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWMetaDataTableViewCell.h; sourceTree = "<group>"; };
+		6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWMetaDataTableViewCell.m; sourceTree = "<group>"; };
 		631FA59322C7AEF400FA83C8 /* Dreamwidth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Dreamwidth.xcdatamodel; sourceTree = "<group>"; };
 		631FA59522C8D09C00FA83C8 /* BCHDWComment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWComment.h; sourceTree = "<group>"; };
 		631FA59622C8D09C00FA83C8 /* BCHDWComment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWComment.m; sourceTree = "<group>"; };
@@ -197,6 +203,10 @@
 				6332FC131E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m */,
 				6332FC0F1E15AB4100E11A49 /* BCHDWUserTableViewCell.h */,
 				6332FC101E15AB4100E11A49 /* BCHDWUserTableViewCell.m */,
+				6302C73B22CB8A9200346552 /* BCHDWEntryDetailController.h */,
+				6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */,
+				6302C73E22CB8E3500346552 /* BCHDWMetaDataTableViewCell.h */,
+				6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -474,6 +484,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6302C73D22CB8A9200346552 /* BCHDWEntryDetailController.m in Sources */,
 				6332FC201E16B2A100E11A49 /* BCHDWAvatarTableViewController.m in Sources */,
 				6332FC0E1E15A8DF00E11A49 /* BCHDWDreamwidthService.m in Sources */,
 				6332FC071E1595B200E11A49 /* BCHDWMenuOption.m in Sources */,
@@ -496,6 +507,7 @@
 				6332FC0A1E159A8100E11A49 /* BCHDWTheme.m in Sources */,
 				631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */,
 				631FA59D22C8EC3800FA83C8 /* BCHDWEntryOld.m in Sources */,
+				6302C74022CB8E3500346552 /* BCHDWMetaDataTableViewCell.m in Sources */,
 				631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */,
 				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
 				6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */,

@@ -13,7 +13,8 @@
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWEntryTableViewCell.h"
-#import "BCHDWEntryOld.h"
+#import "BCHDWEntryDetailController.h"
+#import "BCHDWLoginViewController.h"
 #import "BCHDWTheme.h"
 #import "UIViewController+Menu.h"
 
@@ -21,7 +22,8 @@
 
 @property (nonatomic, weak) IBOutlet UITableView* tableView;
 
-@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
+@property (nonatomic, strong) BCHDWEntry* selectedEntry;
 
 @end
 
@@ -51,11 +53,16 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     UIViewController* popup = segue.destinationViewController;
- 
-    popup.providesPresentationContextTransitionStyle = YES;
-    popup.definesPresentationContext = YES;
     
-    [popup setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    if ([popup isKindOfClass:[BCHDWLoginViewController class]]) {
+ 
+        popup.providesPresentationContextTransitionStyle = YES;
+        popup.definesPresentationContext = YES;
+        
+        [popup setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    } else if ([popup isKindOfClass:[BCHDWEntryDetailController class]]) {
+        ((BCHDWEntryDetailController*) popup).entry = self.selectedEntry;
+    }
 }
 
 #pragma mark - Table view data source
@@ -86,6 +93,13 @@
     
     return cell;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.selectedEntry = self.fetchedResultsController.fetchedObjects[indexPath.row];
+    [self performSegueWithIdentifier:@"detail" sender:nil];
+}
+
+#pragma mark - Core Data
 
 - (void) queryData:(NSManagedObjectContext*) managedObjectContext {
     

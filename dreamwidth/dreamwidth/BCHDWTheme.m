@@ -19,6 +19,8 @@
 
 @property (nonatomic, strong) UIColor* dreamwidthRed;
 @property (nonatomic, strong) UIColor* dreamwidthPink;
+@property (nonatomic, strong) UIColor* dreamBalloonBlue;
+@property (nonatomic, strong) UIColor* dreamBalloonLightBlue;
 
 @end
 
@@ -28,6 +30,8 @@
     if (self = [super init]) {
         self.dreamwidthRed = [UIColor colorWithHex:@"c5353c"];
         self.dreamwidthPink = [UIColor colorWithHex:@"ffdcd9"];
+        self.dreamBalloonBlue = [UIColor colorWithHex:@"5a8394"];
+        self.dreamBalloonLightBlue = [UIColor colorWithHex:@"abc1c9"];
         self.menuColor = self.dreamwidthRed;
         self.primaryColor = self.dreamwidthRed;
         self.loginScreenColor = self.dreamwidthPink;
@@ -100,7 +104,8 @@
 }
 
 -(void) applyTheme:(MDCTextInputControllerBase*) textInputController {
-    textInputController.errorColor = [UIColor colorWithHex:@"#D0021B"];
-    textInputController.activeColor = self.dreamwidthRed;
+    textInputController.errorColor = self.dreamwidthRed;
+    textInputController.activeColor = self.dreamBalloonBlue;
+    textInputController.floatingPlaceholderActiveColor = self.dreamBalloonLightBlue;
 }
 @end
