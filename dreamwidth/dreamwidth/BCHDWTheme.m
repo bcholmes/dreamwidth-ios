@@ -26,8 +26,8 @@
 
 -(id) init {
     if (self = [super init]) {
-        self.dreamwidthRed = [UIColor colorWithHex:@"C1272D"];
-        self.dreamwidthPink = [UIColor colorWithHex:@"FFEEED"];
+        self.dreamwidthRed = [UIColor colorWithHex:@"c5353c"];
+        self.dreamwidthPink = [UIColor colorWithHex:@"ffdcd9"];
         self.menuColor = self.dreamwidthRed;
         self.primaryColor = self.dreamwidthRed;
         self.loginScreenColor = self.dreamwidthPink;
@@ -61,7 +61,7 @@
 
 -(void) configureSimpleCell {
     BCHDWSimpleTableViewCell* proxy = [BCHDWSimpleTableViewCell appearance];
-    proxy.selectedBackgroundColor = [UIColor colorWithHex:@"9F000A"];
+    proxy.selectedBackgroundColor = [UIColor clearColor];
 }
 
 -(void) configureProfileMainCell {

@@ -14,6 +14,7 @@
 #import "BCHDWAppDelegate.h"
 #import "BCHDWEntryTableViewCell.h"
 #import "BCHDWEntryOld.h"
+#import "BCHDWTheme.h"
 #import "UIViewController+Menu.h"
 
 @interface BCHDWEntryListViewController ()<UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
@@ -31,15 +32,10 @@
     
     [self initializeMenuButton];
 
+    self.view.backgroundColor = [BCHDWTheme instance].loginScreenColor;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
 
-    BCHDWDreamwidthService* service = [BCHDWAppDelegate instance].dreamwidthService;
-    if ([service isLoggedIn]) {
-        [self loadEntries];
-    } else {
-        [service addObserver:self forKeyPath:@"currentUser" options:NSKeyValueObservingOptionNew context:nil];
-    }
     [self queryData:[BCHDWAppDelegate instance].managedObjectContext];
 }
 
@@ -50,33 +46,6 @@
         [self performSegueWithIdentifier:@"login" sender:nil];
     }
 }
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    [self loadEntries];
-}
-
--(void) loadEntries {
-    BCHDWDreamwidthService* service = [BCHDWAppDelegate instance].dreamwidthService;
-    [SVProgressHUD show];
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        [service getEvents:^(NSError* error, NSArray* events) {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [SVProgressHUD dismiss];
-                if (error != nil) {
-                    [[[UIAlertView alloc] initWithTitle:@"Error occurred"
-                                                message:@"There was a problem communicating with Dreamwidth"
-                                               delegate:nil
-                                      cancelButtonTitle:@"OK"
-                                      otherButtonTitles:nil] show];
-                } else {
-                    NSLog(@"entries found");
-                    [service fetchRecentReadingPageActivity];
-                }
-            });
-        }];
-    });
-}
-
 
 #pragma mark - Navigation
 

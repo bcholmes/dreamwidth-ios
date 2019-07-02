@@ -12,16 +12,16 @@ most recent first.
 [some progress](https://github.com/dreamwidth/dw-free/pull/2265)
 on that front, but a solution is probably a few months off, still.
 
-In the meantime, this app uses the so-called "flat API" for login and fetching the
-user's entries supplemented by HTML screen-scraping to get reading lists, entry content
-and comments.
+In the meantime, this app uses the so-called ["flat API"](https://www.livejournal.com/doc/server/ljp.csp.flat.protocol.html)
+for login and fetching the user's entries supplemented by HTML screen-scraping
+to get reading lists, entry content and comments.
 
 ## Items to Be Completed
 
 1. ~~Reverse-engineer Dreamwidth's cookie-based session auth~~ DONE! The flat API
 allows me to get a session cookie and use that for some requests, turning that session
 id into the necessary cookies is pretty terrible.
-2. ~~Call the Mobile Reading Page and get the recent Reading List~~ DONE!
+2. ~~Call the [Mobile Reading Page](https://www.dreamwidth.org/mobile/read) and get the recent Reading List~~ DONE!
 3. Fetch each page as format=light and scrape its content. IN PROGRESS!
 4. Show a fuller entry page, with comments
 5. Render more complex entry HTML

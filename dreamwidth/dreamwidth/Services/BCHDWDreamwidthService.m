@@ -11,6 +11,9 @@
 #import <AFNetworking/AFNetworking.h>
 #import <UYLPasswordManager/UYLPasswordManager.h>
 #import <HTMLKit/HTMLKit.h>
+#import <NSDate-Additions/NSDate+Additions.h>
+
+#import "BCHDWEntryOld.h"
 
 @interface BCHDWEntryHandle : NSObject
 
@@ -125,6 +128,7 @@
         if (author != nil && author.length > 0) {
             BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
             [entry.managedObjectContext performBlock:^{
+                NSDate* newestComment = nil;
                 entry.subject = [document querySelector:@".entry-title"].textContent;
                 HTMLElement* avatarAnchor = [document querySelector:@".userpic img"];
                 entry.avatarUrl = avatarAnchor.attributes[@"src"];
@@ -132,7 +136,9 @@
 
                 NSString* entryDate = [document querySelector:@".poster-info .datetime"].textContent;
                 entry.creationDate = [self.dateFormatter dateFromString:entryDate];
-                NSLog(@"Creation date: %@", entry.creationDate);
+                if (entry.updateDate == nil) {
+                    entry.updateDate = entry.creationDate;
+                }
                 
                 NSArray* comments = [document querySelectorAll:@".comment-thread"];
                 NSUInteger count = 0;
@@ -168,10 +174,17 @@
                     // BCH: - this is wrong if there's any formatting, but let's just stick with it for now
                     commentRecord.commentText = [comment querySelector:@".comment-content"].textContent;
                     
+                    if (newestComment == nil || [newestComment isEarlierThanDate:commentRecord.creationDate]) {
+                        newestComment = commentRecord.creationDate;
+                    }
+                    
                     count++;
                 }
                 
                 entry.numberOfComments = [NSNumber numberWithUnsignedInteger:count];
+                if (newestComment != nil && [newestComment isLaterThanDate:entry.updateDate]) {
+                    entry.updateDate = newestComment;
+                }
                 
                 [entry.managedObjectContext save:nil];
             }];
@@ -195,16 +208,18 @@
 }
 
 -(void) loginUsingStoredCredentials:(void (^)(NSError*, BCHDWUser*))callback {
-    UYLPasswordManager* manager = [UYLPasswordManager sharedInstance];
-    NSString* userid = [manager keyForIdentifier:@"userid"];
-    NSString* password = [manager keyForIdentifier:@"password"];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        UYLPasswordManager* manager = [UYLPasswordManager sharedInstance];
+        NSString* userid = [manager keyForIdentifier:@"userid"];
+        NSString* password = [manager keyForIdentifier:@"password"];
 
-    [self.api loginWithUser:userid password:password andCompletion:^(NSError* error, BCHDWUser* user) {
-        if (error == nil) {
-            self.currentUser = user;
-        }
-        callback(error, user);
-    }];
+        [self.api loginWithUser:userid password:password andCompletion:^(NSError* error, BCHDWUser* user) {
+            if (error == nil) {
+                self.currentUser = user;
+            }
+            callback(error, user);
+        }];
+    });
 }
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError*, BCHDWUser*))callback {
@@ -214,6 +229,8 @@
             [manager registerKey:userid forIdentifier:@"userid"];
             [manager registerKey:password forIdentifier:@"password"];
             self.currentUser = user;
+            
+            [self synchWithServer];
         }
         callback(error, user);
     }];
@@ -236,4 +253,44 @@
         [self.api getEvents:self.currentUser completion:callback];
     }
 }
+
+-(void) synchWithServer {
+    if ([self isLoggedIn] && self.currentUser == nil) {
+        [self loginUsingStoredCredentials:^(NSError* error, BCHDWUser* user) {
+            if (error == nil) {
+                NSLog(@"fetching user's events");
+                [self.api getEvents:self.currentUser completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+                    if (error) {
+                        NSLog(@"error: %@", error);
+                    } else {
+                        [self processEntries:entries];
+                    }
+                }];
+                NSLog(@"fetching reading page");
+                [self fetchRecentReadingPageActivity];
+            }
+        }];
+    } else if (self.currentUser != nil) {
+        [self.api getEvents:self.currentUser completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+            if (error) {
+                NSLog(@"error: %@", error);
+            } else {
+                [self processEntries:entries];
+            }
+        }];
+        [self fetchRecentReadingPageActivity];
+    }
+}
+
+-(void) processEntries:(NSArray*) entries {
+    [self.api performFunctionWithWebSession:^(NSError * _Nullable error, NSString * _Nullable session) {
+        if (error == nil) {
+            [self setAuthenticationCookie:session];
+            for (BCHDWEntryOld* entry in entries) {
+                [self fetchEntry:entry.url];
+            }
+        }
+    }];
+}
+
 @end

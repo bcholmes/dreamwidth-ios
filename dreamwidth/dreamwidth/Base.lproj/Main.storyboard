@@ -364,9 +364,9 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="150" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="q4a-7c-rec">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="entryCell" rowHeight="150" id="4za-ZC-j2o" customClass="BCHDWEntryTableViewCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="entryCell" rowHeight="150" id="4za-ZC-j2o" customClass="BCHDWEntryTableViewCell">
                                         <rect key="frame" x="0.0" y="28" width="375" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4za-ZC-j2o" id="W42-ok-2x1">
@@ -396,7 +396,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hEI-Xp-3GE">
-                                                            <rect key="frame" x="32.5" y="90" width="31" height="14.5"/>
+                                                            <rect key="frame" x="8" y="90" width="80" height="14.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
@@ -416,13 +416,15 @@
                                                         <constraint firstItem="ty9-kP-Dki" firstAttribute="top" secondItem="Eol-f8-bDS" secondAttribute="top" constant="8" id="NNl-10-LZ9"/>
                                                         <constraint firstAttribute="bottom" secondItem="yru-Wg-Swl" secondAttribute="bottom" constant="8" id="REE-8n-iEH"/>
                                                         <constraint firstItem="hEI-Xp-3GE" firstAttribute="top" secondItem="MOK-yj-VHW" secondAttribute="bottom" constant="2" id="bAy-G1-rvk"/>
+                                                        <constraint firstItem="hEI-Xp-3GE" firstAttribute="trailing" secondItem="MOK-yj-VHW" secondAttribute="trailing" id="eCX-AB-VUt"/>
                                                         <constraint firstAttribute="trailing" secondItem="yru-Wg-Swl" secondAttribute="trailing" constant="8" id="f4N-Cr-K9A"/>
+                                                        <constraint firstItem="hEI-Xp-3GE" firstAttribute="leading" secondItem="MOK-yj-VHW" secondAttribute="leading" id="xmp-Dn-Fki"/>
                                                         <constraint firstItem="hEI-Xp-3GE" firstAttribute="centerX" secondItem="MOK-yj-VHW" secondAttribute="centerX" id="ydU-TH-Pih"/>
                                                         <constraint firstItem="MOK-yj-VHW" firstAttribute="top" secondItem="Eol-f8-bDS" secondAttribute="top" constant="8" id="zOn-zW-xgP"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.90578025579452515" green="0.90593224763870239" blue="0.90576022863388062" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="Eol-f8-bDS" secondAttribute="bottom" constant="10" id="10f-zv-w7l"/>
                                                 <constraint firstItem="Eol-f8-bDS" firstAttribute="leading" secondItem="W42-ok-2x1" secondAttribute="leading" constant="15" id="Q0i-1c-Uhb"/>
@@ -430,6 +432,7 @@
                                                 <constraint firstItem="Eol-f8-bDS" firstAttribute="top" secondItem="W42-ok-2x1" secondAttribute="top" constant="10" id="mtb-W4-ZrN"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="avatarImageView" destination="MOK-yj-VHW" id="SeA-Ey-xKZ"/>
                                             <outlet property="cardView" destination="Eol-f8-bDS" id="8tR-G0-Slo"/>
@@ -441,7 +444,6 @@
                                 </prototypes>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="q4a-7c-rec" firstAttribute="top" secondItem="B6j-PX-62f" secondAttribute="top" id="FWa-k9-Icv"/>
                             <constraint firstAttribute="bottom" secondItem="q4a-7c-rec" secondAttribute="bottom" id="HhL-rr-wjP"/>

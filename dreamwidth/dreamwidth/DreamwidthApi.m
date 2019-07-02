@@ -228,28 +228,31 @@
 }
 
 -(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback {
-    NSDictionary* challengeMap = [self getChallengeMap];
-    if (challengeMap != nil) {
-        NSString* challenge = [challengeMap objectForKey:@"challenge"];
-        
-        NSDictionary* parameters = @{ @"mode": @"getevents",
-                                      @"user": user.username,
-                                      @"auth_method": @"challenge",
-                                      @"auth_challenge": challenge,
-                                      @"auth_response": [self generateChallengeResponse:challenge user:user],
-                                      @"selecttype": @"lastn",
-                                      @"howmany": @"20",
-                                      @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
-                                      @"ver": @"1"
-                                      };
-        
-        NSDictionary* result = [self postHttpRequest:parameters];
-        NSLog(@"Result is %@", result);
-        callback(nil, [BCHDWEntryOld parseMap:result user:user.username]);
-        
-    } else {
-        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
-    }
+    [self performWithChallenge:^(NSError* error, NSString* challenge) {
+        if (error == nil) {
+            NSDictionary* parameters = @{ @"mode": @"getevents",
+                                          @"user": user.username,
+                                          @"auth_method": @"challenge",
+                                          @"auth_challenge": challenge,
+                                          @"auth_response": [self generateChallengeResponse:challenge user:user],
+                                          @"selecttype": @"lastn",
+                                          @"howmany": @"20",
+                                          @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
+                                          @"ver": @"1"
+                                          };
+            
+            [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                
+                NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
+                callback(nil, [BCHDWEntryOld parseMap:result user:user.username]);
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"sessiongenerate failed."}], nil);
+            }];
+            
+        } else {
+            callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+        }
+    }];
 }
 
 -(void) getReadingList:(void (^)(NSError* error, NSArray* entries)) callback {
