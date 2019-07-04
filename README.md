@@ -23,17 +23,20 @@ allows me to get a session cookie and use that for some requests, turning that s
 id into the necessary cookies is pretty terrible.
 2. ~~Call the [Mobile Reading Page](https://www.dreamwidth.org/mobile/read) and get the recent Reading List~~ DONE!
 3. Fetch each page as format=light and scrape its content. IN PROGRESS!
-4. Show a fuller entry page, with comments
+4. Show a fuller entry page, with comments. 90% COMPLETE
 5. Render more complex entry HTML
 6. Compose a new entry
 7. Compose a new comment
 8. Better account settings management
+9. Notifications
+10. Refresh content on a reasonable schedule.
+11. Apple will almost-certainly insist that I exclude all of the NSFW content. I have a plan for this; I just need to fiddle with the details.
 
 ## Screens
 
 Here are some screenshots of work-in-progress:
 
-![entries](etc/screenshots/entries.png "Entries") ![menu](etc/screenshots/menu.png "Menu") ![profile](etc/screenshots/profile.png "Profile")
+![entries](etc/screenshots/entries.png "Entries") ![menu](etc/screenshots/menu.png "Menu") ![profile](etc/screenshots/profile.png "Profile") ![comments](etc/screenshots/comments.png "Comments")
 
 ## Building the Code
 
