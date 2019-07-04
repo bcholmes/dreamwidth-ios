@@ -69,6 +69,7 @@
         BCHDWCommentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"comment" forIndexPath:indexPath];
         BCHDWComment* comment = self.fetchedResultsController.fetchedObjects[indexPath.row];
         
+        NSLog(@"Subject: %@", comment.subject);
         if (comment.subject == nil || comment.subject.length == 0) {
             cell.subjectLabel.hidden = YES;
         } else {

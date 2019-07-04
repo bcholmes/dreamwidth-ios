@@ -172,9 +172,9 @@
         }
         commentRecord.creationDate = [self.dateFormatter dateFromString:date];
         
-        HTMLElement* title = [comment querySelector:@".comment-title span"];
-        NSString* titleClass = title.attributes[@"class"];
-        if ([titleClass rangeOfString:@"invisible"].location == NSNotFound) {
+        HTMLElement* title = [comment querySelector:@".comment-title"];
+        NSString* titleClass = [title querySelector:@"span"].attributes[@"class"];
+        if (titleClass == nil || [titleClass rangeOfString:@"invisible"].location == NSNotFound) {
             commentRecord.subject = title.textContent;
         }
         
