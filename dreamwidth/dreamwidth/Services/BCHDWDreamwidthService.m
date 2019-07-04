@@ -33,6 +33,7 @@
 @property (nonatomic, strong) BCHDWPersistenceService* persistenceService;
 @property (nonnull, nonatomic, strong) AFHTTPSessionManager* htmlManager;
 @property (nonnull, strong) NSDateFormatter* dateFormatter;
+@property (nonnull, strong) NSDate* lastSyncDate;
 @end
 
 @implementation BCHDWDreamwidthService
