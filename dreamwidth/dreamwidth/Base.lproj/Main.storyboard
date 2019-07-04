@@ -117,17 +117,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L4M-ik-dsL" customClass="MDCTextField">
-                                <rect key="frame" x="16" y="100" width="343" height="30"/>
+                                <rect key="frame" x="48" y="100" width="279" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oUe-dt-4Jc" customClass="MDCTextField">
-                                <rect key="frame" x="16" y="138" width="343" height="30"/>
+                                <rect key="frame" x="48" y="138" width="279" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gar-jY-bIU" customClass="MDCFlatButton">
-                                <rect key="frame" x="16" y="200" width="343" height="42"/>
+                                <rect key="frame" x="32" y="200" width="311" height="42"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="42" id="o7K-pT-69R"/>
                                 </constraints>
@@ -136,25 +136,32 @@
                                     <action selector="login:" destination="3Uv-Yq-2oK" eventType="primaryActionTriggered" id="tz7-fT-pJE"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-DS-dsI">
+                                <rect key="frame" x="331" y="139.5" width="27" height="27"/>
+                                <state key="normal" image="onepassword-login-button"/>
+                                <connections>
+                                    <action selector="findLoginFrom1Password:" destination="3Uv-Yq-2oK" eventType="touchUpInside" id="L0d-ho-67e"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Gar-jY-bIU" firstAttribute="top" secondItem="oUe-dt-4Jc" secondAttribute="bottom" constant="32" id="0c9-Cm-dbw"/>
-                            <constraint firstItem="L4M-ik-dsL" firstAttribute="leading" secondItem="eoY-QB-Tk7" secondAttribute="leadingMargin" id="HFR-er-7El"/>
-                            <constraint firstItem="Gar-jY-bIU" firstAttribute="leading" secondItem="eoY-QB-Tk7" secondAttribute="leadingMargin" id="LXe-8c-LF5"/>
+                            <constraint firstItem="L4M-ik-dsL" firstAttribute="leading" secondItem="eoY-QB-Tk7" secondAttribute="leadingMargin" constant="32" id="HFR-er-7El"/>
+                            <constraint firstItem="Gar-jY-bIU" firstAttribute="leading" secondItem="eoY-QB-Tk7" secondAttribute="leadingMargin" constant="16" id="LXe-8c-LF5"/>
+                            <constraint firstItem="edt-DS-dsI" firstAttribute="centerY" secondItem="oUe-dt-4Jc" secondAttribute="centerY" id="N3m-H8-ZMU"/>
                             <constraint firstItem="oUe-dt-4Jc" firstAttribute="top" secondItem="L4M-ik-dsL" secondAttribute="bottom" constant="8" id="NWF-DP-7nW"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="L4M-ik-dsL" secondAttribute="trailing" id="NmB-fy-sbf"/>
-                            <constraint firstItem="L4M-ik-dsL" firstAttribute="centerX" secondItem="eoY-QB-Tk7" secondAttribute="centerX" id="Pp0-yr-QiE"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Gar-jY-bIU" secondAttribute="trailing" id="XSA-hD-e0o"/>
-                            <constraint firstItem="oUe-dt-4Jc" firstAttribute="centerX" secondItem="eoY-QB-Tk7" secondAttribute="centerX" id="YMW-WX-gbD"/>
-                            <constraint firstItem="oUe-dt-4Jc" firstAttribute="leading" secondItem="eoY-QB-Tk7" secondAttribute="leadingMargin" id="ZpL-0c-07I"/>
-                            <constraint firstItem="Gar-jY-bIU" firstAttribute="centerX" secondItem="eoY-QB-Tk7" secondAttribute="centerX" id="cuv-Hf-kxa"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="oUe-dt-4Jc" secondAttribute="trailing" id="gCc-mG-aAS"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="L4M-ik-dsL" secondAttribute="trailing" constant="32" id="NmB-fy-sbf"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Gar-jY-bIU" secondAttribute="trailing" constant="16" id="XSA-hD-e0o"/>
+                            <constraint firstItem="oUe-dt-4Jc" firstAttribute="leading" secondItem="eoY-QB-Tk7" secondAttribute="leadingMargin" constant="32" id="ZpL-0c-07I"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="oUe-dt-4Jc" secondAttribute="trailing" constant="32" id="gCc-mG-aAS"/>
+                            <constraint firstItem="edt-DS-dsI" firstAttribute="leading" secondItem="oUe-dt-4Jc" secondAttribute="trailing" constant="4" id="oYs-wl-XWd"/>
                             <constraint firstItem="L4M-ik-dsL" firstAttribute="top" secondItem="KIO-cs-09l" secondAttribute="bottom" constant="80" id="yVO-vs-mpc"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="It6-tJ-b6R"/>
                     <connections>
+                        <outlet property="onePasswordButton" destination="edt-DS-dsI" id="M51-kg-R53"/>
                         <outlet property="passwordField" destination="oUe-dt-4Jc" id="Ibr-DT-vMP"/>
                         <outlet property="usernameField" destination="L4M-ik-dsL" id="5lN-CS-ggz"/>
                     </connections>
@@ -660,4 +667,7 @@
             <point key="canvasLocation" x="2129" y="31"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="onepassword-login-button" width="27" height="27"/>
+    </resources>
 </document>

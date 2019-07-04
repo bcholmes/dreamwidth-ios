@@ -27,5 +27,6 @@ target 'dreamwidth' do
   pod 'NSDate-Additions'
   pod 'UIColor-HexString'
   pod 'UYLPasswordManager', '~> 1.1'
+  pod '1PasswordExtension', '~> 1.8.5'
 
 end

@@ -14,6 +14,8 @@
 #import <MaterialComponents/MaterialTextFields.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 
+#import <1PasswordExtension/OnePasswordExtension.h>
+
 #import "BCHDWAppDelegate.h"
 #import "BCHDWTheme.h"
 
@@ -26,6 +28,7 @@
 @property (nonatomic, nullable, strong) MDCTextInputControllerUnderline* passwordFieldController;
 
 @property (nonatomic, nullable, weak) IBOutlet UIScrollView* scrollView;
+@property (nonatomic, nullable, weak) IBOutlet UIButton* onePasswordButton;
 
 @end
 
@@ -34,6 +37,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [BCHDWTheme instance].loginScreenColor;
+    
+    [self.onePasswordButton setHidden:![[OnePasswordExtension sharedExtension] isAppExtensionAvailable]];
     
     [self.usernameField addTarget:self action:@selector(login:) forControlEvents:UIControlEventEditingDidEndOnExit];
     [self.passwordField addTarget:self action:@selector(login:) forControlEvents:UIControlEventEditingDidEndOnExit];
@@ -80,6 +85,20 @@
     } else {
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     }
+}
+
+- (IBAction) findLoginFrom1Password:(id)sender {
+    [[OnePasswordExtension sharedExtension] findLoginForURLString:@"https://www.dreamwidth.org" forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
+        if (loginDictionary.count == 0) {
+            if (error.code != AppExtensionErrorCodeCancelledByUser) {
+                NSLog(@"Error invoking 1Password App Extension for find login: %@", error);
+            }
+            return;
+        }
+        
+        self.usernameField.text = loginDictionary[AppExtensionUsernameKey];
+        self.passwordField.text = loginDictionary[AppExtensionPasswordKey];
+    }];
 }
 
 /*
