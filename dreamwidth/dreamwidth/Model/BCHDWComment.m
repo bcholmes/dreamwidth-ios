@@ -10,6 +10,18 @@
 
 @implementation BCHDWComment
 
-@dynamic avatarUrl, commentId, commentText, author, creationDate, depth, replyToCommentId, subject, entry;
+@dynamic avatarUrl, commentId, commentText, author, creationDate, depth, replyToCommentId, subject, entry, orderKey;
+
+-(NSInteger) lastOrderPart {
+    if (self.orderKey != nil) {
+        if ([self.orderKey rangeOfString:@"."].location != NSNotFound) {
+            return [[self.orderKey substringFromIndex:[self.orderKey rangeOfString:@"." options:NSBackwardsSearch].location + 1] integerValue];
+        } else {
+            return [self.orderKey integerValue];
+        }
+    } else {
+        return 0;
+    }
+}
 
 @end

@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString* subject;
 @property (nonatomic, strong) NSDate* creationDate;
 @property (nonatomic, strong) BCHDWEntry* entry;
+@property (nonatomic, strong) NSString* orderKey;
+
+@property (nonatomic, readonly) NSInteger lastOrderPart;
 
 @end
 

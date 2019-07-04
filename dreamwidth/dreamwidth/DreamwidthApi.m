@@ -110,7 +110,6 @@
     if (data != nil) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSLog(@"http status code for request mode %@: %lu", [requestParameters objectForKey:@"mode"], (unsigned long)httpResponse.statusCode);
-        NSLog(@"http content type: %@", [httpResponse.allHeaderFields objectForKey:@"Content-Type"]);
         if (httpResponse.statusCode == 200) {
             
             return [self createResponseMap:data];
@@ -205,7 +204,6 @@
                                       };
         
         NSDictionary* result = [self postHttpRequest:parameters];
-        NSLog(@"Result is %@", result);
         NSString* success = [result objectForKey:@"success"];
         if ([success isEqualToString:@"OK"]) {
             BCHDWUser* user = [BCHDWUser parseMap:result];

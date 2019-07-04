@@ -9,10 +9,13 @@
 #import "BCHDWEntryDetailController.h"
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
+#import <CoreData/CoreData.h>
 
 #import "BCHDWMetaDataTableViewCell.h"
 
 @interface BCHDWEntryDetailController ()
+
+@property (nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 
 @end
 
@@ -21,6 +24,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 80;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     

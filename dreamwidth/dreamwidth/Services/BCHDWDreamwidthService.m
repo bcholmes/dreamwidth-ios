@@ -118,6 +118,82 @@
     return [NSArray arrayWithArray:result];
 }
 
+- (void) processComments:(HTMLDocument*) document entry:(BCHDWEntry*) entry {
+    NSMutableArray* depthList = [NSMutableArray new];
+    NSDate* newestComment = nil;
+    NSArray* comments = [document querySelectorAll:@".comment-thread"];
+    NSUInteger count = 0;
+    for (HTMLElement* comment in comments) {
+        NSString* commentId = [comment querySelector:@".dwexpcomment"].attributes[@"id"];
+        if (commentId != nil && [commentId rangeOfString:@"cmt"].location == 0) {
+            commentId = [commentId substringFromIndex:3];
+        }
+        
+        NSString* author = [comment querySelector:@".ljuser"].textContent;
+        BCHDWComment* commentRecord = [self.persistenceService commentById:commentId author:author];
+        commentRecord.entry = entry;
+        
+        NSString* depth = comment.attributes[@"class"];
+        NSRange depthRange = [depth rangeOfString:@"comment-depth-" options:NSBackwardsSearch];
+        if (depth != nil && depthRange.location != NSNotFound) {
+            depth = [depth substringFromIndex:depthRange.location + depthRange.length];
+        }
+        commentRecord.depth = [NSNumber numberWithInteger:[depth integerValue]];
+        NSInteger depthValue = [commentRecord.depth integerValue];
+        
+        if (depthValue == (depthList.count + 1)) {
+            if (depthValue > 1) {
+                BCHDWComment* parent = [depthList lastObject];
+                commentRecord.replyToCommentId = parent.commentId;
+                commentRecord.orderKey = [NSString stringWithFormat:@"%@.0001", parent.orderKey];
+            } else {
+                commentRecord.orderKey = @"0001";
+            }
+            [depthList addObject:commentRecord];
+        } else if (depthValue > 0 && depthValue <= depthList.count) {
+            BCHDWComment* peer = depthList[depthValue-1];
+            [depthList removeObjectsInRange:NSMakeRange(depthValue-1, depthList.count - depthValue + 1)];
+
+            if (depthValue > 1) {
+                BCHDWComment* parent = [depthList lastObject];
+                commentRecord.replyToCommentId = parent.commentId;
+                commentRecord.orderKey = [NSString stringWithFormat:@"%@.%04ld", parent.orderKey, peer.lastOrderPart + 1];
+            } else {
+                commentRecord.orderKey = [NSString stringWithFormat:@"%04ld", peer.lastOrderPart + 1];
+            }
+            [depthList addObject:commentRecord];
+        } else {
+            NSLog(@"Wrong depth: %ld, count = %lu", depthValue, depthList.count);
+        }
+        
+        NSString* date = [comment querySelector:@".comment-date-text"].textContent;
+        if ([date rangeOfString:@" (local)"].location != NSNotFound) {
+            date = [date substringToIndex:[date rangeOfString:@" (local)"].location];
+        }
+        commentRecord.creationDate = [self.dateFormatter dateFromString:date];
+        
+        HTMLElement* title = [comment querySelector:@".comment-title span"];
+        NSString* titleClass = title.attributes[@"class"];
+        if ([titleClass rangeOfString:@"invisible"].location == NSNotFound) {
+            commentRecord.subject = title.textContent;
+        }
+        
+        // BCH: - this is wrong if there's any formatting, but let's just stick with it for now
+        commentRecord.commentText = [comment querySelector:@".comment-content"].textContent;
+        
+        if (newestComment == nil || [newestComment isEarlierThanDate:commentRecord.creationDate]) {
+            newestComment = commentRecord.creationDate;
+        }
+        
+        count++;
+    }
+    
+    entry.numberOfComments = [NSNumber numberWithUnsignedInteger:count];
+    if (newestComment != nil && [newestComment isLaterThanDate:entry.updateDate]) {
+        entry.updateDate = newestComment;
+    }
+}
+
 -(void) fetchEntry:(NSString*) entryUrl {
     [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryUrl] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
@@ -128,7 +204,6 @@
         if (author != nil && author.length > 0) {
             BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
             [entry.managedObjectContext performBlock:^{
-                NSDate* newestComment = nil;
                 entry.subject = [document querySelector:@".entry-title"].textContent;
                 HTMLElement* avatarAnchor = [document querySelector:@".userpic img"];
                 entry.avatarUrl = avatarAnchor.attributes[@"src"];
@@ -140,51 +215,7 @@
                     entry.updateDate = entry.creationDate;
                 }
                 
-                NSArray* comments = [document querySelectorAll:@".comment-thread"];
-                NSUInteger count = 0;
-                for (HTMLElement* comment in comments) {
-                    NSString* commentId = [comment querySelector:@".dwexpcomment"].attributes[@"id"];
-                    if (commentId != nil && [commentId rangeOfString:@"cmt"].location == 0) {
-                        commentId = [commentId substringFromIndex:3];
-                    }
-                    
-                    NSString* author = [comment querySelector:@".ljuser"].textContent;
-                    BCHDWComment* commentRecord = [self.persistenceService commentById:commentId author:author];
-                    commentRecord.entry = entry;
-                    
-                    NSString* depth = comment.attributes[@"class"];
-                    NSRange depthRange = [depth rangeOfString:@"comment-depth-"];
-                    if (depth != nil && depthRange.location != NSNotFound) {
-                        depth = [depth substringFromIndex:depthRange.location + depthRange.length];
-                    }
-                    commentRecord.depth = [NSNumber numberWithInteger:[depth integerValue]];
-                    
-                    NSString* date = [comment querySelector:@".comment-date-text"].textContent;
-                    if ([date rangeOfString:@" (local)"].location != NSNotFound) {
-                        date = [date substringToIndex:[date rangeOfString:@" (local)"].location];
-                    }
-                    commentRecord.creationDate = [self.dateFormatter dateFromString:date];
-
-                    HTMLElement* title = [comment querySelector:@".comment-title span"];
-                    NSString* titleClass = title.attributes[@"class"];
-                    if ([titleClass rangeOfString:@"invisible"].location == NSNotFound) {
-                        commentRecord.subject = title.textContent;
-                    }
-                    
-                    // BCH: - this is wrong if there's any formatting, but let's just stick with it for now
-                    commentRecord.commentText = [comment querySelector:@".comment-content"].textContent;
-                    
-                    if (newestComment == nil || [newestComment isEarlierThanDate:commentRecord.creationDate]) {
-                        newestComment = commentRecord.creationDate;
-                    }
-                    
-                    count++;
-                }
-                
-                entry.numberOfComments = [NSNumber numberWithUnsignedInteger:count];
-                if (newestComment != nil && [newestComment isLaterThanDate:entry.updateDate]) {
-                    entry.updateDate = newestComment;
-                }
+                [self processComments:document entry:entry];
                 
                 [entry.managedObjectContext save:nil];
             }];

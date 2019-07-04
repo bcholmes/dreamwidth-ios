@@ -12,8 +12,10 @@
 #import <MaterialComponents/MaterialTextFields.h>
 #import <UIColor-HexRGB/UIColor+HexRGB.h>
 
-#import "BCHDWSimpleTableViewCell.h"
+#import "BCHDWBannerView.h"
+#import "BCHDWBackgroundView.h"
 #import "BCHDWProfileMainTableViewCell.h"
+#import "BCHDWSimpleTableViewCell.h"
 
 @interface BCHDWTheme ()
 
@@ -52,6 +54,8 @@
 -(void) configure {
     [self configureNavigationBars];
     [self configureButtons];
+    [self configureBackgroundView];
+    [self configureBannerView];
     [self configureSimpleCell];
     [self configureProfileMainCell];
     [self configureFlatButton];
@@ -68,6 +72,16 @@
     proxy.selectedBackgroundColor = [UIColor clearColor];
 }
 
+-(void) configureBannerView {
+    BCHDWBannerView* proxy = [BCHDWBannerView appearance];
+    proxy.backgroundColor = self.dreamwidthPink;
+}
+
+-(void) configureBackgroundView {
+    BCHDWBackgroundView* proxy = [BCHDWBackgroundView appearance];
+    proxy.backgroundColor = self.dreamwidthPink;
+}
+
 -(void) configureProfileMainCell {
     BCHDWProfileMainTableViewCell* proxy = [BCHDWProfileMainTableViewCell appearance];
     proxy.backgroundColor = self.dreamwidthRed;
@@ -82,9 +96,7 @@
     [barProxy setBarStyle:UIBarStyleBlack];
     [barProxy setTranslucent:NO];
     [barProxy setOpaque:NO];
-    [barProxy setTitleTextAttributes:@{
-                                       NSForegroundColorAttributeName: [UIColor whiteColor]
-                                       }];
+    [barProxy setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor whiteColor] }];
     [barProxy setTintColor:[UIColor whiteColor]];
 
     // remove bottom separator line from navigation bar

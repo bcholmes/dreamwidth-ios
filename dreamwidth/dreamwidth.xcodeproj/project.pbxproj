@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		6302C73D22CB8A9200346552 /* BCHDWEntryDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */; };
 		6302C74022CB8E3500346552 /* BCHDWMetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */; };
+		6302C74322CB92B900346552 /* BCHDWBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74222CB92B900346552 /* BCHDWBannerView.m */; };
+		6302C74622CC116500346552 /* BCHDWBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74522CC116500346552 /* BCHDWBackgroundView.m */; };
 		631FA59422C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59222C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld */; };
 		631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59622C8D09C00FA83C8 /* BCHDWComment.m */; };
 		631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59922C8D18600FA83C8 /* BCHDWPersistenceService.m */; };
@@ -59,6 +61,10 @@
 		6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntryDetailController.m; sourceTree = "<group>"; };
 		6302C73E22CB8E3500346552 /* BCHDWMetaDataTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWMetaDataTableViewCell.h; sourceTree = "<group>"; };
 		6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWMetaDataTableViewCell.m; sourceTree = "<group>"; };
+		6302C74122CB92B900346552 /* BCHDWBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWBannerView.h; sourceTree = "<group>"; };
+		6302C74222CB92B900346552 /* BCHDWBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWBannerView.m; sourceTree = "<group>"; };
+		6302C74422CC116500346552 /* BCHDWBackgroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWBackgroundView.h; sourceTree = "<group>"; };
+		6302C74522CC116500346552 /* BCHDWBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWBackgroundView.m; sourceTree = "<group>"; };
 		631FA59322C7AEF400FA83C8 /* Dreamwidth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Dreamwidth.xcdatamodel; sourceTree = "<group>"; };
 		631FA59522C8D09C00FA83C8 /* BCHDWComment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWComment.h; sourceTree = "<group>"; };
 		631FA59622C8D09C00FA83C8 /* BCHDWComment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWComment.m; sourceTree = "<group>"; };
@@ -146,6 +152,10 @@
 				6332FBFD1E157F7900E11A49 /* UIViewController+Menu.m */,
 				6332FC021E1594D300E11A49 /* WSEnum.h */,
 				6332FC031E1594D300E11A49 /* WSEnum.m */,
+				6302C74122CB92B900346552 /* BCHDWBannerView.h */,
+				6302C74222CB92B900346552 /* BCHDWBannerView.m */,
+				6302C74422CC116500346552 /* BCHDWBackgroundView.h */,
+				6302C74522CC116500346552 /* BCHDWBackgroundView.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -498,6 +508,7 @@
 				D8EA84F11AB1E6BD00B71DC4 /* BCHDWAppDelegate.m in Sources */,
 				D81603CD1D09DFE200529654 /* BCHDWEntryTableViewCell.m in Sources */,
 				D81603CA1D09DCC300529654 /* BCHDWEntryListViewController.m in Sources */,
+				6302C74322CB92B900346552 /* BCHDWBannerView.m in Sources */,
 				D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */,
 				631FA59422C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld in Sources */,
 				6332FC041E1594D300E11A49 /* WSEnum.m in Sources */,
@@ -508,6 +519,7 @@
 				631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */,
 				631FA59D22C8EC3800FA83C8 /* BCHDWEntryOld.m in Sources */,
 				6302C74022CB8E3500346552 /* BCHDWMetaDataTableViewCell.m in Sources */,
+				6302C74622CC116500346552 /* BCHDWBackgroundView.m in Sources */,
 				631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */,
 				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
 				6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */,
