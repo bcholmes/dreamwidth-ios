@@ -11,6 +11,7 @@
 		6302C74022CB8E3500346552 /* BCHDWMetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */; };
 		6302C74322CB92B900346552 /* BCHDWBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74222CB92B900346552 /* BCHDWBannerView.m */; };
 		6302C74622CC116500346552 /* BCHDWBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74522CC116500346552 /* BCHDWBackgroundView.m */; };
+		6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */; };
 		631FA59422C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59222C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld */; };
 		631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59622C8D09C00FA83C8 /* BCHDWComment.m */; };
 		631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59922C8D18600FA83C8 /* BCHDWPersistenceService.m */; };
@@ -65,6 +66,8 @@
 		6302C74222CB92B900346552 /* BCHDWBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWBannerView.m; sourceTree = "<group>"; };
 		6302C74422CC116500346552 /* BCHDWBackgroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWBackgroundView.h; sourceTree = "<group>"; };
 		6302C74522CC116500346552 /* BCHDWBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWBackgroundView.m; sourceTree = "<group>"; };
+		6302C74722CD973C00346552 /* BCHDWCommentTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWCommentTableViewCell.h; sourceTree = "<group>"; };
+		6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWCommentTableViewCell.m; sourceTree = "<group>"; };
 		631FA59322C7AEF400FA83C8 /* Dreamwidth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Dreamwidth.xcdatamodel; sourceTree = "<group>"; };
 		631FA59522C8D09C00FA83C8 /* BCHDWComment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWComment.h; sourceTree = "<group>"; };
 		631FA59622C8D09C00FA83C8 /* BCHDWComment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWComment.m; sourceTree = "<group>"; };
@@ -217,6 +220,8 @@
 				6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */,
 				6302C73E22CB8E3500346552 /* BCHDWMetaDataTableViewCell.h */,
 				6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */,
+				6302C74722CD973C00346552 /* BCHDWCommentTableViewCell.h */,
+				6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -505,6 +510,7 @@
 				D8F233D11AB20E4D00F61C25 /* DreamwidthApi.m in Sources */,
 				D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */,
 				D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */,
+				6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */,
 				D8EA84F11AB1E6BD00B71DC4 /* BCHDWAppDelegate.m in Sources */,
 				D81603CD1D09DFE200529654 /* BCHDWEntryTableViewCell.m in Sources */,
 				D81603CA1D09DCC300529654 /* BCHDWEntryListViewController.m in Sources */,

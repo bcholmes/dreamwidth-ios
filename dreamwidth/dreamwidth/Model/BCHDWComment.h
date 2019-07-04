@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString* orderKey;
 
 @property (nonatomic, readonly) NSInteger lastOrderPart;
+@property (nonatomic, readonly) NSInteger depthAsInteger;
 
 @end
 

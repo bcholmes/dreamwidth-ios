@@ -166,7 +166,7 @@
             NSLog(@"Wrong depth: %ld, count = %lu", depthValue, depthList.count);
         }
         
-        NSString* date = [comment querySelector:@".comment-date-text"].textContent;
+        NSString* date = [comment querySelector:@".datetime"].textContent;
         if ([date rangeOfString:@" (local)"].location != NSNotFound) {
             date = [date substringToIndex:[date rangeOfString:@" (local)"].location];
         }
@@ -184,6 +184,9 @@
         if (newestComment == nil || [newestComment isEarlierThanDate:commentRecord.creationDate]) {
             newestComment = commentRecord.creationDate;
         }
+        
+        HTMLElement* avatarAnchor = [comment querySelector:@".userpic img"];
+        commentRecord.avatarUrl = avatarAnchor.attributes[@"src"];
         
         count++;
     }

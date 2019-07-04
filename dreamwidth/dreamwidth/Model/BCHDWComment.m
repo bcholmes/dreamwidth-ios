@@ -24,4 +24,8 @@
     }
 }
 
+-(NSInteger) depthAsInteger {
+    return [self.depth integerValue];
+}
+
 @end

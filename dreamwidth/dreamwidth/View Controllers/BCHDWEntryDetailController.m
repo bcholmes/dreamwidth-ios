@@ -11,9 +11,11 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <CoreData/CoreData.h>
 
+#import "BCHDWAppDelegate.h"
+#import "BCHDWCommentTableViewCell.h"
 #import "BCHDWMetaDataTableViewCell.h"
 
-@interface BCHDWEntryDetailController ()
+@interface BCHDWEntryDetailController ()<NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 
@@ -31,6 +33,7 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self queryData:[BCHDWAppDelegate instance].managedObjectContext];
 }
 
 #pragma mark - Table view data source
@@ -40,27 +43,51 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section == 0 ? 1 : 0;
+    return section == 0 ? 1 : self.fetchedResultsController.fetchedObjects.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BCHDWMetaDataTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"metaData" forIndexPath:indexPath];
-
     NSDateFormatter* formatter = [NSDateFormatter new];
-    formatter.dateFormat = @"yyyy-MM-dd hh:mm a";
+    formatter.dateFormat = @"yyyy-MMM-dd hh:mm a";
     
-    cell.titleLabel.text = self.entry.subject;
-    cell.userLabel.text = self.entry.author;
-    cell.dateLabel.text = [formatter stringFromDate:self.entry.creationDate];
-    
-    if (self.entry.avatarUrl != nil) {
-        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:self.entry.avatarUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-    } else {
-        cell.avatarImageView.image = nil;
-    }
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        BCHDWMetaDataTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"metaData" forIndexPath:indexPath];
 
-    return cell;
+        cell.titleLabel.text = self.entry.subject;
+        cell.userLabel.text = self.entry.author;
+        cell.dateLabel.text = [formatter stringFromDate:self.entry.creationDate];
+        
+        if (self.entry.avatarUrl != nil) {
+            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:self.entry.avatarUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        } else {
+            cell.avatarImageView.image = nil;
+        }
+
+        return cell;
+    } else {
+        BCHDWCommentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"comment" forIndexPath:indexPath];
+        BCHDWComment* comment = self.fetchedResultsController.fetchedObjects[indexPath.row];
+        
+        if (comment.subject == nil || comment.subject.length == 0) {
+            cell.subjectLabel.hidden = YES;
+        } else {
+            cell.subjectLabel.text = comment.subject;
+            cell.subjectLabel.hidden = NO;
+        }
+        cell.authorLabel.text = [NSString stringWithFormat:@"%@ on %@", comment.author, [formatter stringFromDate:comment.creationDate]];
+        cell.commentTextLabel.text = comment.commentText;
+        
+        if (comment.avatarUrl != nil) {
+            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:comment.avatarUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        } else {
+            cell.avatarImageView.image = nil;
+        }
+        
+        cell.leftConstraint.constant = 16 + (comment.depthAsInteger - 1) * 8;
+        
+        return cell;
+    }
 }
 
 /*
@@ -106,5 +133,31 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - Core Data
+
+- (void) queryData:(NSManagedObjectContext*) managedObjectContext {
+    
+    // Set up the fetched results controller if needed.
+    if (self.fetchedResultsController == nil) {
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        fetchRequest.entity = [NSEntityDescription entityForName:@"Comment" inManagedObjectContext:managedObjectContext];
+        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"entry == %@", self.entry];
+        fetchRequest.sortDescriptors = @[ [[NSSortDescriptor alloc] initWithKey:@"orderKey" ascending:YES] ];
+        
+        NSFetchedResultsController* aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        aFetchedResultsController.delegate = self;
+        self.fetchedResultsController = aFetchedResultsController;
+        
+        NSError* error;
+        if (![self.fetchedResultsController performFetch:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, error.userInfo);
+        }
+    }
+}
+
+- (void) controllerDidChangeContent:(NSFetchedResultsController*) controller {
+    [self.tableView reloadData];
+}
 
 @end
