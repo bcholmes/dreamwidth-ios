@@ -64,7 +64,7 @@
         [SVProgressHUD show];
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
             [service loginWithUser:username password:password andCompletion:^(NSError* error, BCHDWUser* user) {
-                dispatch_sync(dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
                     [SVProgressHUD dismiss];
                     if (error != nil) {
                         NSUInteger statusCode = [[error.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];

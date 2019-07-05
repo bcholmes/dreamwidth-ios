@@ -6,7 +6,6 @@ project 'dreamwidth/dreamwidth'
 target 'dreamwidth' do
 
   pod 'AFNetworking', '~> 3.1'
-  pod 'BlocksKit'
   pod 'Colours'
   pod 'HTMLKit', '~> 2.1'
   pod 'MaterialComponents/AppBar', '~> 84.0'
