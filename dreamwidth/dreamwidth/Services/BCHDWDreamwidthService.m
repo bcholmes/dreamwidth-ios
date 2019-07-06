@@ -179,8 +179,7 @@
             commentRecord.subject = title.textContent;
         }
         
-        // BCH: - this is wrong if there's any formatting, but let's just stick with it for now
-        commentRecord.commentText = [comment querySelector:@".comment-content"].textContent;
+        commentRecord.commentText = [self collectTextContent:[comment querySelector:@".comment-content"]];
         
         if (newestComment == nil || [newestComment isEarlierThanDate:commentRecord.creationDate]) {
             newestComment = commentRecord.creationDate;
@@ -195,6 +194,51 @@
     entry.numberOfComments = [NSNumber numberWithUnsignedInteger:count];
     if (newestComment != nil && [newestComment isLaterThanDate:entry.updateDate]) {
         entry.updateDate = newestComment;
+    }
+}
+
+
+-(NSString*) collectTextContent:(HTMLElement*) content {
+    NSMutableString* result = [NSMutableString new];
+    for (HTMLNode* node in content.childNodes) {
+        if ([node isKindOfClass:[HTMLElement class]]) {
+            HTMLElement* element = (HTMLElement*) node;
+            if ([element.tagName isEqualToString:@"br"]) {
+                [result appendString:@"\n"];
+            } else if ([self isExcluded:element]) {
+                // skip it
+            } else {
+                [result appendFormat:@"<%@", element.tagName];
+                [element.attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
+                    NSMutableString *escaped = [value mutableCopy];
+                    [escaped replaceOccurrencesOfString:@"&" withString:@"&amp;" options:0 range:NSMakeRange(0, escaped.length)];
+                    [escaped replaceOccurrencesOfString:@"0x00A0" withString:@"&nbsp;" options:0 range:NSMakeRange(0, escaped.length)];
+                    [escaped replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:0 range:NSMakeRange(0, escaped.length)];
+                    
+                    [result appendFormat:@" %@=\"%@\"", key, escaped];
+                }];
+                
+                [result appendString:@">"];
+                [result appendString:[self collectTextContent:element]];
+                
+                if (![element.tagName isEqualToAny:@"area", @"base", @"basefont", @"bgsound", @"br", @"col", @"embed",
+                     @"frame", @"hr", @"img", @"input", @"keygen", @"link", @"menuitem", @"meta", @"param", @"source",
+                     @"track", @"wbr", nil]) {
+                    [result appendFormat:@"</%@>", element.tagName];
+                }
+            }
+        } else if ([node isKindOfClass:[HTMLText class]]) {
+            [result appendString:node.outerHTML];
+        }
+    }
+    return [NSString stringWithString:result];
+}
+
+-(BOOL) isExcluded:(HTMLElement*) element {
+    if (([element.tagName isEqualToString:@"div"]) && [element.attributes[@"class"] rangeOfString:@"edittime"].location != NSNotFound) {
+        return YES;
+    } else {
+        return NO;
     }
 }
 

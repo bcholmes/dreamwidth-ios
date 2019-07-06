@@ -10,10 +10,13 @@
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <CoreData/CoreData.h>
+#import <DateTools/NSDate+DateTools.h>
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWCommentTableViewCell.h"
+#import "BCHDWHTMLHelper.h"
 #import "BCHDWMetaDataTableViewCell.h"
+#import "NSString+DreamBalloon.h"
 
 @interface BCHDWEntryDetailController ()<NSFetchedResultsControllerDelegate>
 
@@ -75,8 +78,7 @@
             cell.subjectLabel.text = comment.subject;
             cell.subjectLabel.hidden = NO;
         }
-        cell.authorLabel.text = [NSString stringWithFormat:@"%@ on %@", comment.author, [formatter stringFromDate:comment.creationDate]];
-        cell.commentTextLabel.text = comment.commentText;
+        cell.authorLabel.text = [NSString stringWithFormat:@"%@, %@", comment.author, [comment.creationDate timeAgoSinceNow]];
         
         if (comment.avatarUrl != nil) {
             [cell.avatarImageView setImageWithURL:[NSURL URLWithString:comment.avatarUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
@@ -85,10 +87,31 @@
         }
         
         cell.leftConstraint.constant = 16 + (comment.depthAsInteger - 1) * 8;
+
+        if ([comment.commentText isHTMLMarkupPresent]) {
+            NSArray* markedUpText = [[BCHDWHTMLHelper new] parseHtmlIntoAttributedStrings:comment.commentText];
+            for (NSAttributedString* string in markedUpText) {
+                UILabel* commentTextLabel = [UILabel new];
+                commentTextLabel.numberOfLines = 0;
+                commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                commentTextLabel.attributedText = string;
+                
+                [cell.stackView addArrangedSubview:commentTextLabel];
+            }
+        } else {
+            UILabel* commentTextLabel = [UILabel new];
+            commentTextLabel.numberOfLines = 0;
+            commentTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+            commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            commentTextLabel.text = comment.commentText;
+            
+            [cell.stackView addArrangedSubview:commentTextLabel];
+        }
         
         return cell;
     }
 }
+
 
 /*
 // Override to support conditional editing of the table view.

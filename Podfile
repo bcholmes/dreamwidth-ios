@@ -7,6 +7,7 @@ target 'dreamwidth' do
 
   pod 'AFNetworking', '~> 3.1'
   pod 'Colours'
+  pod 'DateTools'
   pod 'HTMLKit', '~> 2.1'
   pod 'MaterialComponents/AppBar', '~> 84.0'
   pod 'MaterialComponents/BottomSheet', '~> 84.0'

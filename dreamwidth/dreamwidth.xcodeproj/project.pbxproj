@@ -12,6 +12,8 @@
 		6302C74322CB92B900346552 /* BCHDWBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74222CB92B900346552 /* BCHDWBannerView.m */; };
 		6302C74622CC116500346552 /* BCHDWBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74522CC116500346552 /* BCHDWBackgroundView.m */; };
 		6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */; };
+		6302C74C22D0CC4C00346552 /* NSString+DreamBalloon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74B22D0CC4C00346552 /* NSString+DreamBalloon.m */; };
+		6302C74F22D0F13000346552 /* BCHDWHTMLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74E22D0F13000346552 /* BCHDWHTMLHelper.m */; };
 		631FA59422C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59222C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld */; };
 		631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59622C8D09C00FA83C8 /* BCHDWComment.m */; };
 		631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59922C8D18600FA83C8 /* BCHDWPersistenceService.m */; };
@@ -68,6 +70,10 @@
 		6302C74522CC116500346552 /* BCHDWBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWBackgroundView.m; sourceTree = "<group>"; };
 		6302C74722CD973C00346552 /* BCHDWCommentTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWCommentTableViewCell.h; sourceTree = "<group>"; };
 		6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWCommentTableViewCell.m; sourceTree = "<group>"; };
+		6302C74A22D0CC4C00346552 /* NSString+DreamBalloon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+DreamBalloon.h"; sourceTree = "<group>"; };
+		6302C74B22D0CC4C00346552 /* NSString+DreamBalloon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+DreamBalloon.m"; sourceTree = "<group>"; };
+		6302C74D22D0F13000346552 /* BCHDWHTMLHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWHTMLHelper.h; sourceTree = "<group>"; };
+		6302C74E22D0F13000346552 /* BCHDWHTMLHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWHTMLHelper.m; sourceTree = "<group>"; };
 		631FA59322C7AEF400FA83C8 /* Dreamwidth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Dreamwidth.xcdatamodel; sourceTree = "<group>"; };
 		631FA59522C8D09C00FA83C8 /* BCHDWComment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWComment.h; sourceTree = "<group>"; };
 		631FA59622C8D09C00FA83C8 /* BCHDWComment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWComment.m; sourceTree = "<group>"; };
@@ -159,6 +165,10 @@
 				6302C74222CB92B900346552 /* BCHDWBannerView.m */,
 				6302C74422CC116500346552 /* BCHDWBackgroundView.h */,
 				6302C74522CC116500346552 /* BCHDWBackgroundView.m */,
+				6302C74A22D0CC4C00346552 /* NSString+DreamBalloon.h */,
+				6302C74B22D0CC4C00346552 /* NSString+DreamBalloon.m */,
+				6302C74D22D0F13000346552 /* BCHDWHTMLHelper.h */,
+				6302C74E22D0F13000346552 /* BCHDWHTMLHelper.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -445,6 +455,7 @@
 			inputPaths = (
 				"${SRCROOT}/../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/1PasswordExtension/OnePasswordExtensionResources.bundle",
+				"${PODS_ROOT}/DateTools/DateTools/DateTools/DateTools.bundle",
 				"${PODS_ROOT}/MaterialComponents/components/AppBar/src/MaterialAppBar.bundle",
 				"${PODS_ROOT}/MaterialComponents/components/CollectionCells/src/MaterialCollectionCells.bundle",
 				"${PODS_ROOT}/MaterialComponents/components/Collections/src/MaterialCollections.bundle",
@@ -461,6 +472,7 @@
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/OnePasswordExtensionResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DateTools.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialAppBar.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCollectionCells.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCollections.bundle",
@@ -506,6 +518,7 @@
 				6332FC0E1E15A8DF00E11A49 /* BCHDWDreamwidthService.m in Sources */,
 				6332FC071E1595B200E11A49 /* BCHDWMenuOption.m in Sources */,
 				D81603C71D08C28400529654 /* BCHDWUser.m in Sources */,
+				6302C74C22D0CC4C00346552 /* NSString+DreamBalloon.m in Sources */,
 				6332FC1D1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.m in Sources */,
 				6332FBFE1E157F7900E11A49 /* UIViewController+Menu.m in Sources */,
 				D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */,
@@ -531,6 +544,7 @@
 				631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */,
 				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
 				6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */,
+				6302C74F22D0F13000346552 /* BCHDWHTMLHelper.m in Sources */,
 				6332FC141E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

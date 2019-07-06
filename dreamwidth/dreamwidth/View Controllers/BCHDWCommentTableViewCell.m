@@ -21,4 +21,14 @@
     // Configure the view for the selected state
 }
 
+-(void) prepareForReuse {
+    [super prepareForReuse];
+    
+    for (UIView* subview in self.stackView.arrangedSubviews) {
+        [self.stackView removeArrangedSubview:subview];
+        [subview removeConstraints:subview.constraints];
+        [subview removeFromSuperview];
+    };
+}
+
 @end
