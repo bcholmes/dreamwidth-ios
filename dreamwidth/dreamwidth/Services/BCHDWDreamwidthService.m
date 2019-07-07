@@ -341,17 +341,23 @@
 }
 
 - (void) partialSyncWithServer {
+    NSDate* date = self.lastSyncDate;
     NSLog(@"Starting partial sync with server.");
-    [self.api getEvents:self.currentUser since:self.lastSyncDate completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+    [self.api getEvents:self.currentUser since:date completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
         if (error) {
             NSLog(@"error: %@", error);
         } else if (entries.count > 0) {
+            self.lastSyncDate = [NSDate new];
             [self processEntries:entries];
         } else {
             NSLog(@"No new user entries to process");
         }
     }];
-    [self fetchRecentReadingPageActivity];
+    [self.api checkFriends:date completion:^(NSError * _Nullable error, BOOL newEntries) {
+        if (error != nil && newEntries) {
+            [self fetchRecentReadingPageActivity];
+        }
+    }];
 }
 
 -(void) fullOrPartialSyncWithServer {
@@ -379,6 +385,7 @@
         if (error == nil) {
             [self setAuthenticationCookie:session];
             for (BCHDWEntryHandle* entry in entries) {
+                NSLog(@"Fetch data for url: %@", entry.url);
                 [self fetchEntry:entry.url];
             }
         }

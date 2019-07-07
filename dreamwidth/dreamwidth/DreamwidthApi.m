@@ -183,6 +183,7 @@
         }
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"Challenge error: %@", error);
         callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
     }];
 }
@@ -243,6 +244,7 @@
                                           };
             [self callGetEventsFlatApi:parameters callback:callback];
         } else {
+            NSLog(@"Get events error: %@", error);
             callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
         }
     }];
@@ -252,9 +254,39 @@
     [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
-        callback(nil, [BCHDWEntryHandle parseMap:result]);
+        NSArray* entries = [BCHDWEntryHandle parseMap:result];
+        NSLog(@"number of entries: %lu", entries.count);
+        callback(nil, entries);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"Get events flat API error: %@", error);
         callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getevents failed."}], nil);
+    }];
+}
+
+-(void) checkFriends:(NSDate*) date completion:(void (^)(NSError* error, BOOL newEntries)) callback {
+    [self performWithChallenge:^(NSError* error, NSString* challenge) {
+        if (error == nil) {
+            NSDictionary* parameters = @{ @"mode": @"checkfriends",
+                                          @"user": self.currentUser.username,
+                                          @"auth_method": @"challenge",
+                                          @"auth_challenge": challenge,
+                                          @"auth_response": [self generateChallengeResponse:challenge user:self.currentUser],
+                                          @"lastupdate": [self.dateFormatter stringFromDate:date],
+                                          @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
+                                          @"ver": @"1"
+                                          };
+            
+            [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                
+                NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
+                callback(nil, [result[@"new"] isEqualToString:@"1"]);
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getevents failed."}], nil);
+            }];
+        } else {
+            NSLog(@"Check friends error: %@", error);
+            callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+        }
     }];
 }
 
@@ -274,6 +306,7 @@
             
             [self callGetEventsFlatApi:parameters callback:callback];
         } else {
+            NSLog(@"Get events error: %@", error);
             callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
         }
     }];
@@ -313,6 +346,7 @@
             callback(nil, nil);
             
         } else {
+            NSLog(@"Get reading list error: %@", error);
             callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
         }
     }];

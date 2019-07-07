@@ -17,6 +17,7 @@
     for (NSInteger i = 1; i <= count; i++) {
         BCHDWEntryHandle* entry = [BCHDWEntryHandle new];
         entry.url = [map objectForKey:[NSString stringWithFormat:@"events_%ld_url", i]];
+        [result addObject:entry];
     }
     
     return [NSArray arrayWithArray:result];
