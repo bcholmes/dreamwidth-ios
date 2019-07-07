@@ -22,6 +22,6 @@
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback;
 -(void) postEntry:(NSString*) entryText completion:(void (^)(NSError* error, NSString* url)) callback;
 -(void) fetchRecentReadingPageActivity;
--(void) synchWithServer;
+-(void) syncWithServer;
 
 @end

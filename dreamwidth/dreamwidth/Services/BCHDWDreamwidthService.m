@@ -13,19 +13,7 @@
 #import <HTMLKit/HTMLKit.h>
 #import <NSDate-Additions/NSDate+Additions.h>
 
-#import "BCHDWEntryOld.h"
-
-@interface BCHDWEntryHandle : NSObject
-
-@property (nonatomic, strong) NSString* url;
-@property (nonatomic, strong) NSString* text;
-
-@end
-
-@implementation BCHDWEntryHandle
-
-@end
-
+#import "BCHDWEntryHandle.h"
 
 @interface BCHDWDreamwidthService()
 
@@ -108,7 +96,6 @@
         NSString* href = anchor.attributes[@"href"];
         if ([href rangeOfString:@".html?"].location != NSNotFound) {
             BCHDWEntryHandle* handle = [BCHDWEntryHandle new];
-            handle.text = anchor.textContent;
             handle.url = [href substringToIndex:[href rangeOfString:@"?"].location];
             if (![friendSet containsObject:handle.url]) {
                 [friendSet addObject:handle.url];
@@ -200,7 +187,7 @@
 
 -(NSString*) collectTextContent:(HTMLElement*) content {
     NSMutableString* result = [NSMutableString new];
-    for (HTMLNode* node in content.childNodes) {
+    for (HTMLNode* node = content.firstChild; node != nil; node = node.nextSibling) {
         if ([node isKindOfClass:[HTMLElement class]]) {
             HTMLElement* element = (HTMLElement*) node;
             if ([element.tagName isEqualToString:@"br"]) {
@@ -263,6 +250,11 @@
                     entry.updateDate = entry.creationDate;
                 }
                 
+                HTMLElement* lock = [document querySelector:@".access-filter"];
+                if (lock != nil) {
+                    entry.locked = YES;
+                }
+                
                 entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
                 
                 [self processComments:document entry:entry];
@@ -311,7 +303,7 @@
             [manager registerKey:password forIdentifier:@"password"];
             self.currentUser = user;
             
-            [self synchWithServer];
+            [self syncWithServer];
         }
         callback(error, user);
     }];
@@ -335,31 +327,50 @@
     }
 }
 
--(void) synchWithServer {
+- (void) fullSyncWithServer {
+    NSLog(@"Starting full sync with server.");
+    [self.api getEvents:self.currentUser completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+        if (error) {
+            NSLog(@"error: %@", error);
+        } else {
+            self.lastSyncDate = [NSDate new];
+            [self processEntries:entries];
+        }
+    }];
+    [self fetchRecentReadingPageActivity];
+}
+
+- (void) partialSyncWithServer {
+    NSLog(@"Starting partial sync with server.");
+    [self.api getEvents:self.currentUser since:self.lastSyncDate completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+        if (error) {
+            NSLog(@"error: %@", error);
+        } else if (entries.count > 0) {
+            [self processEntries:entries];
+        } else {
+            NSLog(@"No new user entries to process");
+        }
+    }];
+    [self fetchRecentReadingPageActivity];
+}
+
+-(void) fullOrPartialSyncWithServer {
+    if (self.lastSyncDate == nil || [[self.lastSyncDate dateByAddingHours:1] isEarlierThanDate:[NSDate new]]) {
+        [self fullSyncWithServer];
+    } else {
+        [self partialSyncWithServer];
+    }
+}
+
+-(void) syncWithServer {
     if ([self isLoggedIn] && self.currentUser == nil) {
         [self loginUsingStoredCredentials:^(NSError* error, BCHDWUser* user) {
             if (error == nil) {
-                NSLog(@"fetching user's events");
-                [self.api getEvents:self.currentUser completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
-                    if (error) {
-                        NSLog(@"error: %@", error);
-                    } else {
-                        [self processEntries:entries];
-                    }
-                }];
-                NSLog(@"fetching reading page");
-                [self fetchRecentReadingPageActivity];
+                [self fullOrPartialSyncWithServer];
             }
         }];
     } else if (self.currentUser != nil) {
-        [self.api getEvents:self.currentUser completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
-            if (error) {
-                NSLog(@"error: %@", error);
-            } else {
-                [self processEntries:entries];
-            }
-        }];
-        [self fetchRecentReadingPageActivity];
+        [self fullOrPartialSyncWithServer];
     }
 }
 
@@ -367,7 +378,7 @@
     [self.api performFunctionWithWebSession:^(NSError * _Nullable error, NSString * _Nullable session) {
         if (error == nil) {
             [self setAuthenticationCookie:session];
-            for (BCHDWEntryOld* entry in entries) {
+            for (BCHDWEntryHandle* entry in entries) {
                 [self fetchEntry:entry.url];
             }
         }

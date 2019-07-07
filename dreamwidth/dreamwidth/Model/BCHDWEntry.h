@@ -21,5 +21,5 @@
 @property (nonatomic, strong) NSDate* creationDate;
 @property (nonatomic, strong) NSDate* updateDate;
 @property (nonatomic, strong) NSNumber* numberOfComments;
-
+@property (nonatomic, assign) BOOL locked;
 @end

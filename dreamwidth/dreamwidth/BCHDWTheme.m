@@ -54,6 +54,7 @@
 -(void) configure {
     [self configureNavigationBars];
     [self configureButtons];
+    [self configureMaterialButton];
     [self configureBackgroundView];
     [self configureBannerView];
     [self configureSimpleCell];
@@ -113,6 +114,16 @@
     [proxy setBackgroundColor:self.dreamwidthRed forState:UIControlStateNormal];
     [proxy setBackgroundColor:[UIColor colorWithHex:@"888888"] forState:UIControlStateDisabled];
     [proxy setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+}
+
+-(void) configureMaterialButton {
+    MDCButton* proxy = [MDCButton appearance];
+    proxy.tintColor = self.dreamwidthRed;
+    proxy.inkColor = [self.dreamwidthRed colorWithAlphaComponent:0.32];
+    proxy.disabledAlpha = 1.0;
+    proxy.uppercaseTitle = NO;
+    [proxy setTitleColor:self.dreamwidthRed forState:UIControlStateNormal];
+    [proxy setTitleColor:[UIColor colorWithHex:@"888888"] forState:UIControlStateDisabled];
 }
 
 -(void) applyTheme:(MDCTextInputControllerBase*) textInputController {

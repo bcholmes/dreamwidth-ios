@@ -293,15 +293,22 @@
                                             </constraints>
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="qWL-KJ-bCq">
-                                            <rect key="frame" x="16" y="70" width="351" height="24"/>
+                                            <rect key="frame" x="16" y="70" width="351" height="0.0"/>
                                         </stackView>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gfN-Hs-O8u" customClass="MDCButton">
+                                            <rect key="frame" x="327" y="78" width="32" height="16"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                            <state key="normal" title="Reply"/>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="qWL-KJ-bCq" firstAttribute="top" secondItem="F8D-xp-bAb" secondAttribute="bottom" constant="8" id="3iZ-Jg-TWR"/>
                                         <constraint firstItem="qWL-KJ-bCq" firstAttribute="leading" secondItem="F8D-xp-bAb" secondAttribute="leading" id="CNG-Sb-rll"/>
                                         <constraint firstAttribute="trailing" secondItem="qWL-KJ-bCq" secondAttribute="trailing" constant="8" id="CV4-eB-OOs"/>
                                         <constraint firstItem="F8D-xp-bAb" firstAttribute="top" secondItem="iwg-XP-2GT" secondAttribute="top" constant="4" id="Dd2-oe-ihT"/>
-                                        <constraint firstAttribute="bottom" secondItem="qWL-KJ-bCq" secondAttribute="bottom" constant="8" id="ZgK-cD-CTl"/>
+                                        <constraint firstItem="gfN-Hs-O8u" firstAttribute="top" secondItem="qWL-KJ-bCq" secondAttribute="bottom" constant="8" id="G9W-SH-Pd5"/>
+                                        <constraint firstAttribute="trailing" secondItem="gfN-Hs-O8u" secondAttribute="trailing" constant="16" id="Ttd-wR-8eg"/>
+                                        <constraint firstAttribute="bottom" secondItem="gfN-Hs-O8u" secondAttribute="bottom" constant="8" id="Zil-1o-pBp"/>
                                         <constraint firstItem="F8D-xp-bAb" firstAttribute="leading" secondItem="iwg-XP-2GT" secondAttribute="leading" constant="16" id="kgA-ao-qIq"/>
                                         <constraint firstAttribute="trailing" secondItem="F8D-xp-bAb" secondAttribute="trailing" constant="16" id="yZy-SU-GRm"/>
                                     </constraints>

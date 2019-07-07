@@ -73,12 +73,8 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
-    [self.dreamwidthService synchWithServer];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:5 * 60.0
-                                     target:self.dreamwidthService
-                                   selector:@selector(synchWithServer)
-                                   userInfo:nil
-                                    repeats:YES];
+    [self.dreamwidthService syncWithServer];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:5 * 60.0 target:self.dreamwidthService selector:@selector(syncWithServer) userInfo:nil repeats:YES];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

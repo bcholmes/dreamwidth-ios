@@ -27,6 +27,7 @@ typedef NS_ENUM(NSInteger, DWErrorCodes) {
 
 -(void) loginWithUser:(NSString* _Nonnull) userid password:(NSString* _Nonnull) password andCompletion:(void (^ _Nonnull)(NSError* _Nullable error, BCHDWUser* _Nullable user)) callback;
 -(void) getEvents:(BCHDWUser* _Nonnull) user completion:(void (^ _Nonnull)(NSError* _Nullable error, NSArray* _Nullable entries)) callback;
+-(void) getEvents:(BCHDWUser* _Nonnull) user since:(NSDate* _Nonnull) date completion:(void (^)(NSError*  _Nonnull error, NSArray*  _Nonnull entries)) callback;
 -(void) getReadingList:(void (^ _Nonnull)(NSError* _Nullable error, NSArray* _Nullable entries)) callback;
 -(void) performFunctionWithWebSession:(void (^ _Nonnull)(NSError* _Nullable, NSString* _Nullable)) callback;
 -(BOOL) isLoggedIn;

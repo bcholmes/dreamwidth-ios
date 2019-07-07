@@ -10,6 +10,7 @@
         <attribute name="orderKey" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="replyToCommentId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="subject" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="entry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Entry" syncable="YES"/>
     </entity>
     <entity name="Entry" representedClassName="BCHDWEntry" syncable="YES">
@@ -18,6 +19,7 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="entryId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="entryText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lockedFlag" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="numberOfComments" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="subject" optional="YES" attributeType="String" syncable="YES"/>
@@ -25,7 +27,7 @@
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Comment" positionX="-54" positionY="-9" width="128" height="195"/>
-        <element name="Entry" positionX="-36" positionY="72" width="128" height="195"/>
+        <element name="Comment" positionX="-54" positionY="-9" width="128" height="210"/>
+        <element name="Entry" positionX="-36" positionY="72" width="128" height="210"/>
     </elements>
 </model>

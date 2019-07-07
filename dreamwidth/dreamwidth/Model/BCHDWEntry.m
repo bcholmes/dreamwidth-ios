@@ -8,8 +8,22 @@
 
 #import "BCHDWEntry.h"
 
+@interface BCHDWEntry()
+
+@property (nonatomic, strong) NSNumber* lockedFlag;
+
+@end
+
 @implementation BCHDWEntry
 
-@dynamic author, entryId, entryText, subject, creationDate, updateDate, url, avatarUrl, rating, numberOfComments;
+@dynamic author, entryId, entryText, subject, creationDate, updateDate, url, avatarUrl, rating, numberOfComments, lockedFlag;
+
+-(BOOL) locked {
+    return [self.lockedFlag boolValue];
+}
+
+-(void) setLocked:(BOOL) locked {
+    self.lockedFlag = [NSNumber numberWithBool:locked];
+}
 
 @end
