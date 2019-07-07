@@ -10,6 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface BCHDWBlock : NSObject
+
+@property (nonatomic, readonly) NSAttributedString* text;
+
+@end
+
 @interface BCHDWHTMLHelper : NSObject
 
 -(NSArray*) parseHtmlIntoAttributedStrings:(NSString*) html;

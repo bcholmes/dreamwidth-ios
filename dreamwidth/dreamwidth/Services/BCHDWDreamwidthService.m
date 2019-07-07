@@ -263,6 +263,8 @@
                     entry.updateDate = entry.creationDate;
                 }
                 
+                entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
+                
                 [self processComments:document entry:entry];
                 
                 [entry.managedObjectContext save:nil];

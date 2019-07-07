@@ -14,6 +14,7 @@
 		6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */; };
 		6302C74C22D0CC4C00346552 /* NSString+DreamBalloon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74B22D0CC4C00346552 /* NSString+DreamBalloon.m */; };
 		6302C74F22D0F13000346552 /* BCHDWHTMLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C74E22D0F13000346552 /* BCHDWHTMLHelper.m */; };
+		6302C75222D1264500346552 /* BCHDWEntryContentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C75122D1264500346552 /* BCHDWEntryContentTableViewCell.m */; };
 		631FA59422C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59222C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld */; };
 		631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59622C8D09C00FA83C8 /* BCHDWComment.m */; };
 		631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59922C8D18600FA83C8 /* BCHDWPersistenceService.m */; };
@@ -74,6 +75,8 @@
 		6302C74B22D0CC4C00346552 /* NSString+DreamBalloon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+DreamBalloon.m"; sourceTree = "<group>"; };
 		6302C74D22D0F13000346552 /* BCHDWHTMLHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWHTMLHelper.h; sourceTree = "<group>"; };
 		6302C74E22D0F13000346552 /* BCHDWHTMLHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWHTMLHelper.m; sourceTree = "<group>"; };
+		6302C75022D1264500346552 /* BCHDWEntryContentTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryContentTableViewCell.h; sourceTree = "<group>"; };
+		6302C75122D1264500346552 /* BCHDWEntryContentTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntryContentTableViewCell.m; sourceTree = "<group>"; };
 		631FA59322C7AEF400FA83C8 /* Dreamwidth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Dreamwidth.xcdatamodel; sourceTree = "<group>"; };
 		631FA59522C8D09C00FA83C8 /* BCHDWComment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWComment.h; sourceTree = "<group>"; };
 		631FA59622C8D09C00FA83C8 /* BCHDWComment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWComment.m; sourceTree = "<group>"; };
@@ -232,6 +235,8 @@
 				6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */,
 				6302C74722CD973C00346552 /* BCHDWCommentTableViewCell.h */,
 				6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */,
+				6302C75022D1264500346552 /* BCHDWEntryContentTableViewCell.h */,
+				6302C75122D1264500346552 /* BCHDWEntryContentTableViewCell.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -527,6 +532,7 @@
 				D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */,
 				6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */,
 				D8EA84F11AB1E6BD00B71DC4 /* BCHDWAppDelegate.m in Sources */,
+				6302C75222D1264500346552 /* BCHDWEntryContentTableViewCell.m in Sources */,
 				D81603CD1D09DFE200529654 /* BCHDWEntryTableViewCell.m in Sources */,
 				D81603CA1D09DCC300529654 /* BCHDWEntryListViewController.m in Sources */,
 				6302C74322CB92B900346552 /* BCHDWBannerView.m in Sources */,

@@ -14,6 +14,7 @@
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWCommentTableViewCell.h"
+#import "BCHDWEntryContentTableViewCell.h"
 #import "BCHDWHTMLHelper.h"
 #import "BCHDWMetaDataTableViewCell.h"
 #import "NSString+DreamBalloon.h"
@@ -46,7 +47,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section == 0 ? 1 : self.fetchedResultsController.fetchedObjects.count;
+    return section == 0 ? 2 : self.fetchedResultsController.fetchedObjects.count;
 }
 
 
@@ -68,6 +69,10 @@
         }
 
         return cell;
+    } else if (indexPath.section == 0) {
+        BCHDWEntryContentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"content" forIndexPath:indexPath];
+        [self populateHtmlContent:self.entry.entryText stackView:cell.stackView];
+        return cell;
     } else {
         BCHDWCommentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"comment" forIndexPath:indexPath];
         BCHDWComment* comment = self.fetchedResultsController.fetchedObjects[indexPath.row];
@@ -87,31 +92,33 @@
         }
         
         cell.leftConstraint.constant = 16 + (comment.depthAsInteger - 1) * 8;
-
-        if ([comment.commentText isHTMLMarkupPresent]) {
-            NSArray* markedUpText = [[BCHDWHTMLHelper new] parseHtmlIntoAttributedStrings:comment.commentText];
-            for (NSAttributedString* string in markedUpText) {
-                UILabel* commentTextLabel = [UILabel new];
-                commentTextLabel.numberOfLines = 0;
-                commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-                commentTextLabel.attributedText = string;
-                
-                [cell.stackView addArrangedSubview:commentTextLabel];
-            }
-        } else {
-            UILabel* commentTextLabel = [UILabel new];
-            commentTextLabel.numberOfLines = 0;
-            commentTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-            commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-            commentTextLabel.text = comment.commentText;
-            
-            [cell.stackView addArrangedSubview:commentTextLabel];
-        }
+        [self populateHtmlContent:comment.commentText stackView:cell.stackView];
         
         return cell;
     }
 }
 
+-(void) populateHtmlContent:(NSString*) html stackView:(UIStackView*) stackView {
+    if ([html isHTMLMarkupPresent]) {
+        NSArray* markedUpText = [[BCHDWHTMLHelper new] parseHtmlIntoAttributedStrings:html];
+        for (NSAttributedString* string in markedUpText) {
+            UILabel* commentTextLabel = [UILabel new];
+            commentTextLabel.numberOfLines = 0;
+            commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            commentTextLabel.attributedText = string;
+            
+            [stackView addArrangedSubview:commentTextLabel];
+        }
+    } else {
+        UILabel* commentTextLabel = [UILabel new];
+        commentTextLabel.numberOfLines = 0;
+        commentTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+        commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        commentTextLabel.text = html;
+        
+        [stackView addArrangedSubview:commentTextLabel];
+    }
+}
 
 /*
 // Override to support conditional editing of the table view.

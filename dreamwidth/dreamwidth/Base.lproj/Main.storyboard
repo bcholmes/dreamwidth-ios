@@ -292,7 +292,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="G5f-jD-Ji5" secondAttribute="bottom" priority="750" constant="4" id="tcK-x7-xje"/>
                                             </constraints>
                                         </view>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="qWL-KJ-bCq">
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="qWL-KJ-bCq">
                                             <rect key="frame" x="16" y="70" width="351" height="24"/>
                                         </stackView>
                                     </subviews>
@@ -312,6 +312,28 @@
                                     <outlet property="leftConstraint" destination="kgA-ao-qIq" id="n29-uW-A9p"/>
                                     <outlet property="stackView" destination="qWL-KJ-bCq" id="vTT-Bh-NzH"/>
                                     <outlet property="subjectLabel" destination="4Lg-xI-qBo" id="60C-D4-Owj"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="content" rowHeight="84" id="vK7-eE-Nel" customClass="BCHDWEntryContentTableViewCell">
+                                <rect key="frame" x="0.0" y="260.5" width="375" height="84"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vK7-eE-Nel" id="kAF-Kj-e7a">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="84"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="F01-hz-nEz">
+                                            <rect key="frame" x="16" y="16" width="343" height="52"/>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="F01-hz-nEz" firstAttribute="leading" secondItem="kAF-Kj-e7a" secondAttribute="leading" constant="16" id="8XM-22-7yY"/>
+                                        <constraint firstItem="F01-hz-nEz" firstAttribute="top" secondItem="kAF-Kj-e7a" secondAttribute="top" constant="16" id="Nog-UV-YKg"/>
+                                        <constraint firstAttribute="bottom" secondItem="F01-hz-nEz" secondAttribute="bottom" constant="16" id="SpN-Lt-MeP"/>
+                                        <constraint firstAttribute="trailing" secondItem="F01-hz-nEz" secondAttribute="trailing" constant="16" id="sZE-Rt-ZdR"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="stackView" destination="F01-hz-nEz" id="84j-d3-zXy"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

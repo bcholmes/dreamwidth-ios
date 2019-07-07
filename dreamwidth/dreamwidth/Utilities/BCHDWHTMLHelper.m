@@ -25,6 +25,11 @@ typedef enum {
 
 @end
 
+@implementation BCHDWBlock
+
+@end
+
+
 @implementation BCHDWStyleAttributes
 
 -(NSDictionary*) attributes {
@@ -72,30 +77,33 @@ typedef enum {
     for (HTMLNode* node in element.childNodes) {
         if ([node isKindOfClass:[HTMLElement class]]) {
             HTMLElement* e = (HTMLElement*) node;
-            if ([e.tagName isEqualToString:@"b"] || [e.tagName isEqualToString:@"strong"]) {
-                self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlBoldStyle;
-            } else if ([e.tagName isEqualToString:@"i"] || [e.tagName isEqualToString:@"em"]) {
-                self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlItalicStyle;
-            } else if ([e.tagName isEqualToString:@"strike"] || [e.tagName isEqualToString:@"s"] || [e.tagName isEqualToString:@"del"]) {
-                self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlStrikethroughStyle;
-            }
+            if (![e.tagName isEqualToString:@"form"]) {
+                if ([e.tagName isEqualToString:@"b"] || [e.tagName isEqualToString:@"strong"]) {
+                    self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlBoldStyle;
+                } else if ([e.tagName isEqualToString:@"i"] || [e.tagName isEqualToString:@"em"]) {
+                    self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlItalicStyle;
+                } else if ([e.tagName isEqualToString:@"strike"] || [e.tagName isEqualToString:@"s"] || [e.tagName isEqualToString:@"del"]) {
+                    self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlStrikethroughStyle;
+                }
 
-            [self processMarkup:e array:array];
+                [self processMarkup:e array:array];
 
-            if ([e.tagName isEqualToString:@"b"] || [e.tagName isEqualToString:@"strong"]) {
-                self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlBoldStyle;
-            } else if ([e.tagName isEqualToString:@"i"] || [e.tagName isEqualToString:@"em"]) {
-                self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlItalicStyle;
-            } else if ([e.tagName isEqualToString:@"strike"] || [e.tagName isEqualToString:@"s"] || [e.tagName isEqualToString:@"del"]) {
-                self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlStrikethroughStyle;
-            }
+                if ([e.tagName isEqualToString:@"b"] || [e.tagName isEqualToString:@"strong"]) {
+                    self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlBoldStyle;
+                } else if ([e.tagName isEqualToString:@"i"] || [e.tagName isEqualToString:@"em"]) {
+                    self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlItalicStyle;
+                } else if ([e.tagName isEqualToString:@"strike"] || [e.tagName isEqualToString:@"s"] || [e.tagName isEqualToString:@"del"]) {
+                    self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlStrikethroughStyle;
+                }
 
-            if ([self isBlockElement:e]) {
-                NSMutableAttributedString* string = [NSMutableAttributedString new];
-                self.defaultAttributes = [BCHDWStyleAttributes new];
-                [array addObject:string];
+                if ([self isBlockElement:e]) {
+                    if ([array lastObject].length > 0) {
+                        NSMutableAttributedString* string = [NSMutableAttributedString new];
+                        [array addObject:string];
+                    }
+                    self.defaultAttributes = [BCHDWStyleAttributes new];
+                }
             }
-            
         } else if ([node isKindOfClass:[HTMLText class]]) {
             NSAttributedString* part = [[NSAttributedString alloc] initWithString:node.textContent attributes:self.defaultAttributes.attributes];
             [[array lastObject] appendAttributedString:part];
@@ -104,7 +112,7 @@ typedef enum {
 }
 
 -(BOOL) isBlockElement:(HTMLElement*) element {
-    NSArray* blockTags = @[ @"p", @"div", @"blockquote" ];
+    NSArray* blockTags = @[ @"p", @"div", @"blockquote", @"ol", @"li", @"ul", @"h1", @"h2", @"h3", @"h4", @"h5", @"h6", @"section", @"table", @"pre", @"hr" ];
     return [blockTags containsObject:element.tagName];
 }
 
