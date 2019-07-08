@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) IBOutlet UILabel* userLabel;
 @property (nonatomic, strong) IBOutlet UILabel* dateLabel;
 @property (nonatomic, strong) IBOutlet UILabel* titleLabel;
+@property (nonatomic, strong) IBOutlet UIImageView* lockedImageView;
 
 @property (nonatomic, strong) IBOutlet UIImageView* avatarImageView;
 

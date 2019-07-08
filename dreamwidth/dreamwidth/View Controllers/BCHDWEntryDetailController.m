@@ -17,6 +17,8 @@
 #import "BCHDWEntryContentTableViewCell.h"
 #import "BCHDWHTMLHelper.h"
 #import "BCHDWMetaDataTableViewCell.h"
+#import "BCHDWTheme.h"
+#import "BCHDWUserStringHelper.h"
 #import "NSString+DreamBalloon.h"
 
 @interface BCHDWEntryDetailController ()<NSFetchedResultsControllerDelegate>
@@ -59,11 +61,13 @@
         BCHDWMetaDataTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"metaData" forIndexPath:indexPath];
 
         cell.titleLabel.text = self.entry.subject;
-        cell.userLabel.text = self.entry.author;
+        cell.userLabel.textColor = nil;
+        cell.userLabel.attributedText = [[BCHDWUserStringHelper new] userLabel:self.entry.author font:cell.userLabel.font];
         cell.dateLabel.text = [formatter stringFromDate:self.entry.creationDate];
+        cell.lockedImageView.hidden = !self.entry.locked;
         
         if (self.entry.avatarUrl != nil) {
-            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:self.entry.avatarUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:self.entry.avatarUrl] placeholderImage:[UIImage imageNamed:@"user"]];
         } else {
             cell.avatarImageView.image = nil;
         }
@@ -83,10 +87,14 @@
             cell.subjectLabel.text = comment.subject;
             cell.subjectLabel.hidden = NO;
         }
-        cell.authorLabel.text = [NSString stringWithFormat:@"%@, %@", comment.author, [comment.creationDate timeAgoSinceNow]];
+        NSMutableAttributedString* labelText = [[[BCHDWUserStringHelper new] userLabel:comment.author font:cell.authorLabel.font] mutableCopy];
+        [labelText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@", %@", [comment.creationDate timeAgoSinceNow]] attributes:@{ NSFontAttributeName : cell.authorLabel.font, NSForegroundColorAttributeName : [BCHDWTheme instance].primaryDarkColor}]];
+        
+        cell.authorLabel.textColor = nil;
+        cell.authorLabel.attributedText = labelText;
         
         if (comment.avatarUrl != nil) {
-            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:comment.avatarUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:comment.avatarUrl] placeholderImage:[UIImage imageNamed:@"user"]];
         } else {
             cell.avatarImageView.image = nil;
         }

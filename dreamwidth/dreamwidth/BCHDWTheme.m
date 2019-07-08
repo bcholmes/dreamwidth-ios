@@ -36,7 +36,9 @@
         self.dreamBalloonLightBlue = [UIColor colorWithHex:@"abc1c9"];
         self.menuColor = self.dreamwidthRed;
         self.primaryColor = self.dreamwidthRed;
+        self.primaryDarkColor = [UIColor colorWithHex:@"463730"];
         self.loginScreenColor = self.dreamwidthPink;
+        self.primaryTextColor = [UIColor colorWithHex:@"333333"];
     }
     return self;
 }
@@ -60,6 +62,12 @@
     [self configureSimpleCell];
     [self configureProfileMainCell];
     [self configureFlatButton];
+    [self configureLabel];
+}
+
+-(void) configureLabel {
+    UILabel* proxy = [UILabel appearance];
+    proxy.textColor = [UIColor colorWithHex:@"333333"];
 }
 
 -(void) configureButtons {

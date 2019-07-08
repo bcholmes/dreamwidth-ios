@@ -13,9 +13,11 @@
 
 -(void) configure;
 
+@property (nonatomic, strong) UIColor* primaryDarkColor;
 @property (nonatomic, strong) UIColor* primaryColor;
 @property (nonatomic, strong) UIColor* menuColor;
 @property (nonatomic, strong) UIColor* loginScreenColor;
+@property (nonatomic, strong) UIColor* primaryTextColor;
 
 -(void) applyTheme:(MDCTextInputControllerBase*) textInputController;
 

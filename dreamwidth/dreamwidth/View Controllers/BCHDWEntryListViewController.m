@@ -78,9 +78,9 @@
     cell.posterLabel.text = entry.author;
 
     if (entry.avatarUrl != nil) {
-        [cell.avatarImageView sd_setImageWithURL:[NSURL URLWithString:entry.avatarUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        [cell.avatarImageView sd_setImageWithURL:[NSURL URLWithString:entry.avatarUrl] placeholderImage:[UIImage imageNamed:@"user"]];
     } else {
-        cell.avatarImageView.image = nil;
+        cell.avatarImageView.image = [UIImage imageNamed:@"user"];
     }
     
     if ([entry.numberOfComments integerValue] == 0) {
