@@ -13,7 +13,9 @@
 #import <DateTools/NSDate+DateTools.h>
 
 #import "BCHDWAppDelegate.h"
+#import "BCHDWCommentComposer.h"
 #import "BCHDWCommentTableViewCell.h"
+#import "BCHDWComposeReplyViewController.h"
 #import "BCHDWEntryContentTableViewCell.h"
 #import "BCHDWHTMLHelper.h"
 #import "BCHDWMetaDataTableViewCell.h"
@@ -21,13 +23,23 @@
 #import "BCHDWUserStringHelper.h"
 #import "NSString+DreamBalloon.h"
 
-@interface BCHDWEntryDetailController ()<NSFetchedResultsControllerDelegate>
+@interface BCHDWEntryDetailController ()<NSFetchedResultsControllerDelegate,BCHDWCommentComposer>
 
 @property (nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
+@property (nonatomic, strong) NSDateFormatter* formatter;
+@property (nonatomic, strong) BCHDWComment* selectedComment;
 
 @end
 
 @implementation BCHDWEntryDetailController
+
+-(instancetype) initWithCoder:(NSCoder*) coder {
+    if (self = [super initWithCoder:coder]) {
+        self.formatter = [NSDateFormatter new];
+        self.formatter.dateFormat = @"yyyy-MMM-dd hh:mm a";
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -42,6 +54,11 @@
     [self queryData:[BCHDWAppDelegate instance].managedObjectContext];
 }
 
+-(void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.selectedComment = nil;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -53,9 +70,7 @@
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDateFormatter* formatter = [NSDateFormatter new];
-    formatter.dateFormat = @"yyyy-MMM-dd hh:mm a";
+- (UITableViewCell*) tableView:(UITableView*) tableView cellForRowAtIndexPath:(NSIndexPath*) indexPath {
     
     if (indexPath.section == 0 && indexPath.row == 0) {
         BCHDWMetaDataTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"metaData" forIndexPath:indexPath];
@@ -63,7 +78,7 @@
         cell.titleLabel.text = self.entry.subject;
         cell.userLabel.textColor = nil;
         cell.userLabel.attributedText = [[BCHDWUserStringHelper new] userLabel:self.entry.author font:cell.userLabel.font];
-        cell.dateLabel.text = [formatter stringFromDate:self.entry.creationDate];
+        cell.dateLabel.text = [self.formatter stringFromDate:self.entry.creationDate];
         cell.lockedImageView.hidden = !self.entry.locked;
         
         if (self.entry.avatarUrl != nil) {
@@ -99,6 +114,8 @@
             cell.avatarImageView.image = nil;
         }
         
+        cell.composer = self;
+        cell.comment = comment;
         cell.leftConstraint.constant = 16 + (comment.depthAsInteger - 1) * 8;
         [self populateHtmlContent:comment.commentText stackView:cell.stackView];
         
@@ -126,6 +143,11 @@
         
         [stackView addArrangedSubview:commentTextLabel];
     }
+}
+
+-(void) reply:(BCHDWComment*) comment {
+    self.selectedComment = comment;
+    [self performSegueWithIdentifier:@"comment" sender:nil];
 }
 
 /*
@@ -162,15 +184,14 @@
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    BCHDWComposeReplyViewController* controller = segue.destinationViewController;
+    controller.entry = self.entry;
+    controller.comment = self.selectedComment;
 }
-*/
 
 #pragma mark - Core Data
 

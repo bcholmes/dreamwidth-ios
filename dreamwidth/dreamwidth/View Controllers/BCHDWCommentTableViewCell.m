@@ -31,4 +31,8 @@
     };
 }
 
+-(IBAction) reply:(id)sender {
+    [self.composer reply:self.comment];
+}
+
 @end
