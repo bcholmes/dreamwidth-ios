@@ -24,6 +24,7 @@
 @property (nonnull, nonatomic, strong) AFHTTPSessionManager* htmlManager;
 @property (nonnull, strong) NSDateFormatter* dateFormatter;
 @property (nonnull, strong) NSDate* lastSyncDate;
+@property (nonnull, strong) NSDictionary* knownSocialMediaSites;
 @end
 
 @implementation BCHDWDreamwidthService
@@ -42,6 +43,8 @@
         [self.htmlManager.requestSerializer setValue:@"application/x-www-form-urlencoded; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
         self.htmlManager.responseSerializer = [AFHTTPResponseSerializer serializer];
         self.htmlManager.completionQueue = dispatch_queue_create("org.ayizan.dreamballoon.html", DISPATCH_QUEUE_SERIAL);
+        
+        self.knownSocialMediaSites = @{ @"ao3.org": @"ao3", @"archiveofourown.org": @"ao3", @"blogger.com" : @"blogger", @"github.com": @"github", @"twitter.com" : @"twitter" };
     }
     return self;
 }
@@ -186,6 +189,31 @@
     }
 }
 
+-(BOOL) isUserReference:(HTMLElement*) element {
+    return [element.tagName isEqualToString:@"span"] && [element.attributes[@"class"] isEqualToString:@"ljuser"];
+}
+
+-(NSString*) extractUserReference:(HTMLElement*) element {
+    
+    NSString* user = element.textContent;
+    
+    NSArray* anchors = [element querySelectorAll:@"a"];
+    HTMLElement* anchor = [anchors lastObject];
+    NSString* site = nil;
+    NSString* url = anchor.attributes[@"href"];
+    for (NSString* domain in self.knownSocialMediaSites) {
+        if ([url rangeOfString:domain].location != NSNotFound) {
+            site = self.knownSocialMediaSites[domain];
+            break;
+        }
+    }
+    
+    if (site != nil) {
+        return [NSString stringWithFormat:@"%@.%@", user, site];
+    } else {
+        return user;
+    }
+}
 
 -(NSString*) collectTextContent:(HTMLElement*) content {
     NSMutableString* result = [NSMutableString new];
@@ -196,6 +224,8 @@
                 [result appendString:@"\n"];
             } else if ([self isExcluded:element]) {
                 // skip it
+            } else if ([self isUserReference:element]) {
+                [result appendFormat:@"@%@", [self extractUserReference:element]];
             } else {
                 [result appendFormat:@"<%@", element.tagName];
                 [element.attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {

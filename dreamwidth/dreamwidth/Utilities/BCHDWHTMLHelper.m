@@ -11,6 +11,8 @@
 #import <UIKit/UIKit.h>
 #import <HTMLKit/HTMLKit.h>
 
+#import "BCHDWUserStringHelper.h"
+
 typedef enum {
     BCHDWHtmlBoldStyle          = 1 << 0,
     BCHDWHtmlItalicStyle        = 1 << 1,
@@ -22,6 +24,7 @@ typedef enum {
 
 @property (nonatomic, assign) BCHDWHtmlStyle styles;
 @property (nonatomic, readonly) NSDictionary* attributes;
+@property (nonatomic, readonly) UIFont* font;
 
 @end
 
@@ -32,9 +35,9 @@ typedef enum {
 
 @implementation BCHDWStyleAttributes
 
--(NSDictionary*) attributes {
+-(UIFont*) font {
     UIFont* font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    
+
     UIFontDescriptorSymbolicTraits traits = 0;
     if (self.styles & BCHDWHtmlBoldStyle) {
         traits |= UIFontDescriptorTraitBold;
@@ -43,14 +46,17 @@ typedef enum {
         traits |= UIFontDescriptorTraitItalic;
     }
     
-    UIFont* newFont = [UIFont fontWithDescriptor:[[font fontDescriptor] fontDescriptorWithSymbolicTraits:traits] size:font.pointSize];
+    return [UIFont fontWithDescriptor:[[font fontDescriptor] fontDescriptorWithSymbolicTraits:traits] size:font.pointSize];
+}
+
+-(NSDictionary*) attributes {
 
     if (self.styles & BCHDWHtmlStrikethroughStyle) {
         return @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInteger:NSUnderlinePatternSolid | NSUnderlineStyleSingle],
-                  NSFontAttributeName : newFont,
+                  NSFontAttributeName : self.font,
                   NSForegroundColorAttributeName : [UIColor blackColor] };
     } else {
-        return @{ NSFontAttributeName : newFont,
+        return @{ NSFontAttributeName : self.font,
                   NSForegroundColorAttributeName : [UIColor blackColor]};
     }
 }
@@ -60,6 +66,7 @@ typedef enum {
 @interface BCHDWHTMLHelper()
 
 @property (nonatomic, nonnull, strong) BCHDWStyleAttributes* defaultAttributes;
+@property (nonatomic, nonnull, strong) BCHDWUserStringHelper* userformatter;
 
 @end
 
@@ -68,6 +75,7 @@ typedef enum {
 -(instancetype) init {
     if (self = [super init]) {
         self.defaultAttributes = [BCHDWStyleAttributes new];
+        self.userformatter = [BCHDWUserStringHelper new];
     }
     return self;
 }
@@ -105,11 +113,44 @@ typedef enum {
                 }
             }
         } else if ([node isKindOfClass:[HTMLText class]]) {
-            NSAttributedString* part = [[NSAttributedString alloc] initWithString:node.textContent attributes:self.defaultAttributes.attributes];
-            [[array lastObject] appendAttributedString:part];
+            [self appendText:(HTMLText*) node buffer:[array lastObject]];
         }
     }
 }
+
+-(void) appendText:(HTMLText*) text buffer:(NSMutableAttributedString*) string {
+    NSString* textContent = text.textContent;
+    
+    NSRange   searchedRange = NSMakeRange(0, [textContent length]);
+    NSString* pattern = @"(?<!\\\\)@[a-zA-Z0-9_]+(?:\\.[a-zA-Z0-9]+)?";
+    NSError*  error = nil;
+    
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern: pattern options:0 error:&error];
+    NSArray* matches = [regex matchesInString:textContent options:0 range: searchedRange];
+    for (NSTextCheckingResult* match in matches) {
+        NSString* matchText = [textContent substringWithRange:match.range];
+
+        if (match.range.location > searchedRange.location) {
+            [string appendAttributedString:[[NSAttributedString alloc] initWithString:[textContent substringWithRange:NSMakeRange(searchedRange.location, match.range.location - searchedRange.location)] attributes:self.defaultAttributes.attributes]];
+        }
+        
+        UIImage* icon = nil;
+        if ([matchText rangeOfString:@"."].location != NSNotFound) {
+            NSRange range = [matchText rangeOfString:@"."];
+            NSString* site = [matchText substringFromIndex:range.location + 1];
+            matchText = [matchText substringToIndex:range.location];
+            icon = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon", site]];
+        }
+        
+        [string appendAttributedString:[self.userformatter userLabel:[matchText substringFromIndex:1] icon:icon font:self.defaultAttributes.font]];
+        searchedRange = NSMakeRange(match.range.location + match.range.length, textContent.length - (match.range.location + match.range.length));
+    }
+
+    if (searchedRange.length > 0) {
+        [string appendAttributedString:[[NSAttributedString alloc] initWithString:[textContent substringWithRange:searchedRange] attributes:self.defaultAttributes.attributes]];
+    }
+}
+
 
 -(BOOL) isBlockElement:(HTMLElement*) element {
     NSArray* blockTags = @[ @"p", @"div", @"blockquote", @"ol", @"li", @"ul", @"h1", @"h2", @"h3", @"h4", @"h5", @"h6", @"section", @"table", @"pre", @"hr" ];
