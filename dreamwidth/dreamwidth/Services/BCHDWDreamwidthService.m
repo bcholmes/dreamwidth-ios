@@ -44,7 +44,7 @@
         self.htmlManager.responseSerializer = [AFHTTPResponseSerializer serializer];
         self.htmlManager.completionQueue = dispatch_queue_create("org.ayizan.dreamballoon.html", DISPATCH_QUEUE_SERIAL);
         
-        self.knownSocialMediaSites = @{ @"ao3.org": @"ao3", @"archiveofourown.org": @"ao3", @"blogger.com" : @"blogger", @"github.com": @"github", @"twitter.com" : @"twitter" };
+        self.knownSocialMediaSites = @{ @"ao3.org": @"ao3", @"archiveofourown.org": @"ao3", @"blogger.com" : @"blogger", @"facebook.com": @"facebook", @"github.com": @"github", @"livejournal.com": @"livejournal", @"tumblr.com": @"tumblr", @"twitter.com" : @"twitter" };
     }
     return self;
 }
