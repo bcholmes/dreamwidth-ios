@@ -82,7 +82,7 @@ typedef enum {
 
 - (void) processMarkup:(HTMLElement*) element array:(NSMutableArray<NSMutableAttributedString*>*) array {
     
-    for (HTMLNode* node in element.childNodes) {
+    for (HTMLNode* node = element.firstChild; node != nil; node = node.nextSibling) {
         if ([node isKindOfClass:[HTMLElement class]]) {
             HTMLElement* e = (HTMLElement*) node;
             if (![e.tagName isEqualToString:@"form"]) {

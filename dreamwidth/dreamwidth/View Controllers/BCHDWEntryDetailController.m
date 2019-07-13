@@ -124,7 +124,7 @@
 }
 
 -(void) populateHtmlContent:(NSString*) html stackView:(UIStackView*) stackView {
-    if ([html isHTMLMarkupPresent]) {
+    if ([html isHTMLMarkupPresent] || [html isUserReferencePresent]) {
         NSArray* markedUpText = [[BCHDWHTMLHelper new] parseHtmlIntoAttributedStrings:html];
         for (NSAttributedString* string in markedUpText) {
             UILabel* commentTextLabel = [UILabel new];

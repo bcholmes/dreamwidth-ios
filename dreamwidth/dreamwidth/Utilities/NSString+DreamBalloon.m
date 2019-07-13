@@ -24,4 +24,13 @@
     }
 }
 
+-(BOOL) isUserReferencePresent {
+    NSError* error = nil;
+    NSRange range = NSMakeRange(0, self.length);
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"(?<!\\\\)@[a-zA-Z0-9_]+(?:\\.[a-zA-Z0-9]+)?" options:0 error:&error];
+    NSArray* matches = [regex matchesInString:self options:0 range:range];
+    return (error == nil && matches.count > 0);
+}
+
+
 @end
