@@ -409,6 +409,9 @@
                                                     <constraint firstAttribute="height" constant="42" id="P2j-dK-8HW"/>
                                                 </constraints>
                                                 <state key="normal" title="Post"/>
+                                                <connections>
+                                                    <action selector="postComment:" destination="5bP-Gt-HXN" eventType="touchUpInside" id="C3J-iZ-Avm"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -445,6 +448,10 @@
                             <constraint firstItem="4YN-kO-itF" firstAttribute="top" secondItem="Hi5-Wb-z6f" secondAttribute="bottom" id="uoL-i1-ar4"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="commentTextField" destination="VFU-hi-Fvr" id="BnQ-4z-KCd"/>
+                        <outlet property="subjectTextField" destination="ndu-lj-y42" id="JcH-2V-szL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aQO-kQ-voJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

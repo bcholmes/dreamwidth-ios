@@ -8,7 +8,16 @@
 
 #import "BCHDWComposeReplyViewController.h"
 
+#import <MaterialComponents/MaterialSnackbar.h>
+#import <MaterialComponents/MaterialTextFields.h>
+#import <SVProgressHUD/SVProgressHUD.h>
+
+#import "BCHDWAppDelegate.h"
+
 @interface BCHDWComposeReplyViewController ()
+
+@property (nonatomic, weak) IBOutlet MDCTextField* subjectTextField;
+@property (nonatomic, weak) IBOutlet MDCMultilineTextField* commentTextField;
 
 @end
 
@@ -16,17 +25,28 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(IBAction) postComment:(id)sender {
+    if (self.commentTextField.text.length > 0) {
+        BCHDWDreamwidthService* service = [BCHDWAppDelegate instance].dreamwidthService;
+        BCHDWCommentEntryData* data = [BCHDWCommentEntryData new];
+        data.subject = self.subjectTextField.text;
+        data.commentText = self.commentTextField.text;
+        
+        [SVProgressHUD show];
+        [service postComment:data entry:self.entry parentComment:self.comment callback:^(NSError* error) {
+            [SVProgressHUD dismiss];
+            
+            if (error) {
+                [MDCSnackbarManager showMessage:[MDCSnackbarMessage messageWithText:@"Ooops. We ran into a problem trying to post your comment."]];
+            } else {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+            
+        }];
+    } else {
+        [MDCSnackbarManager showMessage:[MDCSnackbarMessage messageWithText:@"C'mon. You need to type something"]];
+    }
 }
-*/
-
 @end

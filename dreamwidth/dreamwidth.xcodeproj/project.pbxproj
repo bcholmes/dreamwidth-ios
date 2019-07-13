@@ -17,6 +17,8 @@
 		6302C75222D1264500346552 /* BCHDWEntryContentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C75122D1264500346552 /* BCHDWEntryContentTableViewCell.m */; };
 		6302C75522D2884600346552 /* BCHDWUserStringHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C75422D2884600346552 /* BCHDWUserStringHelper.m */; };
 		6302C75822D36EC600346552 /* BCHDWComposeReplyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C75722D36EC600346552 /* BCHDWComposeReplyViewController.m */; };
+		6302C75C22D7746700346552 /* BCHDWCommentEntryData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C75B22D7746700346552 /* BCHDWCommentEntryData.m */; };
+		6302C75F22D8B4D200346552 /* BCHDWFormData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302C75E22D8B4D200346552 /* BCHDWFormData.m */; };
 		631FA59422C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59222C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld */; };
 		631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59622C8D09C00FA83C8 /* BCHDWComment.m */; };
 		631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FA59922C8D18600FA83C8 /* BCHDWPersistenceService.m */; };
@@ -84,6 +86,10 @@
 		6302C75622D36EC600346552 /* BCHDWComposeReplyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWComposeReplyViewController.h; sourceTree = "<group>"; };
 		6302C75722D36EC600346552 /* BCHDWComposeReplyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWComposeReplyViewController.m; sourceTree = "<group>"; };
 		6302C75922D36F1600346552 /* BCHDWCommentComposer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWCommentComposer.h; sourceTree = "<group>"; };
+		6302C75A22D7746700346552 /* BCHDWCommentEntryData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWCommentEntryData.h; sourceTree = "<group>"; };
+		6302C75B22D7746700346552 /* BCHDWCommentEntryData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWCommentEntryData.m; sourceTree = "<group>"; };
+		6302C75D22D8B4D200346552 /* BCHDWFormData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWFormData.h; sourceTree = "<group>"; };
+		6302C75E22D8B4D200346552 /* BCHDWFormData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWFormData.m; sourceTree = "<group>"; };
 		631FA59322C7AEF400FA83C8 /* Dreamwidth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Dreamwidth.xcdatamodel; sourceTree = "<group>"; };
 		631FA59522C8D09C00FA83C8 /* BCHDWComment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWComment.h; sourceTree = "<group>"; };
 		631FA59622C8D09C00FA83C8 /* BCHDWComment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWComment.m; sourceTree = "<group>"; };
@@ -192,6 +198,10 @@
 				6332FC0D1E15A8DF00E11A49 /* BCHDWDreamwidthService.m */,
 				631FA59822C8D18600FA83C8 /* BCHDWPersistenceService.h */,
 				631FA59922C8D18600FA83C8 /* BCHDWPersistenceService.m */,
+				6302C75A22D7746700346552 /* BCHDWCommentEntryData.h */,
+				6302C75B22D7746700346552 /* BCHDWCommentEntryData.m */,
+				6302C75D22D8B4D200346552 /* BCHDWFormData.h */,
+				6302C75E22D8B4D200346552 /* BCHDWFormData.m */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -558,12 +568,14 @@
 				6345FCB91E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m in Sources */,
 				6332FC0A1E159A8100E11A49 /* BCHDWTheme.m in Sources */,
 				631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */,
+				6302C75F22D8B4D200346552 /* BCHDWFormData.m in Sources */,
 				631FA59D22C8EC3800FA83C8 /* BCHDWEntryHandle.m in Sources */,
 				6302C74022CB8E3500346552 /* BCHDWMetaDataTableViewCell.m in Sources */,
 				6302C74622CC116500346552 /* BCHDWBackgroundView.m in Sources */,
 				631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */,
 				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
 				6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */,
+				6302C75C22D7746700346552 /* BCHDWCommentEntryData.m in Sources */,
 				6302C74F22D0F13000346552 /* BCHDWHTMLHelper.m in Sources */,
 				6332FC141E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m in Sources */,
 			);

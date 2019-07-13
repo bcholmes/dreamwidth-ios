@@ -14,6 +14,8 @@
 #import <NSDate-Additions/NSDate+Additions.h>
 
 #import "BCHDWEntryHandle.h"
+#import "BCHDWCommentEntryData.h"
+#import "BCHDWFormData.h"
 
 @interface BCHDWDreamwidthService()
 
@@ -392,4 +394,72 @@
     }];
 }
 
+-(void) postComment:(BCHDWCommentEntryData*) comment entry:(BCHDWEntry*) entry parentComment:(BCHDWComment*) parentComment callback:(void (^) (NSError*)) callback {
+    [self.api performFunctionWithWebSession:^(NSError * _Nullable error, NSString * _Nullable session) {
+
+        if (error == nil) {
+            [self setAuthenticationCookie:session];
+            [self fetchCommentForm:entry parentComment:parentComment callback:^(NSError* error, BCHDWFormData* formData) {
+                if (error == nil) {
+                    
+                    [formData addFormProperties:comment.formProperties];
+                    
+                    [self submitForm:formData callback:^(NSError* error) {
+                        if (error == nil) {
+                            [self fetchEntry:entry.url];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                callback(nil);
+                            });
+                        } else {
+                            NSLog(@"error %@", error);
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                callback(error);
+                            });
+                        }
+                    }];
+                } else {
+                    NSLog(@"error %@", error);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        callback(error);
+                    });
+                }
+            }];
+        } else {
+            NSLog(@"error %@", error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(error);
+            });
+        }
+    }];
+}
+
+
+-(void) submitForm:(BCHDWFormData*) form callback:(void (^)(NSError*)) callback {
+    [self.htmlManager POST:form.submitUrl parameters:form.properties progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        callback(nil);
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"Error posting comment: %@", error);
+        callback(error);
+    }];
+}
+
+-(void) fetchCommentForm:(BCHDWEntry*) entry parentComment:(BCHDWComment*) comment callback:(void (^)(NSError*, BCHDWFormData*)) callback {
+    NSString* url = [NSString stringWithFormat:@"%@?mode=reply&format=light", entry.url];
+    if (comment != nil) {
+        url = [NSString stringWithFormat:@"%@?replyto=%@&format=light", entry.url, comment.commentId];
+    }
+    [self.htmlManager GET:url parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
+        
+        HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
+        HTMLDocument* document = [parser parseDocument];
+        HTMLElement* element = [document querySelector:@"form"];
+        BCHDWFormData* formData = [BCHDWFormData fromHtml:element];
+        
+        callback(nil, formData);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        callback(error, nil);
+    }];
+}
 @end

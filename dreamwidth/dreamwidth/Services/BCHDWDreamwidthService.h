@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "DreamwidthApi.h"
+#import "BCHDWCommentEntryData.h"
 #import "BCHDWPersistenceService.h"
 #import "BCHDWUser.h"
 
@@ -23,5 +24,6 @@
 -(void) postEntry:(NSString*) entryText completion:(void (^)(NSError* error, NSString* url)) callback;
 -(void) fetchRecentReadingPageActivity;
 -(void) syncWithServer;
+-(void) postComment:(BCHDWCommentEntryData*) comment entry:(BCHDWEntry*) entry parentComment:(BCHDWComment*) parentComment callback:(void (^) (NSError*)) callback;
 
 @end
