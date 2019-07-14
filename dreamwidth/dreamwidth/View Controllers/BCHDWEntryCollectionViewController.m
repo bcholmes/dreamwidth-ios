@@ -11,6 +11,7 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <CoreData/CoreData.h>
 #import <MaterialComponents/MaterialAppBar.h>
+#import <DateTools/NSDate+DateTools.h>
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWEntryCollectionViewCell.h"
@@ -131,7 +132,9 @@ static NSString * const reuseIdentifier = @"Cell";
     cell.titleLabel.text = entry.subject;
     cell.authorLabel.attributedText = [self.userHelper userLabel:entry.author font:cell.authorLabel.font];
     cell.summaryLabel.text = entry.summaryText;
-    
+    cell.dateLabel.text = [entry.creationDate timeAgoSinceNow];
+    cell.lockedImageView.hidden = !entry.locked;
+
     if (entry.avatarUrl != nil) {
         [cell.avatarImageView setImageWithURL:[NSURL URLWithString:entry.avatarUrl] placeholderImage:[UIImage imageNamed:@"user"]];
     } else {

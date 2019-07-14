@@ -305,38 +305,44 @@
 -(void) fetchEntry:(NSString*) entryUrl {
     [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryUrl] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
-        HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
-        HTMLDocument* document = [parser parseDocument];
-        
-        NSString* author = [document querySelector:@".poster-info .ljuser"].textContent;
-        if (author != nil && author.length > 0) {
-            BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
-            [entry.managedObjectContext performBlock:^{
-                entry.subject = [document querySelector:@".entry-title"].textContent;
-                HTMLElement* avatarAnchor = [document querySelector:@".userpic img"];
-                entry.avatarUrl = avatarAnchor.attributes[@"src"];
-                entry.author = author;
+        @try {
+            HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
+            HTMLDocument* document = [parser parseDocument];
+            
+            NSString* author = [document querySelector:@".poster-info .ljuser"].textContent;
+            if (author != nil && author.length > 0) {
+                BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
+                [entry.managedObjectContext performBlock:^{
+                    entry.subject = [document querySelector:@".entry-title"].textContent;
+                    HTMLElement* avatarAnchor = [document querySelector:@".userpic img"];
+                    entry.avatarUrl = avatarAnchor.attributes[@"src"];
+                    entry.author = author;
 
-                NSString* entryDate = [document querySelector:@".poster-info .datetime"].textContent;
-                entry.creationDate = [self.dateFormatter dateFromString:entryDate];
-                if (entry.updateDate == nil) {
-                    entry.updateDate = entry.creationDate;
-                }
-                
-                HTMLElement* lock = [document querySelector:@".access-filter"];
-                if (lock != nil) {
-                    entry.locked = YES;
-                }
-                
-                entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
-                entry.summaryText = [self limit:[self collectTextSummary:[document querySelector:@".entry-content"]]];
-                
-                [self processComments:document entry:entry];
-                
-                [entry.managedObjectContext save:nil];
-            }];
-        } else {
- //           NSLog(@"HTML >>>> %@", [[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]);
+                    NSString* entryDate = [document querySelector:@".poster-info .datetime"].textContent;
+                    entry.creationDate = [self.dateFormatter dateFromString:entryDate];
+                    if (entry.updateDate == nil) {
+                        entry.updateDate = entry.creationDate;
+                    }
+                    
+                    HTMLElement* lock = [document querySelector:@".access-filter"];
+                    if (lock != nil) {
+                        entry.locked = YES;
+                    }
+                    
+                    entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
+                    entry.summaryText = [self limit:[self collectTextSummary:[document querySelector:@".entry-content"]]];
+                    
+                    [self processComments:document entry:entry];
+                    
+                    [entry.managedObjectContext save:nil];
+                }];
+            } else {
+     //           NSLog(@"HTML >>>> %@", [[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]);
+            }
+        } @catch (NSException *exception) {
+            NSLog(@"******************************************");
+            NSLog(@"%@", exception.reason);
+            NSLog(@"******************************************");
         }
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"fetch entry: %@", error);

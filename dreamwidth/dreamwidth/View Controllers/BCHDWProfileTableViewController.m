@@ -8,7 +8,7 @@
 
 #import "BCHDWProfileTableViewController.h"
 
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWAvatarTableViewCell.h"
@@ -78,7 +78,7 @@
         cell.usernameLabel.text = self.user.username;
         BCHDWAvatar* avatar = self.user.defaultAvatar;
         if (avatar != nil) {
-            [cell.avatarImageView sd_setImageWithURL:[NSURL URLWithString:avatar.url]];
+            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:avatar.url]];
         }
         
         return cell;

@@ -22,7 +22,6 @@ target 'dreamwidth' do
   pod 'MaterialComponents/TextFields', '~> 84.0'
   pod 'SVProgressHUD'
   pod 'SWRevealViewController'
-  pod 'SDWebImage', '~>3.7'
   pod 'UIColor-HexRGB', '~>1.0'
   pod 'NSDate-Additions'
   pod 'UIColor-HexString'
