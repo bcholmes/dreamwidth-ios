@@ -7,14 +7,20 @@
 //
 
 #import "BCHDWEntryCollectionViewCell.h"
+#import "BCHDWCardView.h"
 
 @interface BCHDWEntryCollectionViewCell()
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint* widthContraint;
+@property (nonatomic, weak) IBOutlet BCHDWCardView* cardView;
 
 @end
 
 @implementation BCHDWEntryCollectionViewCell
+
+-(void) setHighlighted:(BOOL)highlighted {
+    self.cardView.highlighted = highlighted;
+}
 
 -(void) setWidth:(CGFloat) width {
     self.widthContraint.constant = width;

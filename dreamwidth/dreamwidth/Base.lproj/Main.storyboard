@@ -192,7 +192,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="159"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfo-b9-jSo">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfo-b9-jSo" customClass="BCHDWCardView">
                                             <rect key="frame" x="16" y="16" width="343" height="135"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="HtA-qf-Q0j">
@@ -275,6 +275,7 @@
                                 <connections>
                                     <outlet property="authorLabel" destination="wAb-oz-vwE" id="MLB-qq-fjM"/>
                                     <outlet property="avatarImageView" destination="ODJ-jW-VR6" id="Q2W-b7-1Mx"/>
+                                    <outlet property="cardView" destination="yfo-b9-jSo" id="JkV-J7-Ccm"/>
                                     <outlet property="commentLabel" destination="uFk-K5-XdF" id="2r5-JR-JKw"/>
                                     <outlet property="summaryLabel" destination="9o9-2L-yDd" id="4SW-j7-4C3"/>
                                     <outlet property="titleLabel" destination="bsj-V2-L7g" id="qUL-gD-ki4"/>

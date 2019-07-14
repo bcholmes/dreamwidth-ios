@@ -40,6 +40,7 @@
 		63981CAE22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CAD22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m */; };
 		63981CB122DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CB022DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m */; };
 		63981CB422DAB8E10080BF25 /* BCHDWMainCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CB322DAB8E10080BF25 /* BCHDWMainCollectionView.m */; };
+		63981CB722DADE4D0080BF25 /* BCHDWCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CB622DADE4D0080BF25 /* BCHDWCardView.m */; };
 		9E8C5FA2DB9D8FDD88254A4E /* libPods-dreamwidth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */; };
 		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
 		D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C31D08C11300529654 /* BCHDWAvatar.m */; };
@@ -133,6 +134,8 @@
 		63981CB022DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntryCollectionViewController.m; sourceTree = "<group>"; };
 		63981CB222DAB8E10080BF25 /* BCHDWMainCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWMainCollectionView.h; sourceTree = "<group>"; };
 		63981CB322DAB8E10080BF25 /* BCHDWMainCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWMainCollectionView.m; sourceTree = "<group>"; };
+		63981CB522DADE4D0080BF25 /* BCHDWCardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWCardView.h; sourceTree = "<group>"; };
+		63981CB622DADE4D0080BF25 /* BCHDWCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWCardView.m; sourceTree = "<group>"; };
 		731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dreamwidth.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWLoginViewController.h; sourceTree = "<group>"; };
 		D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWLoginViewController.m; sourceTree = "<group>"; };
@@ -197,6 +200,8 @@
 				63981CAA22DA51D80080BF25 /* HTMLElement+DreamBalloon.m */,
 				63981CB222DAB8E10080BF25 /* BCHDWMainCollectionView.h */,
 				63981CB322DAB8E10080BF25 /* BCHDWMainCollectionView.m */,
+				63981CB522DADE4D0080BF25 /* BCHDWCardView.h */,
+				63981CB622DADE4D0080BF25 /* BCHDWCardView.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -583,6 +588,7 @@
 				631FA59D22C8EC3800FA83C8 /* BCHDWEntryHandle.m in Sources */,
 				6302C74022CB8E3500346552 /* BCHDWMetaDataTableViewCell.m in Sources */,
 				6302C74622CC116500346552 /* BCHDWBackgroundView.m in Sources */,
+				63981CB722DADE4D0080BF25 /* BCHDWCardView.m in Sources */,
 				631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */,
 				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
 				6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */,

@@ -286,8 +286,8 @@
     NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
     NSArray* matches = [regex matchesInString:summaryText options:0 range:range];
 
-    if (matches.count > 100) {
-        NSTextCheckingResult* match = matches[99];
+    if (matches.count > 60) {
+        NSTextCheckingResult* match = matches[59];
         return [NSString stringWithFormat:@"%@...", [summaryText substringToIndex:match.range.location]];
     } else {
         return summaryText;

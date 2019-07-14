@@ -14,6 +14,7 @@
 
 #import "BCHDWBannerView.h"
 #import "BCHDWBackgroundView.h"
+#import "BCHDWCardView.h"
 #import "BCHDWMainCollectionView.h"
 #import "BCHDWProfileMainTableViewCell.h"
 #import "BCHDWSimpleTableViewCell.h"
@@ -58,6 +59,7 @@
     [self configureMainCollectionView];
     [self configureNavigationBars];
     [self configureButtons];
+    [self configureCardView];
     [self configureMaterialButton];
     [self configureBackgroundView];
     [self configureBannerView];
@@ -81,6 +83,11 @@
     UIButton* proxy = [UIButton appearance];
     [proxy setTitleColor:self.dreamwidthRed forState:UIControlStateNormal];
     [proxy setTitleColor:[UIColor colorWithHex:@"666666"] forState:UIControlStateHighlighted];
+}
+
+-(void) configureCardView {
+    BCHDWCardView* proxy = [BCHDWCardView appearance];
+    proxy.inkColor = [self.primaryColor colorWithAlphaComponent:0.32];
 }
 
 -(void) configureSimpleCell {
