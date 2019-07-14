@@ -8,7 +8,7 @@
 
 #import "BCHDWMenuViewController.h"
 
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
 #import <SWRevealViewController/SWRevealViewController.h>
 
 #import "BCHDWAppDelegate.h"
@@ -63,7 +63,7 @@
         cell.backgroundColor = [BCHDWTheme instance].menuColor;
         BCHDWAvatar* avatar = user.defaultAvatar;
         if (avatar != nil) {
-            [cell.avatarView sd_setImageWithURL:[NSURL URLWithString:avatar.url] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+            [cell.avatarView setImageWithURL:[NSURL URLWithString:avatar.url] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
         }
         
         return cell;

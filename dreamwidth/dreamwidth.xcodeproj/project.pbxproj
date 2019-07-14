@@ -44,8 +44,6 @@
 		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
 		D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C31D08C11300529654 /* BCHDWAvatar.m */; };
 		D81603C71D08C28400529654 /* BCHDWUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C61D08C28400529654 /* BCHDWUser.m */; };
-		D81603CA1D09DCC300529654 /* BCHDWEntryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C91D09DCC300529654 /* BCHDWEntryListViewController.m */; };
-		D81603CD1D09DFE200529654 /* BCHDWEntryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603CC1D09DFE200529654 /* BCHDWEntryTableViewCell.m */; };
 		D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603CF1D09E8C400529654 /* BCHDWEntry.m */; };
 		D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84ED1AB1E6BD00B71DC4 /* main.m */; };
 		D8EA84F11AB1E6BD00B71DC4 /* BCHDWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EA84F01AB1E6BD00B71DC4 /* BCHDWAppDelegate.m */; };
@@ -142,10 +140,6 @@
 		D81603C31D08C11300529654 /* BCHDWAvatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWAvatar.m; sourceTree = "<group>"; };
 		D81603C51D08C28400529654 /* BCHDWUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWUser.h; sourceTree = "<group>"; };
 		D81603C61D08C28400529654 /* BCHDWUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWUser.m; sourceTree = "<group>"; };
-		D81603C81D09DCC300529654 /* BCHDWEntryListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryListViewController.h; sourceTree = "<group>"; };
-		D81603C91D09DCC300529654 /* BCHDWEntryListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntryListViewController.m; sourceTree = "<group>"; };
-		D81603CB1D09DFE200529654 /* BCHDWEntryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryTableViewCell.h; sourceTree = "<group>"; };
-		D81603CC1D09DFE200529654 /* BCHDWEntryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntryTableViewCell.m; sourceTree = "<group>"; };
 		D81603CE1D09E8C400529654 /* BCHDWEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWEntry.h; sourceTree = "<group>"; };
 		D81603CF1D09E8C400529654 /* BCHDWEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntry.m; sourceTree = "<group>"; };
 		D8EA84E81AB1E6BD00B71DC4 /* dreamwidth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dreamwidth.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -248,10 +242,6 @@
 				6332FC1F1E16B2A100E11A49 /* BCHDWAvatarTableViewController.m */,
 				6345FCB71E17FBE6004B7B19 /* BCHDWComposeEntryViewController.h */,
 				6345FCB81E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m */,
-				D81603C81D09DCC300529654 /* BCHDWEntryListViewController.h */,
-				D81603C91D09DCC300529654 /* BCHDWEntryListViewController.m */,
-				D81603CB1D09DFE200529654 /* BCHDWEntryTableViewCell.h */,
-				D81603CC1D09DFE200529654 /* BCHDWEntryTableViewCell.m */,
 				D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */,
 				D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */,
 				6332FBFF1E15938200E11A49 /* BCHDWMenuViewController.h */,
@@ -579,9 +569,7 @@
 				6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */,
 				D8EA84F11AB1E6BD00B71DC4 /* BCHDWAppDelegate.m in Sources */,
 				6302C75222D1264500346552 /* BCHDWEntryContentTableViewCell.m in Sources */,
-				D81603CD1D09DFE200529654 /* BCHDWEntryTableViewCell.m in Sources */,
 				63981CAE22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m in Sources */,
-				D81603CA1D09DCC300529654 /* BCHDWEntryListViewController.m in Sources */,
 				6302C74322CB92B900346552 /* BCHDWBannerView.m in Sources */,
 				D8EA84EE1AB1E6BD00B71DC4 /* main.m in Sources */,
 				631FA59422C7AEF400FA83C8 /* Dreamwidth.xcdatamodeld in Sources */,

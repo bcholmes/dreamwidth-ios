@@ -8,7 +8,7 @@
 
 #import "BCHDWAvatarTableViewCell.h"
 
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 
 @implementation BCHDWAvatarTableViewCell
@@ -27,7 +27,7 @@
 -(void) populateFromAvatar:(BCHDWAvatar*) avatar {
     self.avatarKeywordsLabel.text = avatar.keywords;
     if (avatar != nil) {
-        [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:avatar.url]];
+        [self.avatarImageView setImageWithURL:[NSURL URLWithString:avatar.url]];
     }
 }
 

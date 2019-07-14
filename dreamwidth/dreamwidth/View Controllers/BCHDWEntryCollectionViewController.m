@@ -18,6 +18,7 @@
 #import "BCHDWEntry.h"
 #import "BCHDWLoginViewController.h"
 #import "BCHDWTheme.h"
+#import "BCHDWUserStringHelper.h"
 
 @interface BCHDWEntryCollectionViewController ()<NSFetchedResultsControllerDelegate, MDCFlexibleHeaderViewLayoutDelegate>
 
@@ -26,6 +27,7 @@
 @property (nonatomic, strong) UIImageView* headerImage;
 @property (nonatomic, assign) CGFloat maxHeaderHeight;
 @property (nonatomic, strong) BCHDWEntry* selectedEntry;
+@property (nonatomic, strong) BCHDWUserStringHelper* userHelper;
 
 @end
 
@@ -38,9 +40,10 @@ static NSString * const reuseIdentifier = @"Cell";
     
     [self configureAppBar];
 
+    self.userHelper = [BCHDWUserStringHelper new];
     UICollectionViewFlowLayout* layout = (UICollectionViewFlowLayout*) self.collectionView.collectionViewLayout;
     CGFloat width = self.collectionView.bounds.size.width;
-    layout.estimatedItemSize = CGSizeMake(width, 130);
+    layout.estimatedItemSize = CGSizeMake(width, 250);
 
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -126,7 +129,7 @@ static NSString * const reuseIdentifier = @"Cell";
     BCHDWEntryCollectionViewCell* cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"entry" forIndexPath:indexPath];
     BCHDWEntry* entry = self.fetchedResultsController.fetchedObjects[indexPath.row];
     cell.titleLabel.text = entry.subject;
-    cell.authorLabel.text = entry.author;
+    cell.authorLabel.attributedText = [self.userHelper userLabel:entry.author font:cell.authorLabel.font];
     cell.summaryLabel.text = entry.summaryText;
     
     if (entry.avatarUrl != nil) {
