@@ -477,21 +477,30 @@
                                     <outlet property="subjectLabel" destination="4Lg-xI-qBo" id="60C-D4-Owj"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="content" rowHeight="84" id="vK7-eE-Nel" customClass="BCHDWEntryContentTableViewCell">
-                                <rect key="frame" x="0.0" y="260.5" width="375" height="84"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="content" rowHeight="107" id="vK7-eE-Nel" customClass="BCHDWEntryContentTableViewCell">
+                                <rect key="frame" x="0.0" y="260.5" width="375" height="107"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vK7-eE-Nel" id="kAF-Kj-e7a">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="84"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="107"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="F01-hz-nEz">
-                                            <rect key="frame" x="16" y="16" width="343" height="52"/>
+                                            <rect key="frame" x="16" y="16" width="343" height="45"/>
                                         </stackView>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxO-6S-fRA" customClass="MDCButton">
+                                            <rect key="frame" x="320" y="69" width="39" height="30"/>
+                                            <state key="normal" title="Reply"/>
+                                            <connections>
+                                                <action selector="reply:" destination="vK7-eE-Nel" eventType="touchUpInside" id="DLw-QV-Ad6"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="rxO-6S-fRA" firstAttribute="top" secondItem="F01-hz-nEz" secondAttribute="bottom" constant="8" id="4mc-Z1-cRg"/>
+                                        <constraint firstAttribute="trailing" secondItem="rxO-6S-fRA" secondAttribute="trailing" constant="16" id="6GO-Eb-rYT"/>
                                         <constraint firstItem="F01-hz-nEz" firstAttribute="leading" secondItem="kAF-Kj-e7a" secondAttribute="leading" constant="16" id="8XM-22-7yY"/>
                                         <constraint firstItem="F01-hz-nEz" firstAttribute="top" secondItem="kAF-Kj-e7a" secondAttribute="top" constant="16" id="Nog-UV-YKg"/>
-                                        <constraint firstAttribute="bottom" secondItem="F01-hz-nEz" secondAttribute="bottom" constant="16" id="SpN-Lt-MeP"/>
+                                        <constraint firstAttribute="bottom" secondItem="rxO-6S-fRA" secondAttribute="bottom" constant="8" id="bVd-DX-W22"/>
                                         <constraint firstAttribute="trailing" secondItem="F01-hz-nEz" secondAttribute="trailing" constant="16" id="sZE-Rt-ZdR"/>
                                     </constraints>
                                 </tableViewCellContentView>

@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#import "BCHDWCommentComposer.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BCHDWEntryContentTableViewCell : UITableViewCell
 
 @property (nonatomic, weak) IBOutlet UIStackView* stackView;
+
+@property (nonatomic, strong) NSObject<BCHDWCommentComposer>* composer;
 
 @end
 

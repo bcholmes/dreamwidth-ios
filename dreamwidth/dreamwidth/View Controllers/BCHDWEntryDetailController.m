@@ -92,6 +92,7 @@
     } else if (indexPath.section == 0) {
         BCHDWEntryContentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"content" forIndexPath:indexPath];
         [self populateHtmlContent:self.entry.entryText stackView:cell.stackView];
+        cell.composer = self;
         return cell;
     } else {
         BCHDWCommentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"comment" forIndexPath:indexPath];
