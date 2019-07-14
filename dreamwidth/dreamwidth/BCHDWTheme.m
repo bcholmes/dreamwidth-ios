@@ -14,6 +14,7 @@
 
 #import "BCHDWBannerView.h"
 #import "BCHDWBackgroundView.h"
+#import "BCHDWMainCollectionView.h"
 #import "BCHDWProfileMainTableViewCell.h"
 #import "BCHDWSimpleTableViewCell.h"
 
@@ -54,6 +55,7 @@
 }
 
 -(void) configure {
+    [self configureMainCollectionView];
     [self configureNavigationBars];
     [self configureButtons];
     [self configureMaterialButton];
@@ -63,6 +65,11 @@
     [self configureProfileMainCell];
     [self configureFlatButton];
     [self configureLabel];
+}
+
+-(void) configureMainCollectionView {
+    BCHDWMainCollectionView* proxy = [BCHDWMainCollectionView appearance];
+    proxy.backgroundColor = self.dreamwidthPink;
 }
 
 -(void) configureLabel {

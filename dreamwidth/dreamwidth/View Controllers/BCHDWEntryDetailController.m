@@ -57,6 +57,7 @@
 -(void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.selectedComment = nil;
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 #pragma mark - Table view data source

@@ -16,6 +16,7 @@
 #import "BCHDWEntryHandle.h"
 #import "BCHDWCommentEntryData.h"
 #import "BCHDWFormData.h"
+#import "HTMLElement+DreamBalloon.h"
 
 @interface BCHDWDreamwidthService()
 
@@ -253,6 +254,46 @@
     return [NSString stringWithString:result];
 }
 
+-(NSString*) collectTextSummary:(HTMLElement*) content {
+    NSMutableString* result = [NSMutableString new];
+    for (HTMLNode* node = content.firstChild; node != nil; node = node.nextSibling) {
+        if ([node isKindOfClass:[HTMLElement class]]) {
+            HTMLElement* element = (HTMLElement*) node;
+            if ([element.tagName isEqualToString:@"br"]) {
+                [result appendString:@"\n"];
+            } else if ([self isExcluded:element]) {
+                // skip it
+            } else {
+                if (result.length == 0) {
+                    // don't do anything
+                } else if ([element.tagName isEqualToString:@"p"] || element.isHeader) {
+                    [result appendString:@"\n\n"];
+                } else if (element.isBlockElement) {
+                    [result appendString:@"\n"];
+                }
+                [result appendString:[self collectTextSummary:element]];
+            }
+        } else if ([node isKindOfClass:[HTMLText class]]) {
+            [result appendString:node.textContent];
+        }
+    }
+    return [NSString stringWithString:result];
+}
+
+-(NSString*) limit:(NSString*) summaryText {
+    NSError* error = nil;
+    NSRange range = NSMakeRange(0, summaryText.length);
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
+    NSArray* matches = [regex matchesInString:summaryText options:0 range:range];
+
+    if (matches.count > 100) {
+        NSTextCheckingResult* match = matches[99];
+        return [NSString stringWithFormat:@"%@...", [summaryText substringToIndex:match.range.location]];
+    } else {
+        return summaryText;
+    }
+}
+
 -(BOOL) isExcluded:(HTMLElement*) element {
     if (([element.tagName isEqualToString:@"div"]) && [element.attributes[@"class"] rangeOfString:@"edittime"].location != NSNotFound) {
         return YES;
@@ -288,6 +329,7 @@
                 }
                 
                 entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
+                entry.summaryText = [self limit:[self collectTextSummary:[document querySelector:@".entry-content"]]];
                 
                 [self processComments:document entry:entry];
                 
