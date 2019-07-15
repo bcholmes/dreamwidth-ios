@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(NSAttributedString*) userLabel:(NSString* _Nonnull) username;
 -(NSAttributedString*) userLabel:(NSString* _Nonnull) username font:(UIFont*) font;
--(NSAttributedString*) userLabel:(NSString* _Nonnull) username icon:(UIImage* _Nullable) icon font:(UIFont* _Nonnull) font;
+-(NSAttributedString*) userLabel:(NSString* _Nullable) username icon:(UIImage* _Nullable) icon font:(UIFont* _Nonnull) font;
 
 @end
 
