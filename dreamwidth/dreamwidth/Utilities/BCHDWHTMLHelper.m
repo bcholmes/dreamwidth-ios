@@ -11,12 +11,15 @@
 #import <UIKit/UIKit.h>
 #import <HTMLKit/HTMLKit.h>
 
+#import "BCHDWTheme.h"
+
 #import "BCHDWUserStringHelper.h"
 
 typedef enum {
     BCHDWHtmlBoldStyle          = 1 << 0,
     BCHDWHtmlItalicStyle        = 1 << 1,
-    BCHDWHtmlStrikethroughStyle = 1 << 2
+    BCHDWHtmlStrikethroughStyle = 1 << 2,
+    BCHDWHtmlAnchor             = 1 << 3
 } BCHDWHtmlStyle;
 
 
@@ -51,14 +54,18 @@ typedef enum {
 
 -(NSDictionary*) attributes {
 
-    if (self.styles & BCHDWHtmlStrikethroughStyle) {
-        return @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInteger:NSUnderlinePatternSolid | NSUnderlineStyleSingle],
-                  NSFontAttributeName : self.font,
-                  NSForegroundColorAttributeName : [UIColor blackColor] };
-    } else {
-        return @{ NSFontAttributeName : self.font,
-                  NSForegroundColorAttributeName : [UIColor blackColor]};
+    NSMutableDictionary* result = [@{ NSFontAttributeName : self.font,
+                                     NSForegroundColorAttributeName : [UIColor blackColor]} mutableCopy];
+    if (self.styles & BCHDWHtmlAnchor) {
+        [result setObject:@(NSUnderlineStyleSingle) forKey:NSUnderlineStyleAttributeName];
+        [result setObject:[BCHDWTheme instance].primaryColor forKey:NSForegroundColorAttributeName];
     }
+    
+    if (self.styles & BCHDWHtmlStrikethroughStyle) {
+        [result setObject:[NSNumber numberWithInteger:NSUnderlinePatternSolid | NSUnderlineStyleSingle] forKey:NSStrikethroughStyleAttributeName];
+    }
+    
+    return [NSDictionary dictionaryWithDictionary:result];
 }
 
 @end
@@ -92,6 +99,8 @@ typedef enum {
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlItalicStyle;
                 } else if ([e.tagName isEqualToString:@"strike"] || [e.tagName isEqualToString:@"s"] || [e.tagName isEqualToString:@"del"]) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlStrikethroughStyle;
+                } else if ([e.tagName isEqualToString:@"a"] && e.attributes[@"href"] != nil) {
+                    self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlAnchor;
                 }
 
                 [self processMarkup:e array:array];
@@ -102,6 +111,8 @@ typedef enum {
                     self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlItalicStyle;
                 } else if ([e.tagName isEqualToString:@"strike"] || [e.tagName isEqualToString:@"s"] || [e.tagName isEqualToString:@"del"]) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlStrikethroughStyle;
+                } else if ([e.tagName isEqualToString:@"a"]) {
+                    self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlAnchor;
                 }
 
                 if ([self isBlockElement:e]) {

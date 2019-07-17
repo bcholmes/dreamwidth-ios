@@ -306,13 +306,13 @@
     [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryUrl] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
         @try {
-            HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
-            HTMLDocument* document = [parser parseDocument];
-            
-            NSString* author = [document querySelector:@".poster-info .ljuser"].textContent;
-            if (author != nil && author.length > 0) {
-                BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
-                [entry.managedObjectContext performBlock:^{
+            BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
+            [entry.managedObjectContext performBlock:^{
+                HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
+                HTMLDocument* document = [parser parseDocument];
+                
+                NSString* author = [document querySelector:@".poster-info .ljuser"].textContent;
+                if (author != nil && author.length > 0) {
                     entry.subject = [document querySelector:@".entry-title"].textContent;
                     HTMLElement* avatarAnchor = [document querySelector:@".userpic img"];
                     entry.avatarUrl = avatarAnchor.attributes[@"src"];
@@ -333,12 +333,9 @@
                     entry.summaryText = [self limit:[self collectTextSummary:[document querySelector:@".entry-content"]]];
                     
                     [self processComments:document entry:entry];
-                    
-                    [entry.managedObjectContext save:nil];
-                }];
-            } else {
-     //           NSLog(@"HTML >>>> %@", [[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]);
-            }
+                }
+                [entry.managedObjectContext save:nil];
+            }];
         } @catch (NSException *exception) {
             NSLog(@"******************************************");
             NSLog(@"%@", exception.reason);
