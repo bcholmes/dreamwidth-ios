@@ -263,6 +263,8 @@
                 [result appendString:@"\n"];
             } else if ([self isExcluded:element]) {
                 // skip it
+            } else if ([self isCut:element]) {
+                break;
             } else {
                 if (result.length == 0) {
                     // don't do anything
@@ -278,6 +280,10 @@
         }
     }
     return [NSString stringWithString:result];
+}
+
+-(BOOL) isCut:(HTMLElement*) element {
+    return [element.tagName isEqualToString:@"a"] && element.attributes[@"name"] != nil && [element.attributes[@"name"] rangeOfString:@"cutid"].location == 0;
 }
 
 -(NSString*) limit:(NSString*) summaryText {
@@ -330,7 +336,7 @@
                     }
                     
                     entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
-                    entry.summaryText = [self limit:[self collectTextSummary:[document querySelector:@".entry-content"]]];
+                    entry.summaryText = [self limit:[[self collectTextSummary:[document querySelector:@".entry-content"]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
                     
                     [self processComments:document entry:entry];
                 }

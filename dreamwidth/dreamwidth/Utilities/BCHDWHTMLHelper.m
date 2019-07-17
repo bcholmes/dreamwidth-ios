@@ -12,8 +12,8 @@
 #import <HTMLKit/HTMLKit.h>
 
 #import "BCHDWTheme.h"
-
 #import "BCHDWUserStringHelper.h"
+#import "HTMLElement+DreamBalloon.h"
 
 typedef enum {
     BCHDWHtmlBoldStyle          = 1 << 0,
@@ -131,6 +131,14 @@ typedef enum {
 
 -(void) appendText:(HTMLText*) text buffer:(NSMutableAttributedString*) string {
     NSString* textContent = text.textContent;
+    if (text.parentElement.isBlockElement && text.previousSibling == nil) {
+        NSCharacterSet* set = [[NSCharacterSet whitespaceAndNewlineCharacterSet] invertedSet];
+        NSRange range = [textContent rangeOfCharacterFromSet:set];
+        if (range.location != NSNotFound && range.location > 0) {
+            textContent = [textContent substringFromIndex:range.location];
+        }
+        NSLog(@"trimmed: %@", textContent);
+    }
     
     NSRange   searchedRange = NSMakeRange(0, [textContent length]);
     NSString* pattern = @"(?<!\\\\)@[a-zA-Z0-9_]+(?:\\.[a-zA-Z0-9]+)?";

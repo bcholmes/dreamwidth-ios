@@ -141,7 +141,7 @@
         commentTextLabel.numberOfLines = 0;
         commentTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
         commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        commentTextLabel.text = html;
+        commentTextLabel.text = [html stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         
         [stackView addArrangedSubview:commentTextLabel];
     }
