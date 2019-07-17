@@ -256,6 +256,12 @@
 
 -(NSString*) collectTextSummary:(HTMLElement*) content {
     NSMutableString* result = [NSMutableString new];
+    [self collectTextSummary:content buffer:result];
+    return [NSString stringWithString:result];
+}
+
+-(BOOL) collectTextSummary:(HTMLElement*) content buffer:(NSMutableString*) result {
+    BOOL stop = NO;
     for (HTMLNode* node = content.firstChild; node != nil; node = node.nextSibling) {
         if ([node isKindOfClass:[HTMLElement class]]) {
             HTMLElement* element = (HTMLElement*) node;
@@ -264,6 +270,7 @@
             } else if ([self isExcluded:element]) {
                 // skip it
             } else if ([self isCut:element]) {
+                stop = YES;
                 break;
             } else {
                 if (result.length == 0) {
@@ -273,13 +280,16 @@
                 } else if (element.isBlockElement) {
                     [result appendString:@"\n"];
                 }
-                [result appendString:[self collectTextSummary:element]];
+                stop = [self collectTextSummary:element buffer:result];
+                if (stop) {
+                    break;
+                }
             }
         } else if ([node isKindOfClass:[HTMLText class]]) {
             [result appendString:node.textContent];
         }
     }
-    return [NSString stringWithString:result];
+    return stop;
 }
 
 -(BOOL) isCut:(HTMLElement*) element {
@@ -311,9 +321,9 @@
 -(void) fetchEntry:(NSString*) entryUrl {
     [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryUrl] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
-        @try {
-            BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
-            [entry.managedObjectContext performBlock:^{
+        BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
+        [entry.managedObjectContext performBlock:^{
+            @try {
                 HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
                 HTMLDocument* document = [parser parseDocument];
                 
@@ -341,12 +351,12 @@
                     [self processComments:document entry:entry];
                 }
                 [entry.managedObjectContext save:nil];
-            }];
-        } @catch (NSException *exception) {
-            NSLog(@"******************************************");
-            NSLog(@"%@", exception.reason);
-            NSLog(@"******************************************");
-        }
+            } @catch (NSException *exception) {
+                NSLog(@"******************************************");
+                NSLog(@"%@", exception.reason);
+                NSLog(@"******************************************");
+            }
+        }];
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"fetch entry: %@", error);
     }];

@@ -31,10 +31,43 @@ typedef enum {
 
 @end
 
+@interface BCHDWTextBlock()
+
+@property (nonatomic, strong) NSMutableAttributedString* content;
+
+@end
+
+
 @implementation BCHDWBlock
 
 @end
 
+@implementation BCHDWImageBlock
+
+-(BOOL) empty {
+    return self.imageUrl == nil || self.imageUrl.length == 0;
+}
+
+@end
+
+@implementation BCHDWTextBlock
+
+-(instancetype) init {
+    if (self = [super init]) {
+        self.content = [NSMutableAttributedString new];
+    }
+    return self;
+}
+
+-(NSAttributedString*) text {
+    return [self.content attributedSubstringFromRange:NSMakeRange(0, self.content.length)];
+}
+
+-(BOOL) empty {
+    return self.content.length == 0;
+}
+
+@end
 
 @implementation BCHDWStyleAttributes
 
@@ -87,7 +120,7 @@ typedef enum {
     return self;
 }
 
-- (void) processMarkup:(HTMLElement*) element array:(NSMutableArray<NSMutableAttributedString*>*) array {
+- (void) processMarkup:(HTMLElement*) element array:(NSMutableArray<BCHDWBlock*>*) array {
     
     for (HTMLNode* node = element.firstChild; node != nil; node = node.nextSibling) {
         if ([node isKindOfClass:[HTMLElement class]]) {
@@ -103,7 +136,19 @@ typedef enum {
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlAnchor;
                 }
 
-                [self processMarkup:e array:array];
+                if ([e.tagName isEqualToString:@"img"]) {
+                    if ([array lastObject].empty) {
+                        [array removeObject:[array lastObject]];
+                    }
+                    BCHDWImageBlock* image = [BCHDWImageBlock new];
+                    [self processImage:e image:image];
+                    if (!image.empty) {
+                        [array addObject:image];
+                    }
+                    [array addObject:[BCHDWTextBlock new]];
+                } else {
+                    [self processMarkup:e array:array];
+                }
 
                 if ([e.tagName isEqualToString:@"b"] || [e.tagName isEqualToString:@"strong"]) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlBoldStyle;
@@ -116,17 +161,26 @@ typedef enum {
                 }
 
                 if ([self isBlockElement:e]) {
-                    if ([array lastObject].length > 0) {
-                        NSMutableAttributedString* string = [NSMutableAttributedString new];
-                        [array addObject:string];
+                    BCHDWBlock* last = [array lastObject];
+                    if (![last isKindOfClass:[BCHDWTextBlock class]] || ((BCHDWTextBlock*) last).text.length > 0) {
+                        [array addObject:[BCHDWTextBlock new]];
                     }
                     self.defaultAttributes = [BCHDWStyleAttributes new];
                 }
             }
         } else if ([node isKindOfClass:[HTMLText class]]) {
-            [self appendText:(HTMLText*) node buffer:[array lastObject]];
+            BCHDWBlock* block = [array lastObject];
+            if (![block isKindOfClass:[BCHDWTextBlock class]]) {
+                block = [BCHDWTextBlock new];
+                [array addObject:block];
+            }
+            [self appendText:(HTMLText*) node buffer:((BCHDWTextBlock*) block).content];
         }
     }
+}
+
+-(void) processImage:(HTMLElement*) element image:(BCHDWImageBlock*) image {
+    image.imageUrl = element.attributes[@"src"];
 }
 
 -(void) appendText:(HTMLText*) text buffer:(NSMutableAttributedString*) string {
@@ -137,7 +191,6 @@ typedef enum {
         if (range.location != NSNotFound && range.location > 0) {
             textContent = [textContent substringFromIndex:range.location];
         }
-        NSLog(@"trimmed: %@", textContent);
     }
     
     NSRange   searchedRange = NSMakeRange(0, [textContent length]);
@@ -179,22 +232,20 @@ typedef enum {
 
 -(NSArray*) parseHtmlIntoAttributedStrings:(NSString*) html {
     NSMutableArray* result = [NSMutableArray new];
-    NSMutableAttributedString* string = [NSMutableAttributedString new];
-    [result addObject:string];
+    [result addObject:[BCHDWTextBlock new]];
 
     HTMLElement* documentBody = [[HTMLDocument documentWithString:html] querySelector:@"body"];
     
     [self processMarkup:documentBody array:result];
     
     while (result.count > 0) {
-        NSMutableAttributedString* last = [result lastObject];
-        if (last.length == 0) {
+        BCHDWBlock* last = [result lastObject];
+        if (last.empty) {
             [result removeLastObject];
         } else {
             break;
         }
     }
-    
     
     return [NSArray arrayWithArray:result];
 }

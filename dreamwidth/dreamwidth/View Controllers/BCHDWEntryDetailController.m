@@ -128,13 +128,27 @@
 -(void) populateHtmlContent:(NSString*) html stackView:(UIStackView*) stackView {
     if ([html isHTMLMarkupPresent] || [html isUserReferencePresent]) {
         NSArray* markedUpText = [[BCHDWHTMLHelper new] parseHtmlIntoAttributedStrings:html];
-        for (NSAttributedString* string in markedUpText) {
-            UILabel* commentTextLabel = [UILabel new];
-            commentTextLabel.numberOfLines = 0;
-            commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-            commentTextLabel.attributedText = string;
-            
-            [stackView addArrangedSubview:commentTextLabel];
+        for (BCHDWBlock* block in markedUpText) {
+            if ([block isKindOfClass:[BCHDWTextBlock class]]) {
+                UILabel* commentTextLabel = [UILabel new];
+                commentTextLabel.numberOfLines = 0;
+                commentTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                commentTextLabel.attributedText = ((BCHDWTextBlock*) block).text;
+                
+                [stackView addArrangedSubview:commentTextLabel];
+            } else if ([block isKindOfClass:[BCHDWImageBlock class]]) {
+                UIImageView* imageView = [UIImageView new];
+                imageView.contentMode = UIViewContentModeScaleAspectFit;
+                __weak UIImageView* weakImage = imageView;
+                [imageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:((BCHDWImageBlock*) block).imageUrl]] placeholderImage:[UIImage imageNamed:@"user"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage* image) {
+
+                    [self.tableView beginUpdates];
+                    weakImage.image = image;
+                    [self.tableView endUpdates];
+                    
+                } failure:nil];
+                [stackView addArrangedSubview:imageView];
+            }
         }
     } else {
         UILabel* commentTextLabel = [UILabel new];
