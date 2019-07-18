@@ -24,10 +24,14 @@
 -(void) prepareForReuse {
     [super prepareForReuse];
     
+    BOOL first = YES;
     for (UIView* subview in self.stackView.arrangedSubviews) {
-        [self.stackView removeArrangedSubview:subview];
-        [subview removeConstraints:subview.constraints];
-        [subview removeFromSuperview];
+        if (!first) {
+            [self.stackView removeArrangedSubview:subview];
+            [subview removeConstraints:subview.constraints];
+            [subview removeFromSuperview];
+        }
+        first = NO;
     };
 }
 

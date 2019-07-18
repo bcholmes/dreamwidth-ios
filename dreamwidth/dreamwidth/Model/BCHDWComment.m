@@ -10,7 +10,7 @@
 
 @implementation BCHDWComment
 
-@dynamic avatarUrl, commentId, commentText, author, creationDate, depth, replyToCommentId, subject, entry, orderKey;
+@dynamic avatarUrl, commentId, commentText, author, creationDate, depth, replyTo, subject, entry, orderKey;
 
 -(NSInteger) lastOrderPart {
     if (self.orderKey != nil) {

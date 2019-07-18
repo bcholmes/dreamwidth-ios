@@ -105,10 +105,14 @@
             cell.subjectLabel.hidden = NO;
         }
         NSMutableAttributedString* labelText = [[[BCHDWUserStringHelper new] userLabel:comment.author font:cell.authorLabel.font] mutableCopy];
-        [labelText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@", %@", [comment.creationDate timeAgoSinceNow]] attributes:@{ NSFontAttributeName : cell.authorLabel.font, NSForegroundColorAttributeName : [BCHDWTheme instance].primaryDarkColor}]];
+        if (comment.replyTo != nil) {
+            [labelText appendAttributedString:[[NSAttributedString alloc] initWithString:@" > " attributes:@{ NSFontAttributeName : cell.authorLabel.font }]];
+            [labelText appendAttributedString:[[BCHDWUserStringHelper new] userLabel:comment.replyTo.author font:cell.authorLabel.font]];
+        }
         
         cell.authorLabel.textColor = nil;
         cell.authorLabel.attributedText = labelText;
+        cell.dateLabel.text = [comment.creationDate timeAgoSinceNow];
         
         if (comment.avatarUrl != nil) {
             [cell.avatarImageView setImageWithURL:[NSURL URLWithString:comment.avatarUrl] placeholderImage:[UIImage imageNamed:@"user"]];

@@ -138,7 +138,7 @@
         if (depthValue == (depthList.count + 1)) {
             if (depthValue > 1) {
                 BCHDWComment* parent = [depthList lastObject];
-                commentRecord.replyToCommentId = parent.commentId;
+                commentRecord.replyTo = parent;
                 commentRecord.orderKey = [NSString stringWithFormat:@"%@.0001", parent.orderKey];
             } else {
                 commentRecord.orderKey = @"0001";
@@ -150,7 +150,7 @@
 
             if (depthValue > 1) {
                 BCHDWComment* parent = [depthList lastObject];
-                commentRecord.replyToCommentId = parent.commentId;
+                commentRecord.replyTo = parent;
                 commentRecord.orderKey = [NSString stringWithFormat:@"%@.%04ld", parent.orderKey, peer.lastOrderPart + 1];
             } else {
                 commentRecord.orderKey = [NSString stringWithFormat:@"%04ld", peer.lastOrderPart + 1];
