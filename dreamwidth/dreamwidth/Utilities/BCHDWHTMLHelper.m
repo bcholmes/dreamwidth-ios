@@ -14,6 +14,7 @@
 #import "BCHDWTheme.h"
 #import "BCHDWUserStringHelper.h"
 #import "HTMLElement+DreamBalloon.h"
+#import "NSString+DreamBalloon.h"
 
 typedef enum {
     BCHDWHtmlBoldStyle          = 1 << 0,
@@ -121,7 +122,6 @@ typedef enum {
 }
 
 - (void) processMarkup:(HTMLElement*) element array:(NSMutableArray<BCHDWBlock*>*) array {
-    
     for (HTMLNode* node = element.firstChild; node != nil; node = node.nextSibling) {
         if ([node isKindOfClass:[HTMLElement class]]) {
             HTMLElement* e = (HTMLElement*) node;
@@ -232,21 +232,28 @@ typedef enum {
 
 -(NSArray*) parseHtmlIntoAttributedStrings:(NSString*) html {
     NSMutableArray* result = [NSMutableArray new];
-    [result addObject:[BCHDWTextBlock new]];
+    if ([html isHTMLMarkupPresent] || [html isUserReferencePresent]) {
+    
+        [result addObject:[BCHDWTextBlock new]];
 
-    HTMLElement* documentBody = [[HTMLDocument documentWithString:html] querySelector:@"body"];
-    
-    [self processMarkup:documentBody array:result];
-    
-    while (result.count > 0) {
-        BCHDWBlock* last = [result lastObject];
-        if (last.empty) {
-            [result removeLastObject];
-        } else {
-            break;
+        HTMLElement* documentBody = [[HTMLDocument documentWithString:html] querySelector:@"body"];
+        
+        [self processMarkup:documentBody array:result];
+        
+        while (result.count > 0) {
+            BCHDWBlock* last = [result lastObject];
+            if (last.empty) {
+                [result removeLastObject];
+            } else {
+                break;
+            }
         }
+        
+    } else {
+        BCHDWTextBlock* textBlock = [BCHDWTextBlock new];
+        [textBlock.content appendAttributedString:[[NSAttributedString alloc] initWithString:[html stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] attributes:self.defaultAttributes.attributes]];
+        [result addObject:textBlock];
     }
-    
     return [NSArray arrayWithArray:result];
 }
 

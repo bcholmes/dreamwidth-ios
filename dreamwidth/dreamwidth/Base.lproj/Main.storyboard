@@ -483,35 +483,55 @@
                                     <outlet property="subjectLabel" destination="4Lg-xI-qBo" id="60C-D4-Owj"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="content" rowHeight="107" id="vK7-eE-Nel" customClass="BCHDWEntryContentTableViewCell">
-                                <rect key="frame" x="0.0" y="261.5" width="375" height="107"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="textBlockCell" id="yoW-PP-wIX" customClass="BCHDWTextBlockTableViewCell">
+                                <rect key="frame" x="0.0" y="261.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vK7-eE-Nel" id="kAF-Kj-e7a">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="107"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yoW-PP-wIX" id="nYg-h4-1ol">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="F01-hz-nEz">
-                                            <rect key="frame" x="16" y="16" width="343" height="45"/>
-                                        </stackView>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxO-6S-fRA" customClass="MDCButton">
-                                            <rect key="frame" x="320" y="69" width="39" height="30"/>
-                                            <state key="normal" title="Reply"/>
-                                            <connections>
-                                                <action selector="reply:" destination="vK7-eE-Nel" eventType="touchUpInside" id="DLw-QV-Ad6"/>
-                                            </connections>
-                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xjv-Dz-8gk">
+                                            <rect key="frame" x="16" y="8" width="343" height="28"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="rxO-6S-fRA" firstAttribute="top" secondItem="F01-hz-nEz" secondAttribute="bottom" constant="8" id="4mc-Z1-cRg"/>
-                                        <constraint firstAttribute="trailing" secondItem="rxO-6S-fRA" secondAttribute="trailing" constant="16" id="6GO-Eb-rYT"/>
-                                        <constraint firstItem="F01-hz-nEz" firstAttribute="leading" secondItem="kAF-Kj-e7a" secondAttribute="leading" constant="16" id="8XM-22-7yY"/>
-                                        <constraint firstItem="F01-hz-nEz" firstAttribute="top" secondItem="kAF-Kj-e7a" secondAttribute="top" constant="16" id="Nog-UV-YKg"/>
-                                        <constraint firstAttribute="bottom" secondItem="rxO-6S-fRA" secondAttribute="bottom" constant="8" id="bVd-DX-W22"/>
-                                        <constraint firstAttribute="trailing" secondItem="F01-hz-nEz" secondAttribute="trailing" constant="16" id="sZE-Rt-ZdR"/>
+                                        <constraint firstItem="Xjv-Dz-8gk" firstAttribute="leading" secondItem="nYg-h4-1ol" secondAttribute="leading" constant="16" id="Eav-If-yEN"/>
+                                        <constraint firstItem="Xjv-Dz-8gk" firstAttribute="top" secondItem="nYg-h4-1ol" secondAttribute="top" constant="8" id="Ybu-hS-QwK"/>
+                                        <constraint firstAttribute="bottom" secondItem="Xjv-Dz-8gk" secondAttribute="bottom" constant="8" id="fh9-Jv-9CU"/>
+                                        <constraint firstAttribute="trailing" secondItem="Xjv-Dz-8gk" secondAttribute="trailing" constant="16" id="kaE-iS-aJn"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="stackView" destination="F01-hz-nEz" id="84j-d3-zXy"/>
+                                    <outlet property="bodyLabel" destination="Xjv-Dz-8gk" id="2yJ-sn-y2N"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="imageBlockCell" rowHeight="300" id="kNZ-h0-0BI" customClass="BCHDWImageBlockTableViewCell">
+                                <rect key="frame" x="0.0" y="305.5" width="375" height="300"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kNZ-h0-0BI" id="hVq-It-XFp">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="300"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image-icon" translatesAutoresizingMaskIntoConstraints="NO" id="roI-vg-moK">
+                                            <rect key="frame" x="0.0" y="8" width="375" height="284"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" priority="750" constant="284" id="lXK-wu-TFe"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="roI-vg-moK" firstAttribute="top" secondItem="hVq-It-XFp" secondAttribute="top" constant="8" id="3d8-yS-UKt"/>
+                                        <constraint firstItem="roI-vg-moK" firstAttribute="centerX" secondItem="hVq-It-XFp" secondAttribute="centerX" id="MWY-A5-WRi"/>
+                                        <constraint firstItem="roI-vg-moK" firstAttribute="width" secondItem="hVq-It-XFp" secondAttribute="width" id="c2Y-d4-KQN"/>
+                                        <constraint firstAttribute="bottom" secondItem="roI-vg-moK" secondAttribute="bottom" constant="8" id="ltP-8z-cjf"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="heightConstraint" destination="lXK-wu-TFe" id="LED-yj-6dy"/>
+                                    <outlet property="imageBlockView" destination="roI-vg-moK" id="WNC-vr-vNH"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -852,6 +872,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="image-icon" width="38" height="30"/>
         <image name="lock-icon" width="18" height="18"/>
         <image name="onepassword-login-button" width="41" height="41"/>
     </resources>

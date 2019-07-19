@@ -16,9 +16,10 @@
 #import "BCHDWCommentComposer.h"
 #import "BCHDWCommentTableViewCell.h"
 #import "BCHDWComposeReplyViewController.h"
-#import "BCHDWEntryContentTableViewCell.h"
 #import "BCHDWHTMLHelper.h"
+#import "BCHDWImageBlockTableViewCell.h"
 #import "BCHDWMetaDataTableViewCell.h"
+#import "BCHDWTextBlockTableViewCell.h"
 #import "BCHDWTheme.h"
 #import "BCHDWUserStringHelper.h"
 #import "NSString+DreamBalloon.h"
@@ -28,6 +29,7 @@
 @property (nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 @property (nonatomic, strong) NSDateFormatter* formatter;
 @property (nonatomic, strong) BCHDWComment* selectedComment;
+@property (nonatomic, strong) NSArray<BCHDWBlock*>* blocks;
 
 @end
 
@@ -46,8 +48,9 @@
     
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80;
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    
+    self.blocks = [[BCHDWHTMLHelper new] parseHtmlIntoAttributedStrings:self.entry.entryText];
+    
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -67,7 +70,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section == 0 ? 2 : self.fetchedResultsController.fetchedObjects.count;
+    return section == 0 ? self.blocks.count + 1 : self.fetchedResultsController.fetchedObjects.count;
 }
 
 
@@ -90,10 +93,28 @@
 
         return cell;
     } else if (indexPath.section == 0) {
-        BCHDWEntryContentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"content" forIndexPath:indexPath];
-        [self populateHtmlContent:self.entry.entryText stackView:cell.stackView];
-        cell.composer = self;
-        return cell;
+        BCHDWBlock* block = self.blocks[indexPath.row-1];
+        
+        if ([block isKindOfClass:[BCHDWTextBlock class]]) {
+            BCHDWTextBlockTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"textBlockCell" forIndexPath:indexPath];
+            cell.bodyLabel.textColor = nil;
+            cell.bodyLabel.attributedText = ((BCHDWTextBlock*) block).text;
+            return cell;
+        } else {
+            BCHDWImageBlockTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"imageBlockCell" forIndexPath:indexPath];
+
+            __weak UIImageView* weakImage = cell.imageBlockView;
+            [cell.imageBlockView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:((BCHDWImageBlock*) block).imageUrl]] placeholderImage:[UIImage imageNamed:@"image-icon"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage* image) {
+                
+                CGFloat width = cell.bounds.size.width;
+                cell.heightConstraint.constant = image.size.height / image.size.width * width;
+                [self.tableView beginUpdates];
+                weakImage.image = image;
+                [self.tableView endUpdates];
+                
+            } failure:nil];
+            return cell;
+        }
     } else {
         BCHDWCommentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"comment" forIndexPath:indexPath];
         BCHDWComment* comment = self.fetchedResultsController.fetchedObjects[indexPath.row];
@@ -144,7 +165,7 @@
                 UIImageView* imageView = [UIImageView new];
                 imageView.contentMode = UIViewContentModeScaleAspectFit;
                 __weak UIImageView* weakImage = imageView;
-                [imageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:((BCHDWImageBlock*) block).imageUrl]] placeholderImage:[UIImage imageNamed:@"user"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage* image) {
+                [imageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:((BCHDWImageBlock*) block).imageUrl]] placeholderImage:[UIImage imageNamed:@"image-icon"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage* image) {
 
                     [self.tableView beginUpdates];
                     weakImage.image = image;
