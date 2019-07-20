@@ -29,6 +29,8 @@
 @property (nonatomic, strong) UIColor* dreamBalloonLightBlue;
 @property (nonatomic, strong) UIColor* dreamBalloonMutedBlue;
 
+@property (nonatomic, strong) UIColor* dreamBalloonLightRed;
+
 @end
 
 @implementation BCHDWTheme
@@ -40,6 +42,7 @@
         self.dreamBalloonBlue = [UIColor colorWithHex:@"5a8394"];
         self.dreamBalloonLightBlue = [UIColor colorWithHex:@"abc1c9"];
         self.dreamBalloonMutedBlue = [UIColor colorWithHex:@"edfaff"];
+        self.dreamBalloonLightRed = [UIColor colorWithHex:@"e0c3c0"];
         self.menuColor = self.dreamwidthRed;
         self.primaryColor = self.dreamwidthRed;
         self.primaryDarkColor = [UIColor colorWithHex:@"463730"];
@@ -82,7 +85,7 @@
 
 -(void) configureMainTableView {
     BCHDWMainTableView* proxy = [BCHDWMainTableView appearance];
-    proxy.backgroundColor = self.dreamBalloonLightBlue;
+    proxy.backgroundColor = self.dreamwidthPink;
 }
 
 -(void) configureFrameView {
@@ -113,7 +116,7 @@
 
 -(void) configureBannerView {
     BCHDWBannerView* proxy = [BCHDWBannerView appearance];
-    proxy.backgroundColor = self.dreamwidthPink;
+    proxy.backgroundColor = self.dreamBalloonLightRed;
 }
 
 -(void) configureBackgroundView {

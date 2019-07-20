@@ -17,6 +17,8 @@
 @property (nonatomic, strong) NSString* subject;
 @property (nonatomic, strong) NSString* entryText;
 @property (nonatomic, strong) NSString* summaryText;
+@property (nonatomic, strong) NSString* summaryText2;
+@property (nonatomic, strong) NSString* summaryImageUrl;
 @property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSString* avatarUrl;
 @property (nonatomic, strong) NSDate* creationDate;

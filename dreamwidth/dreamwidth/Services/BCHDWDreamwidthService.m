@@ -18,6 +18,63 @@
 #import "BCHDWFormData.h"
 #import "HTMLElement+DreamBalloon.h"
 
+@interface BCHDWSummaryExtract : NSObject
+
+@property (nonatomic, strong) NSMutableString* summaryText1;
+@property (nonatomic, strong) NSMutableString* summaryText2;
+@property (nonatomic, strong) NSString* summaryImageUrl;
+@property (nonatomic, readonly) NSMutableString* currentText;
+@property (nonatomic, readonly) BOOL isMaxLength;
+
+@end
+
+@implementation BCHDWSummaryExtract
+
+-(instancetype) init {
+    if (self = [super init]) {
+        self.summaryText1 = [NSMutableString new];
+        self.summaryText2 = [NSMutableString new];
+    }
+    return self;
+}
+
+-(NSMutableString*) currentText {
+    if (self.summaryImageUrl != nil && self.summaryImageUrl.length > 0) {
+        return self.summaryText2;
+    } else {
+        return self.summaryText1;
+    }
+}
+
+-(BOOL) isMaxLength {
+    NSUInteger maxLength = 60;
+    NSError* error = nil;
+    NSRange range = NSMakeRange(0, self.summaryText1.length);
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
+    NSArray* matches = [regex matchesInString:self.summaryText1 options:0 range:range];
+    
+    if (matches.count > maxLength) {
+        NSTextCheckingResult* match = matches[maxLength-1];
+        [self.summaryText1 deleteCharactersInRange:NSMakeRange(match.range.location, self.summaryText1.length - match.range.location)];
+        [self.summaryText1 appendString:@"..."];
+        return YES;
+    } else {
+        range = NSMakeRange(0, self.summaryText2.length);
+        regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
+        matches = [regex matchesInString:self.summaryText2 options:0 range:range];
+        if (matches.count > maxLength) {
+            NSTextCheckingResult* match = matches[maxLength-1];
+            [self.summaryText2 deleteCharactersInRange:NSMakeRange(match.range.location, self.summaryText2.length - match.range.location)];
+            [self.summaryText2 appendString:@"..."];
+            return YES;
+        } else {
+            return NO;
+        }
+    }
+}
+
+@end
+
 @interface BCHDWDreamwidthService()
 
 @property (nonatomic, strong) DreamwidthApi* api;
@@ -254,39 +311,52 @@
     return [NSString stringWithString:result];
 }
 
--(NSString*) collectTextSummary:(HTMLElement*) content {
-    NSMutableString* result = [NSMutableString new];
-    [self collectTextSummary:content buffer:result];
-    return [NSString stringWithString:result];
+-(BCHDWSummaryExtract*) collectSummaryExtract:(HTMLElement*) content {
+    BCHDWSummaryExtract* result = [BCHDWSummaryExtract new];
+    [self collectSummaryExtract:content buffer:result];
+    return result;
 }
 
--(BOOL) collectTextSummary:(HTMLElement*) content buffer:(NSMutableString*) result {
+-(BOOL) collectSummaryExtract:(HTMLElement*) content buffer:(BCHDWSummaryExtract*) extract {
     BOOL stop = NO;
     for (HTMLNode* node = content.firstChild; node != nil; node = node.nextSibling) {
         if ([node isKindOfClass:[HTMLElement class]]) {
             HTMLElement* element = (HTMLElement*) node;
             if ([element.tagName isEqualToString:@"br"]) {
-                [result appendString:@"\n"];
+                [extract.currentText appendString:@"\n"];
             } else if ([self isExcluded:element]) {
                 // skip it
             } else if ([self isCut:element]) {
                 stop = YES;
                 break;
+            } else if ([self isUserReference:element]) {
+                [extract.currentText appendString:node.textContent];
+            } else if ([element.tagName isEqualToString:@"img"]) {
+                if (extract.summaryImageUrl != nil && extract.summaryImageUrl.length > 0) {
+                    stop = YES;
+                    break;
+                } else {
+                    extract.summaryImageUrl = element.attributes[@"src"];
+                }
             } else {
-                if (result.length == 0) {
+                if (extract.currentText.length == 0) {
                     // don't do anything
                 } else if ([element.tagName isEqualToString:@"p"] || element.isHeader) {
-                    [result appendString:@"\n\n"];
+                    [extract.currentText appendString:@"\n\n"];
                 } else if (element.isBlockElement) {
-                    [result appendString:@"\n"];
+                    [extract.currentText appendString:@"\n"];
                 }
-                stop = [self collectTextSummary:element buffer:result];
+                stop = [self collectSummaryExtract:element buffer:extract];
                 if (stop) {
                     break;
                 }
             }
         } else if ([node isKindOfClass:[HTMLText class]]) {
-            [result appendString:node.textContent];
+            [extract.currentText appendString:node.textContent];
+            if ([extract isMaxLength]) {
+                stop = YES;
+                break;
+            }
         }
     }
     return stop;
@@ -312,6 +382,8 @@
 
 -(BOOL) isExcluded:(HTMLElement*) element {
     if (([element.tagName isEqualToString:@"div"]) && [element.attributes[@"class"] rangeOfString:@"edittime"].location != NSNotFound) {
+        return YES;
+    } else if ([element.tagName isEqualToString:@"form"]) {
         return YES;
     } else {
         return NO;
@@ -346,7 +418,12 @@
                     }
                     
                     entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
-                    entry.summaryText = [self limit:[[self collectTextSummary:[document querySelector:@".entry-content"]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+                    BCHDWSummaryExtract* extract = [self collectSummaryExtract:[document querySelector:@".entry-content"]];
+                    NSString* temp = [extract.summaryText1 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    entry.summaryText = temp.length > 0 ? temp : nil;
+                    temp = [extract.summaryText2 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    entry.summaryText2 = temp.length > 0 ? temp : nil;
+                    entry.summaryImageUrl = extract.summaryImageUrl;
                     
                     [self processComments:document entry:entry];
                 }

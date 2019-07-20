@@ -16,7 +16,7 @@
 
 @implementation BCHDWEntry
 
-@dynamic author, entryId, entryText, subject, creationDate, updateDate, url, avatarUrl, rating, numberOfComments, lockedFlag, summaryText;
+@dynamic author, entryId, entryText, subject, creationDate, updateDate, url, avatarUrl, rating, numberOfComments, lockedFlag, summaryText, summaryText2, summaryImageUrl;
 
 -(BOOL) locked {
     return [self.lockedFlag boolValue];

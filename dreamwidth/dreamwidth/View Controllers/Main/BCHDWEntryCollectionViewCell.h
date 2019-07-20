@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) IBOutlet UILabel* authorLabel;
 @property (nonatomic, weak) IBOutlet UILabel* titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel* summaryLabel;
+@property (nonatomic, weak) IBOutlet UIImageView* summaryImageView;
+@property (nonatomic, weak) IBOutlet UILabel* summary2Label;
 @property (nonatomic, weak) IBOutlet UIImageView* avatarImageView;
 @property (nonatomic, weak) IBOutlet UIImageView* lockedImageView;
 @property (nonatomic, weak) IBOutlet UILabel* commentLabel;

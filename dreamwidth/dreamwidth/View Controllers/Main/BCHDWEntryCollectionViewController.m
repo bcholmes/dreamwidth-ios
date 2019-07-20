@@ -131,7 +131,25 @@ static NSString * const reuseIdentifier = @"Cell";
     BCHDWEntry* entry = self.fetchedResultsController.fetchedObjects[indexPath.row];
     cell.titleLabel.text = entry.subject;
     cell.authorLabel.attributedText = [self.userHelper userLabel:entry.author font:cell.authorLabel.font];
-    cell.summaryLabel.text = entry.summaryText;
+    if (entry.summaryText != nil && entry.summaryText.length > 0) {
+        cell.summaryLabel.hidden = NO;
+        cell.summaryLabel.text = entry.summaryText;
+    } else {
+        cell.summaryLabel.hidden = YES;
+    }
+    if (entry.summaryText2 != nil && entry.summaryText2.length > 0) {
+        cell.summary2Label.hidden = NO;
+        cell.summary2Label.text = entry.summaryText2;
+    } else {
+        cell.summary2Label.hidden = YES;
+    }
+    if (entry.summaryImageUrl != nil && entry.summaryImageUrl.length > 0) {
+        cell.summaryImageView.hidden = NO;
+        [cell.summaryImageView setImageWithURL:[NSURL URLWithString:entry.summaryImageUrl] placeholderImage:[UIImage imageNamed:@"image-icon"]];
+    } else {
+        cell.summaryImageView.hidden = YES;
+    }
+
     cell.dateLabel.text = [entry.creationDate timeAgoSinceNow];
     cell.lockedImageView.hidden = !entry.locked;
 

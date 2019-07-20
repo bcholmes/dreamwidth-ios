@@ -258,10 +258,19 @@
 				6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */,
 				6375693622E34636003178E0 /* BCHDWEntryReplyTableViewCell.h */,
 				6375693722E34636003178E0 /* BCHDWEntryReplyTableViewCell.m */,
+			);
+			path = "Entry Details";
+			sourceTree = "<group>";
+		};
+		6375693F22E3CDC6003178E0 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				63981CAF22DAB1F20080BF25 /* BCHDWEntryCollectionViewController.h */,
+				63981CB022DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m */,
 				63981CAC22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.h */,
 				63981CAD22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m */,
 			);
-			path = "Entry Details";
+			path = Main;
 			sourceTree = "<group>";
 		};
 		751AD287C0483B0A8F3DC418 /* Frameworks */ = {
@@ -284,6 +293,7 @@
 		D81603BD1D08B1E500529654 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				6375693F22E3CDC6003178E0 /* Main */,
 				6375693522E34614003178E0 /* Entry Details */,
 				6375693422E345DF003178E0 /* Comments */,
 				6332FC1B1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.h */,
@@ -309,8 +319,6 @@
 				6302C74722CD973C00346552 /* BCHDWCommentTableViewCell.h */,
 				6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */,
 				6302C75922D36F1600346552 /* BCHDWCommentComposer.h */,
-				63981CAF22DAB1F20080BF25 /* BCHDWEntryCollectionViewController.h */,
-				63981CB022DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m */,
 				63981CB822E131FC0080BF25 /* BCHDWTextBlockTableViewCell.h */,
 				63981CB922E131FC0080BF25 /* BCHDWTextBlockTableViewCell.m */,
 				63981CBC22E141CD0080BF25 /* BCHDWImageBlockTableViewCell.h */,
