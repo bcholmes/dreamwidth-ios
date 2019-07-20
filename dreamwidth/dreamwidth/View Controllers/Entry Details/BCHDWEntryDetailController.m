@@ -16,6 +16,7 @@
 #import "BCHDWCommentComposer.h"
 #import "BCHDWCommentTableViewCell.h"
 #import "BCHDWComposeReplyViewController.h"
+#import "BCHDWEntryReplyTableViewCell.h"
 #import "BCHDWHTMLHelper.h"
 #import "BCHDWImageBlockTableViewCell.h"
 #import "BCHDWMetaDataTableViewCell.h"
@@ -70,7 +71,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section == 0 ? self.blocks.count + 1 : self.fetchedResultsController.fetchedObjects.count;
+    return section == 0 ? self.blocks.count + 2 : self.fetchedResultsController.fetchedObjects.count;
 }
 
 
@@ -91,6 +92,10 @@
             cell.avatarImageView.image = nil;
         }
 
+        return cell;
+    } else if (indexPath.section == 0 && indexPath.row == self.blocks.count + 1) {
+        BCHDWEntryReplyTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"replyCell" forIndexPath:indexPath];
+        cell.composer = self;
         return cell;
     } else if (indexPath.section == 0) {
         BCHDWBlock* block = self.blocks[indexPath.row-1];

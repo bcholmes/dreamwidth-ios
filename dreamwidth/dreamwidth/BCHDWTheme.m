@@ -15,7 +15,9 @@
 #import "BCHDWBannerView.h"
 #import "BCHDWBackgroundView.h"
 #import "BCHDWCardView.h"
+#import "BCHDWFrameView.h"
 #import "BCHDWMainCollectionView.h"
+#import "BCHDWMainTableView.h"
 #import "BCHDWProfileMainTableViewCell.h"
 #import "BCHDWSimpleTableViewCell.h"
 
@@ -25,6 +27,7 @@
 @property (nonatomic, strong) UIColor* dreamwidthPink;
 @property (nonatomic, strong) UIColor* dreamBalloonBlue;
 @property (nonatomic, strong) UIColor* dreamBalloonLightBlue;
+@property (nonatomic, strong) UIColor* dreamBalloonMutedBlue;
 
 @end
 
@@ -36,6 +39,7 @@
         self.dreamwidthPink = [UIColor colorWithHex:@"ffdcd9"];
         self.dreamBalloonBlue = [UIColor colorWithHex:@"5a8394"];
         self.dreamBalloonLightBlue = [UIColor colorWithHex:@"abc1c9"];
+        self.dreamBalloonMutedBlue = [UIColor colorWithHex:@"edfaff"];
         self.menuColor = self.dreamwidthRed;
         self.primaryColor = self.dreamwidthRed;
         self.primaryDarkColor = [UIColor colorWithHex:@"463730"];
@@ -57,8 +61,10 @@
 
 -(void) configure {
     [self configureMainCollectionView];
+    [self configureMainTableView];
     [self configureNavigationBars];
     [self configureButtons];
+    [self configureFrameView];
     [self configureCardView];
     [self configureMaterialButton];
     [self configureBackgroundView];
@@ -72,6 +78,16 @@
 -(void) configureMainCollectionView {
     BCHDWMainCollectionView* proxy = [BCHDWMainCollectionView appearance];
     proxy.backgroundColor = self.dreamwidthPink;
+}
+
+-(void) configureMainTableView {
+    BCHDWMainTableView* proxy = [BCHDWMainTableView appearance];
+    proxy.backgroundColor = self.dreamBalloonLightBlue;
+}
+
+-(void) configureFrameView {
+    BCHDWFrameView* proxy = [BCHDWFrameView appearance];
+    proxy.borderColor = [UIColor colorWithHex:@"d8d8d8"];
 }
 
 -(void) configureLabel {

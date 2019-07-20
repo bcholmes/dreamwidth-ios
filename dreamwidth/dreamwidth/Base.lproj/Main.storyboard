@@ -272,21 +272,33 @@
                                                 <constraint firstAttribute="bottom" secondItem="28G-Ee-Cnn" secondAttribute="bottom" constant="8" id="zyi-SZ-IAt"/>
                                             </constraints>
                                         </view>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ODJ-jW-VR6">
-                                            <rect key="frame" x="283" y="6" width="60" height="60"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OWN-gR-dQg" customClass="BCHDWFrameView">
+                                            <rect key="frame" x="283" y="4" width="68" height="68"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ODJ-jW-VR6">
+                                                    <rect key="frame" x="4" y="4" width="60" height="60"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="60" id="Aye-qW-aKm"/>
+                                                        <constraint firstAttribute="height" constant="60" id="fKl-hP-cxR"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="60" id="Aye-qW-aKm"/>
-                                                <constraint firstAttribute="height" constant="60" id="fKl-hP-cxR"/>
+                                                <constraint firstAttribute="bottom" secondItem="ODJ-jW-VR6" secondAttribute="bottom" constant="4" id="5Gt-ul-TwI"/>
+                                                <constraint firstItem="ODJ-jW-VR6" firstAttribute="leading" secondItem="OWN-gR-dQg" secondAttribute="leading" constant="4" id="Kxv-Zb-IKG"/>
+                                                <constraint firstAttribute="trailing" secondItem="ODJ-jW-VR6" secondAttribute="trailing" constant="4" id="SWK-Bh-EoE"/>
+                                                <constraint firstItem="ODJ-jW-VR6" firstAttribute="top" secondItem="OWN-gR-dQg" secondAttribute="top" constant="4" id="fdB-1z-Piq"/>
                                             </constraints>
-                                        </imageView>
+                                        </view>
                                     </subviews>
                                 </view>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="yfo-b9-jSo" firstAttribute="leading" secondItem="1Oy-e8-JSn" secondAttribute="leading" constant="16" id="6hV-UV-crI"/>
-                                    <constraint firstAttribute="trailing" secondItem="ODJ-jW-VR6" secondAttribute="trailing" constant="32" id="D0i-mZ-Yd9"/>
                                     <constraint firstAttribute="trailing" secondItem="yfo-b9-jSo" secondAttribute="trailing" constant="16" id="cNk-1X-J7u"/>
-                                    <constraint firstItem="ODJ-jW-VR6" firstAttribute="top" secondItem="1Oy-e8-JSn" secondAttribute="top" constant="6" id="nK5-Fv-d9W"/>
+                                    <constraint firstItem="OWN-gR-dQg" firstAttribute="top" secondItem="1Oy-e8-JSn" secondAttribute="top" constant="4" id="dBa-AU-6qF"/>
+                                    <constraint firstAttribute="trailing" secondItem="OWN-gR-dQg" secondAttribute="trailing" constant="24" id="gXM-Tr-UUT"/>
                                     <constraint firstAttribute="bottom" secondItem="yfo-b9-jSo" secondAttribute="bottom" constant="8" id="nKL-te-4Sz"/>
                                     <constraint firstItem="yfo-b9-jSo" firstAttribute="top" secondItem="1Oy-e8-JSn" secondAttribute="top" constant="16" id="yIJ-wA-s7z"/>
                                 </constraints>
@@ -322,7 +334,7 @@
         <scene sceneID="xDU-5j-z2J">
             <objects>
                 <tableViewController id="7O6-V8-Xt1" customClass="BCHDWEntryDetailController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="0vY-z6-1lK">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="0vY-z6-1lK" customClass="BCHDWMainTableView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -487,8 +499,31 @@
                                     <outlet property="subjectLabel" destination="4Lg-xI-qBo" id="60C-D4-Owj"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="textBlockCell" id="yoW-PP-wIX" customClass="BCHDWTextBlockTableViewCell">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="replyCell" id="Xg9-vr-Z9O" customClass="BCHDWEntryReplyTableViewCell">
                                 <rect key="frame" x="0.0" y="261.5" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Xg9-vr-Z9O" id="9if-1c-ydp">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hbf-8q-LKg" customClass="MDCButton">
+                                            <rect key="frame" x="327" y="16" width="32" height="20"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                            <state key="normal" title="Reply"/>
+                                            <connections>
+                                                <action selector="reply:" destination="Xg9-vr-Z9O" eventType="touchUpInside" id="nkb-wW-60a"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="hbf-8q-LKg" secondAttribute="bottom" constant="8" id="2zf-f4-Qtj"/>
+                                        <constraint firstItem="hbf-8q-LKg" firstAttribute="top" secondItem="9if-1c-ydp" secondAttribute="top" constant="16" id="oPA-3M-lFU"/>
+                                        <constraint firstAttribute="trailing" secondItem="hbf-8q-LKg" secondAttribute="trailing" constant="16" id="wP8-jR-hTL"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="textBlockCell" id="yoW-PP-wIX" customClass="BCHDWTextBlockTableViewCell">
+                                <rect key="frame" x="0.0" y="305.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yoW-PP-wIX" id="nYg-h4-1ol">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -513,7 +548,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="imageBlockCell" rowHeight="300" id="kNZ-h0-0BI" customClass="BCHDWImageBlockTableViewCell">
-                                <rect key="frame" x="0.0" y="305.5" width="375" height="300"/>
+                                <rect key="frame" x="0.0" y="349.5" width="375" height="300"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kNZ-h0-0BI" id="hVq-It-XFp">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="300"/>
@@ -877,7 +912,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="image-icon" width="38" height="30"/>
+        <image name="image-icon" width="375" height="300"/>
         <image name="lock-icon" width="18" height="18"/>
         <image name="onepassword-login-button" width="41" height="41"/>
     </resources>

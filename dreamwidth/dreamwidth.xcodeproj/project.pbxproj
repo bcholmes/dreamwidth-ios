@@ -35,6 +35,9 @@
 		6332FC1D1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC1C1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.m */; };
 		6332FC201E16B2A100E11A49 /* BCHDWAvatarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC1F1E16B2A100E11A49 /* BCHDWAvatarTableViewController.m */; };
 		6345FCB91E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6345FCB81E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m */; };
+		6375693822E34636003178E0 /* BCHDWEntryReplyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693722E34636003178E0 /* BCHDWEntryReplyTableViewCell.m */; };
+		6375693B22E3660D003178E0 /* BCHDWMainTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693A22E3660D003178E0 /* BCHDWMainTableView.m */; };
+		6375693E22E366E9003178E0 /* BCHDWFrameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693D22E366E9003178E0 /* BCHDWFrameView.m */; };
 		63981CAB22DA51D80080BF25 /* HTMLElement+DreamBalloon.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CAA22DA51D80080BF25 /* HTMLElement+DreamBalloon.m */; };
 		63981CAE22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CAD22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m */; };
 		63981CB122DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CB022DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m */; };
@@ -126,6 +129,12 @@
 		6332FC1F1E16B2A100E11A49 /* BCHDWAvatarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWAvatarTableViewController.m; sourceTree = "<group>"; };
 		6345FCB71E17FBE6004B7B19 /* BCHDWComposeEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWComposeEntryViewController.h; sourceTree = "<group>"; };
 		6345FCB81E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWComposeEntryViewController.m; sourceTree = "<group>"; };
+		6375693622E34636003178E0 /* BCHDWEntryReplyTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryReplyTableViewCell.h; sourceTree = "<group>"; };
+		6375693722E34636003178E0 /* BCHDWEntryReplyTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntryReplyTableViewCell.m; sourceTree = "<group>"; };
+		6375693922E3660D003178E0 /* BCHDWMainTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWMainTableView.h; sourceTree = "<group>"; };
+		6375693A22E3660D003178E0 /* BCHDWMainTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWMainTableView.m; sourceTree = "<group>"; };
+		6375693C22E366E9003178E0 /* BCHDWFrameView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWFrameView.h; sourceTree = "<group>"; };
+		6375693D22E366E9003178E0 /* BCHDWFrameView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWFrameView.m; sourceTree = "<group>"; };
 		63981CA922DA51D80080BF25 /* HTMLElement+DreamBalloon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HTMLElement+DreamBalloon.h"; sourceTree = "<group>"; };
 		63981CAA22DA51D80080BF25 /* HTMLElement+DreamBalloon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HTMLElement+DreamBalloon.m"; sourceTree = "<group>"; };
 		63981CAC22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryCollectionViewCell.h; sourceTree = "<group>"; };
@@ -206,10 +215,14 @@
 				63981CAA22DA51D80080BF25 /* HTMLElement+DreamBalloon.m */,
 				63981CB222DAB8E10080BF25 /* BCHDWMainCollectionView.h */,
 				63981CB322DAB8E10080BF25 /* BCHDWMainCollectionView.m */,
+				6375693922E3660D003178E0 /* BCHDWMainTableView.h */,
+				6375693A22E3660D003178E0 /* BCHDWMainTableView.m */,
 				63981CB522DADE4D0080BF25 /* BCHDWCardView.h */,
 				63981CB622DADE4D0080BF25 /* BCHDWCardView.m */,
 				63981CBF22E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.h */,
 				63981CC022E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m */,
+				6375693C22E366E9003178E0 /* BCHDWFrameView.h */,
+				6375693D22E366E9003178E0 /* BCHDWFrameView.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -227,6 +240,28 @@
 				6302C75E22D8B4D200346552 /* BCHDWFormData.m */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		6375693422E345DF003178E0 /* Comments */ = {
+			isa = PBXGroup;
+			children = (
+				6302C75622D36EC600346552 /* BCHDWComposeReplyViewController.h */,
+				6302C75722D36EC600346552 /* BCHDWComposeReplyViewController.m */,
+			);
+			path = Comments;
+			sourceTree = "<group>";
+		};
+		6375693522E34614003178E0 /* Entry Details */ = {
+			isa = PBXGroup;
+			children = (
+				6302C73B22CB8A9200346552 /* BCHDWEntryDetailController.h */,
+				6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */,
+				6375693622E34636003178E0 /* BCHDWEntryReplyTableViewCell.h */,
+				6375693722E34636003178E0 /* BCHDWEntryReplyTableViewCell.m */,
+				63981CAC22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.h */,
+				63981CAD22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m */,
+			);
+			path = "Entry Details";
 			sourceTree = "<group>";
 		};
 		751AD287C0483B0A8F3DC418 /* Frameworks */ = {
@@ -249,6 +284,8 @@
 		D81603BD1D08B1E500529654 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				6375693522E34614003178E0 /* Entry Details */,
+				6375693422E345DF003178E0 /* Comments */,
 				6332FC1B1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.h */,
 				6332FC1C1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.m */,
 				6332FC1E1E16B2A100E11A49 /* BCHDWAvatarTableViewController.h */,
@@ -267,17 +304,11 @@
 				6332FC131E15BE7F00E11A49 /* BCHDWSimpleTableViewCell.m */,
 				6332FC0F1E15AB4100E11A49 /* BCHDWUserTableViewCell.h */,
 				6332FC101E15AB4100E11A49 /* BCHDWUserTableViewCell.m */,
-				6302C73B22CB8A9200346552 /* BCHDWEntryDetailController.h */,
-				6302C73C22CB8A9200346552 /* BCHDWEntryDetailController.m */,
 				6302C73E22CB8E3500346552 /* BCHDWMetaDataTableViewCell.h */,
 				6302C73F22CB8E3500346552 /* BCHDWMetaDataTableViewCell.m */,
 				6302C74722CD973C00346552 /* BCHDWCommentTableViewCell.h */,
 				6302C74822CD973C00346552 /* BCHDWCommentTableViewCell.m */,
-				6302C75622D36EC600346552 /* BCHDWComposeReplyViewController.h */,
-				6302C75722D36EC600346552 /* BCHDWComposeReplyViewController.m */,
 				6302C75922D36F1600346552 /* BCHDWCommentComposer.h */,
-				63981CAC22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.h */,
-				63981CAD22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m */,
 				63981CAF22DAB1F20080BF25 /* BCHDWEntryCollectionViewController.h */,
 				63981CB022DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m */,
 				63981CB822E131FC0080BF25 /* BCHDWTextBlockTableViewCell.h */,
@@ -580,6 +611,7 @@
 				D8F233D11AB20E4D00F61C25 /* DreamwidthApi.m in Sources */,
 				6302C75522D2884600346552 /* BCHDWUserStringHelper.m in Sources */,
 				D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */,
+				6375693E22E366E9003178E0 /* BCHDWFrameView.m in Sources */,
 				D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */,
 				63981CC122E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m in Sources */,
 				6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */,
@@ -597,12 +629,14 @@
 				6332FC0A1E159A8100E11A49 /* BCHDWTheme.m in Sources */,
 				631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */,
 				6302C75F22D8B4D200346552 /* BCHDWFormData.m in Sources */,
+				6375693B22E3660D003178E0 /* BCHDWMainTableView.m in Sources */,
 				631FA59D22C8EC3800FA83C8 /* BCHDWEntryHandle.m in Sources */,
 				6302C74022CB8E3500346552 /* BCHDWMetaDataTableViewCell.m in Sources */,
 				6302C74622CC116500346552 /* BCHDWBackgroundView.m in Sources */,
 				63981CB722DADE4D0080BF25 /* BCHDWCardView.m in Sources */,
 				631FA59A22C8D18600FA83C8 /* BCHDWPersistenceService.m in Sources */,
 				6332FC011E15938200E11A49 /* BCHDWMenuViewController.m in Sources */,
+				6375693822E34636003178E0 /* BCHDWEntryReplyTableViewCell.m in Sources */,
 				6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */,
 				6302C75C22D7746700346552 /* BCHDWCommentEntryData.m in Sources */,
 				63981CAB22DA51D80080BF25 /* HTMLElement+DreamBalloon.m in Sources */,
