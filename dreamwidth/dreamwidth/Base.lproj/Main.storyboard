@@ -137,7 +137,11 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-DS-dsI">
-                                <rect key="frame" x="331" y="132.5" width="41" height="41"/>
+                                <rect key="frame" x="331" y="140.5" width="25" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="E9K-Kh-8cp"/>
+                                    <constraint firstAttribute="width" constant="25" id="vRH-54-c4v"/>
+                                </constraints>
                                 <state key="normal" image="onepassword-login-button"/>
                                 <connections>
                                     <action selector="findLoginFrom1Password:" destination="3Uv-Yq-2oK" eventType="touchUpInside" id="L0d-ho-67e"/>

@@ -42,6 +42,7 @@
 		63981CB722DADE4D0080BF25 /* BCHDWCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CB622DADE4D0080BF25 /* BCHDWCardView.m */; };
 		63981CBA22E131FC0080BF25 /* BCHDWTextBlockTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CB922E131FC0080BF25 /* BCHDWTextBlockTableViewCell.m */; };
 		63981CBE22E141CD0080BF25 /* BCHDWImageBlockTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CBD22E141CD0080BF25 /* BCHDWImageBlockTableViewCell.m */; };
+		63981CC122E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CC022E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m */; };
 		9E8C5FA2DB9D8FDD88254A4E /* libPods-dreamwidth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */; };
 		D81603C01D08B21600529654 /* BCHDWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */; };
 		D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = D81603C31D08C11300529654 /* BCHDWAvatar.m */; };
@@ -139,6 +140,8 @@
 		63981CB922E131FC0080BF25 /* BCHDWTextBlockTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWTextBlockTableViewCell.m; sourceTree = "<group>"; };
 		63981CBC22E141CD0080BF25 /* BCHDWImageBlockTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWImageBlockTableViewCell.h; sourceTree = "<group>"; };
 		63981CBD22E141CD0080BF25 /* BCHDWImageBlockTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWImageBlockTableViewCell.m; sourceTree = "<group>"; };
+		63981CBF22E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+DreamBalloon.h"; sourceTree = "<group>"; };
+		63981CC022E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+DreamBalloon.m"; sourceTree = "<group>"; };
 		731B75ED8CCDF36DA1EEBC01 /* libPods-dreamwidth.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dreamwidth.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D81603BE1D08B21600529654 /* BCHDWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWLoginViewController.h; sourceTree = "<group>"; };
 		D81603BF1D08B21600529654 /* BCHDWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWLoginViewController.m; sourceTree = "<group>"; };
@@ -205,6 +208,8 @@
 				63981CB322DAB8E10080BF25 /* BCHDWMainCollectionView.m */,
 				63981CB522DADE4D0080BF25 /* BCHDWCardView.h */,
 				63981CB622DADE4D0080BF25 /* BCHDWCardView.m */,
+				63981CBF22E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.h */,
+				63981CC022E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -576,6 +581,7 @@
 				6302C75522D2884600346552 /* BCHDWUserStringHelper.m in Sources */,
 				D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */,
 				D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */,
+				63981CC122E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m in Sources */,
 				6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */,
 				D8EA84F11AB1E6BD00B71DC4 /* BCHDWAppDelegate.m in Sources */,
 				63981CBE22E141CD0080BF25 /* BCHDWImageBlockTableViewCell.m in Sources */,

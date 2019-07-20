@@ -15,6 +15,7 @@
 #import "BCHDWUserStringHelper.h"
 #import "HTMLElement+DreamBalloon.h"
 #import "NSString+DreamBalloon.h"
+#import "NSAttributedString+DreamBalloon.h"
 
 typedef enum {
     BCHDWHtmlBoldStyle          = 1 << 0,
@@ -29,6 +30,10 @@ typedef enum {
 @property (nonatomic, assign) BCHDWHtmlStyle styles;
 @property (nonatomic, readonly) NSDictionary* attributes;
 @property (nonatomic, readonly) UIFont* font;
+@property (nonatomic, assign) NSInteger fontSizeOffset;
+
+-(void) increaseFontSize;
+-(void) decreaseFontSize;
 
 @end
 
@@ -61,16 +66,25 @@ typedef enum {
 }
 
 -(NSAttributedString*) text {
-    return [self.content attributedSubstringFromRange:NSMakeRange(0, self.content.length)];
+    NSAttributedString* result = [self.content attributedSubstringFromRange:NSMakeRange(0, self.content.length)];
+    return [result attributedStringByTrimmingCharacters:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 -(BOOL) empty {
-    return self.content.length == 0;
+    return self.text.length == 0;
 }
 
 @end
 
 @implementation BCHDWStyleAttributes
+
+-(void) increaseFontSize {
+    self.fontSizeOffset += 2;
+}
+
+-(void) decreaseFontSize {
+    self.fontSizeOffset -= 2;
+}
 
 -(UIFont*) font {
     UIFont* font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
@@ -83,7 +97,7 @@ typedef enum {
         traits |= UIFontDescriptorTraitItalic;
     }
     
-    return [UIFont fontWithDescriptor:[[font fontDescriptor] fontDescriptorWithSymbolicTraits:traits] size:font.pointSize];
+    return [UIFont fontWithDescriptor:[[font fontDescriptor] fontDescriptorWithSymbolicTraits:traits] size:font.pointSize + self.fontSizeOffset];
 }
 
 -(NSDictionary*) attributes {
@@ -126,6 +140,14 @@ typedef enum {
         if ([node isKindOfClass:[HTMLElement class]]) {
             HTMLElement* e = (HTMLElement*) node;
             if (![e.tagName isEqualToString:@"form"]) {
+                if ([self isBlockElement:e]) {
+                    BCHDWBlock* last = [array lastObject];
+                    if (![last isKindOfClass:[BCHDWTextBlock class]] || !last.empty) {
+                        [array addObject:[BCHDWTextBlock new]];
+                    }
+                    self.defaultAttributes = [BCHDWStyleAttributes new];
+                }
+                
                 if ([e.tagName isEqualToString:@"b"] || [e.tagName isEqualToString:@"strong"]) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlBoldStyle;
                 } else if ([e.tagName isEqualToString:@"i"] || [e.tagName isEqualToString:@"em"]) {
@@ -134,6 +156,8 @@ typedef enum {
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlStrikethroughStyle;
                 } else if ([e.tagName isEqualToString:@"a"] && e.attributes[@"href"] != nil) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlAnchor;
+                } else if ([e.tagName isEqualToString:@"small"]) {
+                    [self.defaultAttributes decreaseFontSize];
                 }
 
                 if ([e.tagName isEqualToString:@"img"]) {
@@ -158,11 +182,13 @@ typedef enum {
                     self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlStrikethroughStyle;
                 } else if ([e.tagName isEqualToString:@"a"]) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlAnchor;
+                } else if ([e.tagName isEqualToString:@"small"]) {
+                    [self.defaultAttributes increaseFontSize];
                 }
 
                 if ([self isBlockElement:e]) {
                     BCHDWBlock* last = [array lastObject];
-                    if (![last isKindOfClass:[BCHDWTextBlock class]] || ((BCHDWTextBlock*) last).text.length > 0) {
+                    if (![last isKindOfClass:[BCHDWTextBlock class]] || !last.empty) {
                         [array addObject:[BCHDWTextBlock new]];
                     }
                     self.defaultAttributes = [BCHDWStyleAttributes new];
@@ -185,14 +211,16 @@ typedef enum {
 
 -(void) appendText:(HTMLText*) text buffer:(NSMutableAttributedString*) string {
     NSString* textContent = text.textContent;
-    if (text.parentElement.isBlockElement && text.previousSibling == nil) {
+    if (text.parentElement.isBlockElement && (text.previousSibling == nil || string.length == 0)) {
         NSCharacterSet* set = [[NSCharacterSet whitespaceAndNewlineCharacterSet] invertedSet];
         NSRange range = [textContent rangeOfCharacterFromSet:set];
         if (range.location != NSNotFound && range.location > 0) {
             textContent = [textContent substringFromIndex:range.location];
+        } else if (range.location == NSNotFound) {
+            textContent = @"";
         }
     }
-    
+
     NSRange   searchedRange = NSMakeRange(0, [textContent length]);
     NSString* pattern = @"(?<!\\\\)@[a-zA-Z0-9_]+(?:\\.[a-zA-Z0-9]+)?";
     NSError*  error = nil;
