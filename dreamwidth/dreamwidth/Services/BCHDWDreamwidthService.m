@@ -59,6 +59,7 @@
         [self.summaryText1 appendString:@"..."];
         return YES;
     } else {
+        maxLength -= matches.count;
         range = NSMakeRange(0, self.summaryText2.length);
         regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
         matches = [regex matchesInString:self.summaryText2 options:0 range:range];
