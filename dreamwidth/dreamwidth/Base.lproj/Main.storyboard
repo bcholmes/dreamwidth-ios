@@ -633,6 +633,7 @@
                     </view>
                     <connections>
                         <outlet property="commentTextField" destination="VFU-hi-Fvr" id="BnQ-4z-KCd"/>
+                        <outlet property="scrollView" destination="Hi5-Wb-z6f" id="6NV-l5-qek"/>
                         <outlet property="subjectTextField" destination="ndu-lj-y42" id="JcH-2V-szL"/>
                     </connections>
                 </viewController>
