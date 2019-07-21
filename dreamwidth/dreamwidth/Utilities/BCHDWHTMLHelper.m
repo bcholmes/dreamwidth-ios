@@ -200,7 +200,7 @@ typedef enum {
                 block = [BCHDWTextBlock new];
                 [array addObject:block];
             }
-            [self appendText:(HTMLText*) node buffer:((BCHDWTextBlock*) block).content];
+            [self appendTextNode:(HTMLText*) node array:array];
         }
     }
 }
@@ -209,18 +209,7 @@ typedef enum {
     image.imageUrl = element.attributes[@"src"];
 }
 
--(void) appendText:(HTMLText*) text buffer:(NSMutableAttributedString*) string {
-    NSString* textContent = text.textContent;
-    if (text.parentElement.isBlockElement && (text.previousSibling == nil || string.length == 0)) {
-        NSCharacterSet* set = [[NSCharacterSet whitespaceAndNewlineCharacterSet] invertedSet];
-        NSRange range = [textContent rangeOfCharacterFromSet:set];
-        if (range.location != NSNotFound && range.location > 0) {
-            textContent = [textContent substringFromIndex:range.location];
-        } else if (range.location == NSNotFound) {
-            textContent = @"";
-        }
-    }
-
+- (void) appendText:(NSString*) textContent buffer:(NSMutableAttributedString*) string {
     NSRange   searchedRange = NSMakeRange(0, [textContent length]);
     NSString* pattern = @"(?<!\\\\)@[a-zA-Z0-9_]+(?:\\.[a-zA-Z0-9]+)?";
     NSError*  error = nil;
@@ -229,7 +218,7 @@ typedef enum {
     NSArray* matches = [regex matchesInString:textContent options:0 range: searchedRange];
     for (NSTextCheckingResult* match in matches) {
         NSString* matchText = [textContent substringWithRange:match.range];
-
+        
         if (match.range.location > searchedRange.location) {
             [string appendAttributedString:[[NSAttributedString alloc] initWithString:[textContent substringWithRange:NSMakeRange(searchedRange.location, match.range.location - searchedRange.location)] attributes:self.defaultAttributes.attributes]];
         }
@@ -245,9 +234,34 @@ typedef enum {
         [string appendAttributedString:[self.userformatter userLabel:[matchText substringFromIndex:1] icon:icon font:self.defaultAttributes.font]];
         searchedRange = NSMakeRange(match.range.location + match.range.length, textContent.length - (match.range.location + match.range.length));
     }
-
+    
     if (searchedRange.length > 0) {
         [string appendAttributedString:[[NSAttributedString alloc] initWithString:[textContent substringWithRange:searchedRange] attributes:self.defaultAttributes.attributes]];
+    }
+}
+
+-(void) appendTextNode:(HTMLText*) text array:(NSMutableArray<BCHDWBlock*>*) array {
+    NSString* textContent = text.textContent;
+    if (text.parentElement.isBlockElement && (text.previousSibling == nil)) {
+        NSCharacterSet* set = [[NSCharacterSet whitespaceAndNewlineCharacterSet] invertedSet];
+        NSRange range = [textContent rangeOfCharacterFromSet:set];
+        if (range.location != NSNotFound && range.location > 0) {
+            textContent = [textContent substringFromIndex:range.location];
+        } else if (range.location == NSNotFound) {
+            textContent = @"";
+        }
+    }
+
+    NSArray* paragraphs = [textContent componentsSeparatedByString:@"\n\n"];
+    BOOL first = YES;
+    for (NSString* paragraph in paragraphs) {
+        if ([paragraph stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0) {
+            if (!first) {
+                [array addObject:[BCHDWTextBlock new]];
+            }
+            [self appendText:paragraph buffer:((BCHDWTextBlock*) array.lastObject).content];
+            first = NO;
+        }
     }
 }
 
