@@ -12,6 +12,7 @@
 #import <CoreData/CoreData.h>
 #import <MaterialComponents/MaterialAppBar.h>
 #import <DateTools/NSDate+DateTools.h>
+#import <SVProgressHUD/SVProgressHUD.h>
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWEntryCollectionViewCell.h"
@@ -29,6 +30,7 @@
 @property (nonatomic, assign) CGFloat maxHeaderHeight;
 @property (nonatomic, strong) BCHDWEntry* selectedEntry;
 @property (nonatomic, strong) BCHDWUserStringHelper* userHelper;
+@property (nonatomic, strong) NSTimer* timer;
 
 @end
 
@@ -44,7 +46,7 @@ static NSString * const reuseIdentifier = @"Cell";
     self.userHelper = [BCHDWUserStringHelper new];
     UICollectionViewFlowLayout* layout = (UICollectionViewFlowLayout*) self.collectionView.collectionViewLayout;
     CGFloat width = self.collectionView.bounds.size.width;
-    layout.estimatedItemSize = CGSizeMake(width, 250);
+    layout.estimatedItemSize = CGSizeMake(width, 400);
 
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -255,7 +257,17 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 - (void) controllerDidChangeContent:(NSFetchedResultsController*) controller {
-    [self.collectionView reloadData];
+    if (self.timer != nil) {
+        [self.timer invalidate];
+    } else {
+        [SVProgressHUD show];
+    }
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.6 target:self selector:@selector(refresh) userInfo:nil repeats:NO];
+    
 }
 
+-(void) refresh {
+    [self.collectionView reloadData];
+    [SVProgressHUD dismiss];
+}
 @end
