@@ -382,7 +382,7 @@
 }
 
 -(BOOL) isExcluded:(HTMLElement*) element {
-    if (([element.tagName isEqualToString:@"div"]) && [element.attributes[@"class"] rangeOfString:@"edittime"].location != NSNotFound) {
+    if (([element.tagName isEqualToString:@"div"]) && element.attributes[@"class"] != nil && [element.attributes[@"class"] rangeOfString:@"edittime"].location != NSNotFound) {
         return YES;
     } else if ([element.tagName isEqualToString:@"form"]) {
         return YES;
