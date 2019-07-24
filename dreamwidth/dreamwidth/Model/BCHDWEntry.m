@@ -26,4 +26,14 @@
     self.lockedFlag = [NSNumber numberWithBool:locked];
 }
 
+-(BCHDWEntryHandle*) handle {
+    BCHDWEntryHandle* result = [BCHDWEntryHandle new];
+    result.url = self.url;
+    result.author = self.author;
+    result.creationDate = self.creationDate;
+    result.updateDate = self.updateDate;
+    result.commentCount = self.numberOfComments;
+    return result;
+}
+
 @end

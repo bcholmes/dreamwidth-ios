@@ -23,7 +23,7 @@
     return self;
 }
 
--(BCHDWEntry*) entryByUrl:(NSString*) url {
+-(BCHDWEntry*) entryByUrl:(NSString*) url autocreate:(BOOL) autocreate {
     NSMutableArray* result = [NSMutableArray new];
     [self.managedObjectContext performBlockAndWait:^{
         NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Entry"];
@@ -32,13 +32,13 @@
         NSArray* results = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
         if (error == nil && results.count != 0) {
             [result addObject:(BCHDWEntry*) results[0]];
-        } else {
+        } else if (autocreate) {
             BCHDWEntry* entry = [NSEntityDescription insertNewObjectForEntityForName:@"Entry" inManagedObjectContext:self.managedObjectContext];
             entry.url = url;
             [result addObject:entry];
         }
     }];
-    return result[0];
+    return result.count > 0 ? result[0] : nil;
 }
 
 -(BCHDWComment*) commentById:(NSString*) commentId author:(NSString*) author {

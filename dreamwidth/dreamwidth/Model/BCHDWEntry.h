@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+#import "BCHDWEntryHandle.h"
+
 @interface BCHDWEntry : NSManagedObject
 
 @property (nonatomic, strong) NSString* author;
@@ -25,4 +27,5 @@
 @property (nonatomic, strong) NSDate* updateDate;
 @property (nonatomic, strong) NSNumber* numberOfComments;
 @property (nonatomic, assign) BOOL locked;
+@property (nonatomic, readonly) BCHDWEntryHandle* handle;
 @end

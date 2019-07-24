@@ -34,6 +34,7 @@
 		6332FC1A1E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC191E15C49000E11A49 /* BCHDWProfileMainTableViewCell.m */; };
 		6332FC1D1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC1C1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.m */; };
 		6332FC201E16B2A100E11A49 /* BCHDWAvatarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332FC1F1E16B2A100E11A49 /* BCHDWAvatarTableViewController.m */; };
+		633A366B22E885A9005C4248 /* BCHDWAtomParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A366A22E885A9005C4248 /* BCHDWAtomParser.m */; };
 		6345FCB91E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6345FCB81E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m */; };
 		6375693822E34636003178E0 /* BCHDWEntryReplyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693722E34636003178E0 /* BCHDWEntryReplyTableViewCell.m */; };
 		6375693B22E3660D003178E0 /* BCHDWMainTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693A22E3660D003178E0 /* BCHDWMainTableView.m */; };
@@ -127,6 +128,8 @@
 		6332FC1C1E15CFF600E11A49 /* BCHDWAvatarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWAvatarTableViewCell.m; sourceTree = "<group>"; };
 		6332FC1E1E16B2A100E11A49 /* BCHDWAvatarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWAvatarTableViewController.h; sourceTree = "<group>"; };
 		6332FC1F1E16B2A100E11A49 /* BCHDWAvatarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWAvatarTableViewController.m; sourceTree = "<group>"; };
+		633A366922E885A9005C4248 /* BCHDWAtomParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWAtomParser.h; sourceTree = "<group>"; };
+		633A366A22E885A9005C4248 /* BCHDWAtomParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWAtomParser.m; sourceTree = "<group>"; };
 		6345FCB71E17FBE6004B7B19 /* BCHDWComposeEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWComposeEntryViewController.h; sourceTree = "<group>"; };
 		6345FCB81E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWComposeEntryViewController.m; sourceTree = "<group>"; };
 		6375693622E34636003178E0 /* BCHDWEntryReplyTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryReplyTableViewCell.h; sourceTree = "<group>"; };
@@ -238,6 +241,8 @@
 				6302C75B22D7746700346552 /* BCHDWCommentEntryData.m */,
 				6302C75D22D8B4D200346552 /* BCHDWFormData.h */,
 				6302C75E22D8B4D200346552 /* BCHDWFormData.m */,
+				633A366922E885A9005C4248 /* BCHDWAtomParser.h */,
+				633A366A22E885A9005C4248 /* BCHDWAtomParser.m */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -623,6 +628,7 @@
 				D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */,
 				63981CC122E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m in Sources */,
 				6302C74922CD973C00346552 /* BCHDWCommentTableViewCell.m in Sources */,
+				633A366B22E885A9005C4248 /* BCHDWAtomParser.m in Sources */,
 				D8EA84F11AB1E6BD00B71DC4 /* BCHDWAppDelegate.m in Sources */,
 				63981CBE22E141CD0080BF25 /* BCHDWImageBlockTableViewCell.m in Sources */,
 				63981CAE22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m in Sources */,

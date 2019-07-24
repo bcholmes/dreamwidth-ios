@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface BCHDWPersistenceService : NSObject
 
 -(instancetype) initWithManagedObjectContext:(NSManagedObjectContext*) managedObjectContext;
--(BCHDWEntry*) entryByUrl:(NSString*) url;
+-(BCHDWEntry* _Nullable) entryByUrl:(NSString*) url autocreate:(BOOL) autocreate;
 -(BCHDWComment*) commentById:(NSString*) commentId author:(NSString*) author;
 
 @end

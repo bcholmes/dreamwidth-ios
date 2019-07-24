@@ -17,6 +17,7 @@
 #import "BCHDWCommentEntryData.h"
 #import "BCHDWFormData.h"
 #import "HTMLElement+DreamBalloon.h"
+#import "BCHDWAtomParser.h"
 
 @interface BCHDWSummaryExtract : NSObject
 
@@ -142,7 +143,9 @@
             [self fetchReadingPageLight:50 friends:friendSet];
         }
         for (NSString* url in urls) {
-            [self fetchEntry:url];
+            BCHDWEntryHandle* handle = [BCHDWEntryHandle new];
+            handle.url = url;
+            [self fetchEntry:handle];
         }
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
@@ -391,10 +394,10 @@
     }
 }
 
--(void) fetchEntry:(NSString*) entryUrl {
-    [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryUrl] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
+-(void) fetchEntry:(BCHDWEntryHandle*) entryHandle {
+    [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryHandle.url] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
-        BCHDWEntry* entry = [self.persistenceService entryByUrl:entryUrl];
+        BCHDWEntry* entry = [self.persistenceService entryByUrl:entryHandle.url autocreate:YES];
         [entry.managedObjectContext performBlock:^{
             @try {
                 HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
@@ -407,10 +410,15 @@
                     entry.avatarUrl = avatarAnchor.attributes[@"src"];
                     entry.author = author;
 
-                    NSString* entryDate = [document querySelector:@".poster-info .datetime"].textContent;
-                    entry.creationDate = [self.dateFormatter dateFromString:entryDate];
-                    if (entry.updateDate == nil) {
-                        entry.updateDate = entry.creationDate;
+                    if (entryHandle.creationDate == nil && entryHandle.updateDate == nil) {
+                        NSString* entryDate = [document querySelector:@".poster-info .datetime"].textContent;
+                        entry.creationDate = [self.dateFormatter dateFromString:entryDate];
+                        if (entry.updateDate == nil) {
+                            entry.updateDate = entry.creationDate;
+                        }
+                    } else {
+                        entry.creationDate = entryHandle.creationDate;
+                        entry.updateDate = entryHandle.updateDate;
                     }
                     
                     HTMLElement* lock = [document querySelector:@".access-filter"];
@@ -500,7 +508,7 @@
 
 - (void) fullSyncWithServer {
     NSLog(@"Starting full sync with server.");
-    [self.api getEvents:self.currentUser completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+    [self getAtomFeed:self.currentUser.username completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
         if (error) {
             NSLog(@"error: %@", error);
         } else {
@@ -511,17 +519,31 @@
     [self fetchRecentReadingPageActivity];
 }
 
+-(void) getAtomFeed:(NSString*) user completion:(void (^)(NSError* _Nullable error, NSArray* _Nullable entryHandles)) completion {
+    [self.htmlManager GET:[NSString stringWithFormat:@"https://%@.dreamwidth.org/data/atom", user] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSArray* entries = [[BCHDWAtomParser new] parse:responseObject];
+        completion(nil, entries);
+        
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
+        completion(error, nil);
+    }];
+}
+
 - (void) partialSyncWithServer {
     NSDate* date = self.lastSyncDate;
     NSLog(@"Starting partial sync with server.");
-    [self.api getEvents:self.currentUser since:date completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+    [self getAtomFeed:self.currentUser.username completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
         if (error) {
             NSLog(@"error: %@", error);
-        } else if (entries.count > 0) {
-            self.lastSyncDate = [NSDate new];
-            [self processEntries:entries];
         } else {
-            NSLog(@"No new user entries to process");
+            NSArray* newEntries = [self filterNewEntries:entries forUser:self.currentUser.username];
+            if (newEntries.count > 0) {
+                NSLog(@"%lu entries have been identified for %@", newEntries.count, self.currentUser.username);
+                [self processEntries:newEntries];
+            } else {
+                NSLog(@"No new user entries to process");
+            }
         }
     }];
     [self.api checkFriends:date completion:^(NSError * _Nullable error, BOOL newEntries) {
@@ -529,6 +551,23 @@
             [self fetchRecentReadingPageActivity];
         }
     }];
+}
+
+-(NSArray*) filterNewEntries:(NSArray*) entries forUser:(NSString*) username {
+    NSMutableArray* result = [NSMutableArray new];
+    
+    for (BCHDWEntryHandle* handle in entries) {
+        BCHDWEntry* entry = [self.persistenceService entryByUrl:handle.url autocreate:NO];
+        if (!entry) {
+            [result addObject:handle];
+        } else if ([entry.updateDate isEarlierThanDate:handle.updateDate]) {
+            [result addObject:handle];
+        } else if ([entry.numberOfComments integerValue] != [handle.commentCount integerValue]) {
+            [result addObject:handle];
+        }
+    }
+    
+    return [NSArray arrayWithArray:result];
 }
 
 -(void) fullOrPartialSyncWithServer {
@@ -557,7 +596,7 @@
             [self setAuthenticationCookie:session];
             for (BCHDWEntryHandle* entry in entries) {
                 NSLog(@"Fetch data for url: %@", entry.url);
-                [self fetchEntry:entry.url];
+                [self fetchEntry:entry];
             }
         }
     }];
@@ -575,7 +614,7 @@
                     
                     [self submitForm:formData callback:^(NSError* error) {
                         if (error == nil) {
-                            [self fetchEntry:entry.url];
+                            [self fetchEntry:entry.handle];
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 callback(nil);
                             });
