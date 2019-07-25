@@ -19,6 +19,9 @@
     if (self.subject != nil) {
         [result setObject:self.subject forKey:@"subject"];
     }
+    if (self.avatar != nil) {
+        [result setObject:self.avatar.keywords forKey:@"prop_picture_keyword"];
+    }
     
     return [NSDictionary dictionaryWithDictionary:result];
 }

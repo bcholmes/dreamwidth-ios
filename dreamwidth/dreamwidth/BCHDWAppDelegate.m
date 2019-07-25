@@ -7,12 +7,13 @@
 //
 
 #import <SWRevealViewController/SWRevealViewController.h>
+#import <UserNotifications/UserNotifications.h>
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWTheme.h"
 #import "BCHDWPersistenceService.h"
 
-@interface BCHDWAppDelegate ()
+@interface BCHDWAppDelegate ()<UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) NSManagedObjectModel* managedObjectModel;
 @property (nonatomic, strong) NSPersistentStoreCoordinator* persistentStoreCoordinator;
@@ -73,12 +74,38 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
+    [self registerForNotifications];
     [self.dreamwidthService syncWithServer];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:5 * 60.0 target:self.dreamwidthService selector:@selector(syncWithServer) userInfo:nil repeats:YES];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+-(void) registerForNotifications {
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        if (!error) {
+            center.delegate = self;
+            NSLog(@"request succeeded!");
+            /*
+             dispatch_async(dispatch_get_main_queue(), ^{
+             [self addWelcomeNotifications];
+             });
+             */
+        } else {
+            NSLog(@"No user notifications for you!");
+        }
+    }];
+}
+
+- (void)application:(UIApplication*) app didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    if ([error.domain isEqualToString:NSCocoaErrorDomain] && error.code == 3010) {
+        NSLog(@"%@", error.localizedDescription);
+    } else {
+        NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@", error);
+    }
 }
 
 #pragma mark CoreData
@@ -133,6 +160,27 @@
         }
         
         return _persistentStoreCoordinator;
+    }
+}
+
+-(void) processNotification:(NSString*) notificationIdentifier {
+    NSLog(@"Notification id %@", notificationIdentifier);
+}
+
+#pragma mark UNUserNotificationCenterDelegate
+
+- (void)userNotificationCenter:(UNUserNotificationCenter*) center didReceiveNotificationResponse:(UNNotificationResponse*) response withCompletionHandler:(void (^)(void)) completionHandler {
+    
+    [self processNotification:response.notification.request.identifier];
+    
+    if (completionHandler != nil) {
+        completionHandler();
+    }
+}
+
+- (void) userNotificationCenter:(UNUserNotificationCenter*) center willPresentNotification:(UNNotification*) notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options)) completionHandler {
+    if (completionHandler) {
+        completionHandler(UNNotificationPresentationOptionAlert);
     }
 }
 
