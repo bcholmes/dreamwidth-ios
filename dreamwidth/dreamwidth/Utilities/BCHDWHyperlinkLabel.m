@@ -68,7 +68,8 @@
         CGPoint touchPoint = [touch locationInView:self];
         NSValue *rangeValue = [self attributedTextRangeForPoint:touchPoint];
         if (rangeValue) {
-//            NSRange range = [rangeValue rangeValue];
+            NSRange range = [rangeValue rangeValue];
+            NSLog(@"rangeValue => %lu,%lu", range.location, range.length );
 //            NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.attributedText];
 //            [attributedString addAttributes:self.linkAttributeHighlight range:range];
 /*
@@ -77,6 +78,8 @@
             } completion:nil];
             return;
  */
+        } else {
+            NSLog(@"No range");
         }
  
     }
@@ -119,8 +122,8 @@
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)self.attributedText);
     CTFrameRef ctFrame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, self.attributedText.length), path, NULL);
     
-    CGFloat verticalPadding = (CGRectGetHeight(self.frame) - CGRectGetHeight(boundingBox)) / 2;
-    CGFloat horizontalPadding = (CGRectGetWidth(self.frame) - CGRectGetWidth(boundingBox)) / 2;
+    CGFloat verticalPadding = 0; //(CGRectGetHeight(self.frame) - CGRectGetHeight(boundingBox)) / 2;
+    CGFloat horizontalPadding = 0; //(CGRectGetWidth(self.frame) - CGRectGetWidth(boundingBox)) / 2;
     CGFloat ctPointX = point.x - horizontalPadding;
     CGFloat ctPointY = CGRectGetHeight(boundingBox) - (point.y - verticalPadding);
     CGPoint ctPoint = CGPointMake(ctPointX, ctPointY);
@@ -156,6 +159,7 @@
 
 - (NSValue*) attributedTextRangeForPoint:(CGPoint) point {
     NSInteger indexOfCharacter = [self characterIndexForPoint:point];
+    NSLog(@"index of character %ld", indexOfCharacter);
     for (NSValue *rangeValue in self.handlerDictionary) {
         NSRange range = [rangeValue rangeValue];
         if (NSLocationInRange(indexOfCharacter, range)) {

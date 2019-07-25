@@ -10,6 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface BCHDWAnchor : NSObject
+
+@property (nonatomic, nullable, strong) NSString* href;
+@property (nonatomic, assign) NSUInteger location;
+@property (nonatomic, assign) NSUInteger length;
+
+@end
+
 @interface BCHDWBlock : NSObject
 
 @property (nonatomic, readonly) BOOL empty;
@@ -19,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface BCHDWTextBlock : BCHDWBlock
 
 @property (nonatomic, readonly) NSAttributedString* text;
+@property (nonatomic, readonly) NSArray<BCHDWAnchor*>* links;
 
 @end
 

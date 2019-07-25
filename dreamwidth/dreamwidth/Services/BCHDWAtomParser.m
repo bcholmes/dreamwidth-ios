@@ -46,7 +46,6 @@
 - (void)parser:(NSXMLParser*) parser didEndElement:(NSString*) elementName namespaceURI:(nullable NSString*) namespaceURI qualifiedName:(nullable NSString*) qName {
     if (self.currentElement != nil && [elementName isEqualToString:@"published"]) {
         self.currentElement.creationDate = [self.isoDateFormatter dateFromString:self.text];
-        NSLog(@"Date: %@", self.currentElement.creationDate);
     } else if (self.currentElement != nil && [elementName isEqualToString:@"updated"]) {
         self.currentElement.updateDate = [self.isoDateFormatter dateFromString:self.text];
     } else if (self.currentElement != nil && [elementName isEqualToString:@"reply-count"]) {

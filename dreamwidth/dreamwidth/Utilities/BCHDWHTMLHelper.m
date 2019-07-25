@@ -25,6 +25,7 @@ typedef enum {
 } BCHDWHtmlStyle;
 
 
+
 @interface BCHDWStyleAttributes : NSObject
 
 @property (nonatomic, assign) BCHDWHtmlStyle styles;
@@ -40,9 +41,13 @@ typedef enum {
 @interface BCHDWTextBlock()
 
 @property (nonatomic, strong) NSMutableAttributedString* content;
+@property (nonatomic, strong) NSMutableArray* anchors;
 
 @end
 
+@implementation BCHDWAnchor
+
+@end
 
 @implementation BCHDWBlock
 
@@ -61,6 +66,7 @@ typedef enum {
 -(instancetype) init {
     if (self = [super init]) {
         self.content = [NSMutableAttributedString new];
+        self.anchors = [NSMutableArray new];
     }
     return self;
 }
@@ -68,6 +74,24 @@ typedef enum {
 -(NSAttributedString*) text {
     NSAttributedString* result = [self.content attributedSubstringFromRange:NSMakeRange(0, self.content.length)];
     return [result attributedStringByTrimmingCharacters:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+-(NSArray*) links {
+    NSMutableArray* result = [NSMutableArray new];
+    NSString* original = [self.content string];
+    NSRange range = [[self.text string] rangeOfString:original];
+    if (range.location != NSNotFound) {
+        for (BCHDWAnchor* a in self.anchors) {
+            if (a.length > 0) {
+                BCHDWAnchor* anchor = [BCHDWAnchor new];
+                anchor.href = a.href;
+                anchor.location = a.location - range.location;
+                anchor.length = a.length;
+                [result addObject:anchor];
+            }
+        }
+    }
+    return [NSArray arrayWithArray:result];
 }
 
 -(BOOL) empty {
@@ -147,7 +171,8 @@ typedef enum {
                     }
                     self.defaultAttributes = [BCHDWStyleAttributes new];
                 }
-                
+
+                BCHDWAnchor* anchor = nil;
                 if ([e.tagName isEqualToString:@"b"] || [e.tagName isEqualToString:@"strong"]) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlBoldStyle;
                 } else if ([e.tagName isEqualToString:@"i"] || [e.tagName isEqualToString:@"em"]) {
@@ -155,6 +180,13 @@ typedef enum {
                 } else if ([e.tagName isEqualToString:@"strike"] || [e.tagName isEqualToString:@"s"] || [e.tagName isEqualToString:@"del"]) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlStrikethroughStyle;
                 } else if ([e.tagName isEqualToString:@"a"] && e.attributes[@"href"] != nil) {
+                    anchor = [BCHDWAnchor new];
+                    anchor.href = e.attributes[@"href"];
+                    if ([array.lastObject isKindOfClass:[BCHDWTextBlock class]]) {
+                        BCHDWTextBlock* textBlock = (BCHDWTextBlock*) array.lastObject;
+                        anchor.location = textBlock.content.length;
+                        [textBlock.anchors addObject:anchor];
+                    }
                     self.defaultAttributes.styles = self.defaultAttributes.styles | BCHDWHtmlAnchor;
                 } else if ([e.tagName isEqualToString:@"small"]) {
                     [self.defaultAttributes decreaseFontSize];
@@ -181,6 +213,13 @@ typedef enum {
                 } else if ([e.tagName isEqualToString:@"strike"] || [e.tagName isEqualToString:@"s"] || [e.tagName isEqualToString:@"del"]) {
                     self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlStrikethroughStyle;
                 } else if ([e.tagName isEqualToString:@"a"]) {
+                    if ([array.lastObject isKindOfClass:[BCHDWTextBlock class]]) {
+                        BCHDWTextBlock* textBlock = (BCHDWTextBlock*) array.lastObject;
+                        BCHDWAnchor* a = [textBlock.anchors lastObject];
+                        if (a != nil && a == anchor) {
+                            a.length = textBlock.content.length - a.location;
+                        }
+                    }
                     self.defaultAttributes.styles = self.defaultAttributes.styles & ~BCHDWHtmlAnchor;
                 } else if ([e.tagName isEqualToString:@"small"]) {
                     [self.defaultAttributes increaseFontSize];
