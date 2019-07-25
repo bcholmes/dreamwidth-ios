@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import "BCHDWHyperlinkLabel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BCHDWTextBlockTableViewCell : UITableViewCell
 
-@property (nonatomic, nullable, weak) IBOutlet UILabel* bodyLabel;
+@property (nonatomic, nullable, weak) IBOutlet BCHDWHyperlinkLabel* bodyLabel;
 
 @end
 

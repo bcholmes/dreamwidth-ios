@@ -207,6 +207,17 @@ typedef enum {
 
 -(void) processImage:(HTMLElement*) element image:(BCHDWImageBlock*) image {
     image.imageUrl = element.attributes[@"src"];
+    
+    HTMLElement* anchor = nil;
+    for (HTMLElement* e = element.parentElement; e != nil && ![e.tagName isEqualToString:@"body"]; e = e.parentElement) {
+        if ([e.tagName isEqualToString:@"a"] && e.attributes[@"href"] != nil) {
+            anchor = e;
+            break;
+        }
+    }
+    if (anchor != nil) {
+        image.link = anchor.attributes[@"href"];
+    }
 }
 
 - (void) appendText:(NSString*) textContent buffer:(NSMutableAttributedString*) string {

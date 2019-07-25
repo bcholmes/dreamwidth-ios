@@ -118,6 +118,7 @@
                 [self.tableView endUpdates];
                 
             } failure:nil];
+            cell.link = ((BCHDWImageBlock*) block).link;
             return cell;
         }
     } else {

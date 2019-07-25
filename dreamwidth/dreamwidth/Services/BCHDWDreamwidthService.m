@@ -346,6 +346,8 @@
                 if (extract.currentText.length == 0) {
                     // don't do anything
                 } else if ([element.tagName isEqualToString:@"p"] || element.isHeader) {
+                    NSString* trimmed = [extract.currentText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    [extract.currentText replaceCharactersInRange:NSMakeRange(0, extract.currentText.length) withString:trimmed];
                     [extract.currentText appendString:@"\n\n"];
                 } else if (element.isBlockElement) {
                     [extract.currentText appendString:@"\n"];

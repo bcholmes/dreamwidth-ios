@@ -37,6 +37,7 @@
 		633A366B22E885A9005C4248 /* BCHDWAtomParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A366A22E885A9005C4248 /* BCHDWAtomParser.m */; };
 		633A366E22E93432005C4248 /* BCHDWAvatarPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A366D22E93432005C4248 /* BCHDWAvatarPickerViewController.m */; };
 		633A367122E93863005C4248 /* BCHDWAvatarPickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A367022E93863005C4248 /* BCHDWAvatarPickerCollectionViewCell.m */; };
+		633A367422E94947005C4248 /* BCHDWHyperlinkLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A367322E94947005C4248 /* BCHDWHyperlinkLabel.m */; };
 		6345FCB91E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6345FCB81E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m */; };
 		6375693822E34636003178E0 /* BCHDWEntryReplyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693722E34636003178E0 /* BCHDWEntryReplyTableViewCell.m */; };
 		6375693B22E3660D003178E0 /* BCHDWMainTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693A22E3660D003178E0 /* BCHDWMainTableView.m */; };
@@ -136,6 +137,8 @@
 		633A366D22E93432005C4248 /* BCHDWAvatarPickerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWAvatarPickerViewController.m; sourceTree = "<group>"; };
 		633A366F22E93863005C4248 /* BCHDWAvatarPickerCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWAvatarPickerCollectionViewCell.h; sourceTree = "<group>"; };
 		633A367022E93863005C4248 /* BCHDWAvatarPickerCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWAvatarPickerCollectionViewCell.m; sourceTree = "<group>"; };
+		633A367222E94947005C4248 /* BCHDWHyperlinkLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWHyperlinkLabel.h; sourceTree = "<group>"; };
+		633A367322E94947005C4248 /* BCHDWHyperlinkLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWHyperlinkLabel.m; sourceTree = "<group>"; };
 		6345FCB71E17FBE6004B7B19 /* BCHDWComposeEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHDWComposeEntryViewController.h; sourceTree = "<group>"; };
 		6345FCB81E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCHDWComposeEntryViewController.m; sourceTree = "<group>"; };
 		6375693622E34636003178E0 /* BCHDWEntryReplyTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryReplyTableViewCell.h; sourceTree = "<group>"; };
@@ -232,6 +235,8 @@
 				63981CC022E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m */,
 				6375693C22E366E9003178E0 /* BCHDWFrameView.h */,
 				6375693D22E366E9003178E0 /* BCHDWFrameView.m */,
+				633A367222E94947005C4248 /* BCHDWHyperlinkLabel.h */,
+				633A367322E94947005C4248 /* BCHDWHyperlinkLabel.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -635,6 +640,7 @@
 				6302C75522D2884600346552 /* BCHDWUserStringHelper.m in Sources */,
 				D81603C41D08C11300529654 /* BCHDWAvatar.m in Sources */,
 				6375693E22E366E9003178E0 /* BCHDWFrameView.m in Sources */,
+				633A367422E94947005C4248 /* BCHDWHyperlinkLabel.m in Sources */,
 				633A366E22E93432005C4248 /* BCHDWAvatarPickerViewController.m in Sources */,
 				D81603D01D09E8C400529654 /* BCHDWEntry.m in Sources */,
 				63981CC122E1FA7B0080BF25 /* NSAttributedString+DreamBalloon.m in Sources */,

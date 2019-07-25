@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface BCHDWImageBlock : BCHDWBlock
 
 @property (nonatomic, strong) NSString* imageUrl;
+@property (nonatomic, strong) NSString* link;
 
 @end
 

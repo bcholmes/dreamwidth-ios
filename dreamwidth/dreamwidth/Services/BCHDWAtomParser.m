@@ -28,7 +28,7 @@
     
     self.window = [[NSDate new] dateByAddingMonths:-3];
     self.isoDateFormatter = [[NSDateFormatter alloc] init];
-    [self.isoDateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
+    [self.isoDateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
     [self.isoDateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
 }
 
@@ -46,6 +46,7 @@
 - (void)parser:(NSXMLParser*) parser didEndElement:(NSString*) elementName namespaceURI:(nullable NSString*) namespaceURI qualifiedName:(nullable NSString*) qName {
     if (self.currentElement != nil && [elementName isEqualToString:@"published"]) {
         self.currentElement.creationDate = [self.isoDateFormatter dateFromString:self.text];
+        NSLog(@"Date: %@", self.currentElement.creationDate);
     } else if (self.currentElement != nil && [elementName isEqualToString:@"updated"]) {
         self.currentElement.updateDate = [self.isoDateFormatter dateFromString:self.text];
     } else if (self.currentElement != nil && [elementName isEqualToString:@"reply-count"]) {

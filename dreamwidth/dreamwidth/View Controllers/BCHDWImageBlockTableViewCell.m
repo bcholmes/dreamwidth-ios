@@ -12,13 +12,29 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
+
+    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openLink)];
+    singleTap.numberOfTapsRequired = 1;
+    [self.imageBlockView setUserInteractionEnabled:YES];
+    [self.imageBlockView addGestureRecognizer:singleTap];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+-(void) openLink {
+    if (self.link != nil) {
+        @try {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.link] options:@{} completionHandler:nil];
+        } @catch (NSException* exception) {
+            NSLog(@"******************************************");
+            NSLog(@"%@", exception.reason);
+            NSLog(@"******************************************");
+        }
+    }
 }
 
 @end

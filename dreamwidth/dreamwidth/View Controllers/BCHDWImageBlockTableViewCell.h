@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, weak) IBOutlet UIImageView* imageBlockView;
 @property (nonatomic, nullable, weak) IBOutlet NSLayoutConstraint* heightConstraint;
 
+@property (nonatomic, nullable, strong) NSString* link;
+
 @end
 
 NS_ASSUME_NONNULL_END
