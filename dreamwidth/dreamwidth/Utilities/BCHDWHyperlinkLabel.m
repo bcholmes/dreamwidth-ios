@@ -68,8 +68,7 @@
         CGPoint touchPoint = [touch locationInView:self];
         NSValue *rangeValue = [self attributedTextRangeForPoint:touchPoint];
         if (rangeValue) {
-            NSRange range = [rangeValue rangeValue];
-            NSLog(@"rangeValue => %lu,%lu", range.location, range.length );
+//            NSRange range = [rangeValue rangeValue];
 //            NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.attributedText];
 //            [attributedString addAttributes:self.linkAttributeHighlight range:range];
 /*
@@ -78,10 +77,7 @@
             } completion:nil];
             return;
  */
-        } else {
-            NSLog(@"No range");
         }
- 
     }
     [super touchesBegan:touches withEvent:event];
 }
@@ -159,7 +155,6 @@
 
 - (NSValue*) attributedTextRangeForPoint:(CGPoint) point {
     NSInteger indexOfCharacter = [self characterIndexForPoint:point];
-    NSLog(@"index of character %ld", indexOfCharacter);
     for (NSValue *rangeValue in self.handlerDictionary) {
         NSRange range = [rangeValue rangeValue];
         if (NSLocationInRange(indexOfCharacter, range)) {

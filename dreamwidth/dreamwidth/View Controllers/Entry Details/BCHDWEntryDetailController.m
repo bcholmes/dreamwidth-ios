@@ -106,7 +106,6 @@
             cell.bodyLabel.attributedText = ((BCHDWTextBlock*) block).text;
             
             for (BCHDWAnchor* anchor in ((BCHDWTextBlock*) block).links) {
-                NSLog(@"link: -> %@ at %lu, %lu", anchor.href, anchor.location, anchor.length);
                 [cell.bodyLabel setLink:anchor.href forRange:NSMakeRange(anchor.location, anchor.length)];
             }
             

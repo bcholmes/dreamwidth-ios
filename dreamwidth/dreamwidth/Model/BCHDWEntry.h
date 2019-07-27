@@ -14,6 +14,7 @@
 @interface BCHDWEntry : NSManagedObject
 
 @property (nonatomic, strong) NSString* author;
+@property (nonatomic, strong) NSString* community;
 @property (nonatomic, strong) NSString* rating;
 @property (nonatomic, strong) NSString* entryId;
 @property (nonatomic, strong) NSString* subject;
@@ -25,6 +26,7 @@
 @property (nonatomic, strong) NSString* avatarUrl;
 @property (nonatomic, strong) NSDate* creationDate;
 @property (nonatomic, strong) NSDate* updateDate;
+@property (nonatomic, strong) NSDate* lastActivityDate;
 @property (nonatomic, strong) NSNumber* numberOfComments;
 @property (nonatomic, assign) BOOL locked;
 @property (nonatomic, readonly) BCHDWEntryHandle* handle;

@@ -246,8 +246,8 @@
     }
     
     entry.numberOfComments = [NSNumber numberWithUnsignedInteger:count];
-    if (newestComment != nil && [newestComment isLaterThanDate:entry.updateDate]) {
-        entry.updateDate = newestComment;
+    if (newestComment != nil && [newestComment isLaterThanDate:entry.lastActivityDate]) {
+        entry.lastActivityDate = newestComment;
     }
 }
 
@@ -422,6 +422,9 @@
                         entry.creationDate = entryHandle.creationDate;
                         entry.updateDate = entryHandle.updateDate;
                     }
+                    if (entry.lastActivityDate == nil) {
+                        entry.lastActivityDate = entry.updateDate;
+                    }
                     
                     HTMLElement* lock = [document querySelector:@".access-filter"];
                     if (lock != nil) {
@@ -561,10 +564,13 @@
     for (BCHDWEntryHandle* handle in entries) {
         BCHDWEntry* entry = [self.persistenceService entryByUrl:handle.url autocreate:NO];
         if (!entry) {
+            NSLog(@"handle %@ does not exist", handle.url);
             [result addObject:handle];
         } else if ([entry.updateDate isEarlierThanDate:handle.updateDate]) {
+            NSLog(@"handle %@ (%@) has changed (%@)", handle.url, handle.updateDate, entry.updateDate);
             [result addObject:handle];
         } else if ([entry.numberOfComments integerValue] != [handle.commentCount integerValue]) {
+            NSLog(@"handle %@ comment count has changed %@ -> %@", handle.url, entry.numberOfComments, handle.commentCount);
             [result addObject:handle];
         }
     }

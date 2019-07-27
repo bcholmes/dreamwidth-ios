@@ -74,6 +74,8 @@
 
 -(NSArray<BCHDWEntryHandle*>*) parse:(NSData*) data {
     NSXMLParser* parser = [[NSXMLParser alloc] initWithData:data];
+    parser.shouldProcessNamespaces = YES;
+    parser.shouldReportNamespacePrefixes = NO;
     BCHDWXmlParser* parserDelegate = [BCHDWXmlParser new];
     parser.delegate = parserDelegate;
     [parser parse];

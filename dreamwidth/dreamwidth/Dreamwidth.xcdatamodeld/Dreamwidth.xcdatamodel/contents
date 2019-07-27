@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.99" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14492.1" systemVersion="18G84" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Comment" representedClassName="BCHDWComment" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avatarUrl" optional="YES" attributeType="String" syncable="YES"/>
@@ -16,9 +16,11 @@
     <entity name="Entry" representedClassName="BCHDWEntry" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avatarUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="community" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="entryId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="entryText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastActivityDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lockedFlag" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="numberOfComments" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="String" syncable="YES"/>
@@ -31,6 +33,6 @@
     </entity>
     <elements>
         <element name="Comment" positionX="-54" positionY="-9" width="128" height="210"/>
-        <element name="Entry" positionX="-36" positionY="72" width="128" height="255"/>
+        <element name="Entry" positionX="-36" positionY="72" width="128" height="285"/>
     </elements>
 </model>
