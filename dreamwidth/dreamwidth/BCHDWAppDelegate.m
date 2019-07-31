@@ -48,13 +48,14 @@
     
 }
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.dreamwidthApi = [DreamwidthApi new];
     self.persistentService = [[BCHDWPersistenceService alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.dreamwidthService = [[BCHDWDreamwidthService alloc] initWithApi:self.dreamwidthApi persistence:self.persistentService];
     [BCHDWTheme instance];
     [self setUpRevealController];
+    
+    [UIApplication.sharedApplication setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     return YES;
 }
 
@@ -81,6 +82,11 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+    NSLog(@"performFetchWithCompletionHandler");
+    [self.dreamwidthService scheduleBackgroundDownload:completionHandler];
 }
 
 -(void) registerForNotifications {

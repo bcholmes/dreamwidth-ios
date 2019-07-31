@@ -21,6 +21,7 @@
 #import "BCHDWLoginViewController.h"
 #import "BCHDWTheme.h"
 #import "BCHDWUserStringHelper.h"
+#import "NSDate+DreamBalloon.h"
 
 @interface BCHDWEntryCollectionViewController ()<NSFetchedResultsControllerDelegate, MDCFlexibleHeaderViewLayoutDelegate>
 
@@ -152,7 +153,7 @@ static NSString * const reuseIdentifier = @"Cell";
         cell.summaryImageView.hidden = YES;
     }
 
-    cell.dateLabel.text = [entry.creationDate timeAgoSinceNow];
+    cell.dateLabel.text = [entry.creationDate relativeDate];
     cell.lockedImageView.hidden = !entry.locked;
 
     if (entry.avatarUrl != nil) {

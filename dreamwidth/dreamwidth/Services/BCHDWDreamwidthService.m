@@ -12,71 +12,15 @@
 #import <UYLPasswordManager/UYLPasswordManager.h>
 #import <HTMLKit/HTMLKit.h>
 #import <NSDate-Additions/NSDate+Additions.h>
+#import <UserNotifications/UserNotifications.h>
 
 #import "BCHDWEntryHandle.h"
 #import "BCHDWCommentEntryData.h"
 #import "BCHDWFormData.h"
 #import "HTMLElement+DreamBalloon.h"
 #import "BCHDWAtomParser.h"
-
-@interface BCHDWSummaryExtract : NSObject
-
-@property (nonatomic, strong) NSMutableString* summaryText1;
-@property (nonatomic, strong) NSMutableString* summaryText2;
-@property (nonatomic, strong) NSString* summaryImageUrl;
-@property (nonatomic, readonly) NSMutableString* currentText;
-@property (nonatomic, readonly) BOOL isMaxLength;
-
-@end
-
-@implementation BCHDWSummaryExtract
-
--(instancetype) init {
-    if (self = [super init]) {
-        self.summaryText1 = [NSMutableString new];
-        self.summaryText2 = [NSMutableString new];
-    }
-    return self;
-}
-
--(NSMutableString*) currentText {
-    if (self.summaryImageUrl != nil && self.summaryImageUrl.length > 0) {
-        return self.summaryText2;
-    } else {
-        return self.summaryText1;
-    }
-}
-
--(BOOL) isMaxLength {
-    NSUInteger maxLength = 60;
-    NSError* error = nil;
-    NSRange range = NSMakeRange(0, self.summaryText1.length);
-    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
-    NSArray* matches = [regex matchesInString:self.summaryText1 options:0 range:range];
-    
-    if (matches.count > maxLength) {
-        NSTextCheckingResult* match = matches[maxLength-1];
-        [self.summaryText1 deleteCharactersInRange:NSMakeRange(match.range.location, self.summaryText1.length - match.range.location)];
-        [self.summaryText1 appendString:@"..."];
-        return YES;
-    } else {
-        maxLength -= matches.count;
-        range = NSMakeRange(0, self.summaryText2.length);
-        regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
-        matches = [regex matchesInString:self.summaryText2 options:0 range:range];
-        if (matches.count > maxLength) {
-            NSTextCheckingResult* match = matches[maxLength-1];
-            [self.summaryText2 deleteCharactersInRange:NSMakeRange(match.range.location, self.summaryText2.length - match.range.location)];
-            [self.summaryText2 appendString:@"..."];
-            return YES;
-        } else {
-            return NO;
-        }
-    }
-}
-
-@end
-
+#import "BCHDWEntrySummarizer.h"
+#import "BCHDWHTMLUtilities.h"
 @interface BCHDWDreamwidthService()
 
 @property (nonatomic, strong) DreamwidthApi* api;
@@ -134,42 +78,90 @@
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:[NSHTTPCookie cookieWithProperties:@{NSHTTPCookieDomain: @".dreamwidth.org", NSHTTPCookiePath: @"/", NSHTTPCookieName: @"BMLschemepref", NSHTTPCookieValue: @"tropo-red" }]];
 }
 
-- (void) fetchReadingPageLight:(NSUInteger) skip friends:(NSMutableSet*) friendSet {
+- (void) fetchReadingPageLight:(NSUInteger) skip max:(NSUInteger) max friends:(NSMutableDictionary*) friendSet completion:(void (^)(NSError* error, NSDictionary* readingList)) completion {
     [self.htmlManager GET:[NSString stringWithFormat:@"https://www.dreamwidth.org/mobile/read?skip=%lu", skip] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
-        NSArray* urls = [self findAllFriends:(NSData*) responseObject friends:friendSet];
+        NSArray* items = [self findAllFriends:(NSData*) responseObject friends:friendSet];
         
-        if (skip == 0) {
-            [self fetchReadingPageLight:50 friends:friendSet];
-        }
-        for (NSString* url in urls) {
-            BCHDWEntryHandle* handle = [BCHDWEntryHandle new];
-            handle.url = url;
-            [self fetchEntry:handle];
+        if (skip < max && items.count > 0) {
+            [self fetchReadingPageLight:skip + 50 max:max friends:friendSet completion:completion];
+        } else {
+            completion(nil, [NSDictionary dictionaryWithDictionary:friendSet]);
+            
+            
+            for (NSString* author in friendSet) {
+                [self getAtomFeed:author completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+                    if (error && [error.domain isEqualToString:@"org.ayizan.dreamballoon"]) {
+                        [self processEntries:[friendSet objectForKey:author]];
+                    } else if (error) {
+                        NSLog(@"error: %@", error);
+                    } else {
+                        NSArray* filteredEntries = [self filterNewEntries:entries forUser:author];
+                        self.lastSyncDate = [NSDate new];
+                        [self processEntries:filteredEntries];
+                    }
+                }];
+            }
         }
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"Error: %@", error);
+        completion(error, nil);
     }];
 }
 
--(NSArray*) findAllFriends:(NSData*) htmlData friends:(NSMutableSet*) friendSet {
+-(NSArray*) findAllFriends:(NSData*) htmlData friends:(NSMutableDictionary*) friendSet {
 
     NSMutableArray* result = [NSMutableArray new];
     HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding]];
     HTMLDocument* document = [parser parseDocument];
-    NSArray* links = [document querySelectorAll:@"a"];
-    for (HTMLElement* anchor in links) {
-        NSString* href = anchor.attributes[@"href"];
-        if ([href rangeOfString:@".html?"].location != NSNotFound) {
-            BCHDWEntryHandle* handle = [BCHDWEntryHandle new];
-            handle.url = [href substringToIndex:[href rangeOfString:@"?"].location];
-            if (![friendSet containsObject:handle.url]) {
-                [friendSet addObject:handle.url];
-                [result addObject:handle.url];
+
+    HTMLElement* body = [document body];
+    BCHDWEntryHandle* handle = [BCHDWEntryHandle new];
+    for (HTMLNode* node = body.firstChild; node != nil; node = node.nextSibling) {
+        if ([node isKindOfClass:[HTMLElement class]]) {
+            HTMLElement* e = (HTMLElement*) node;
+            if ([e.tagName isEqualToString:@"br"]) {
+                if (handle.url != nil) {
+                    [result addObject:handle];
+                }
+                handle = [BCHDWEntryHandle new];
+            } else if ([e.tagName isEqualToString:@"a"]) {
+                NSString* href = e.attributes[@"href"];
+                if ([href rangeOfString:@".html?"].location != NSNotFound) {
+                    handle.url = [href substringToIndex:[href rangeOfString:@"?"].location];
+                } else if (handle.author == nil) {
+                    handle.author = e.textContent;
+                } else if (handle.communityName == nil) {
+                    handle.communityName = e.textContent;
+                }
             }
         }
     }
+    if (handle.url != nil) {
+        [result addObject:handle];
+    }
+    
+    for (BCHDWEntryHandle* handle in result) {
+        NSString* journal = nil;
+        if (handle.communityName != nil) {
+            journal = handle.communityName;
+        } else if (handle.author != nil) {
+            journal = handle.author;
+        } else {
+            NSLog(@"can't figure out author of this item: %@", handle.url);
+        }
+        
+        if (journal != nil) {
+            NSMutableArray* pages = [friendSet objectForKey:journal];
+            if (pages == nil) {
+                pages = [NSMutableArray new];
+                [friendSet setObject:pages forKey:journal];
+            }
+            [pages addObject:handle];
+        }
+    }
+
     return [NSArray arrayWithArray:result];
 }
 
@@ -218,7 +210,7 @@
             }
             [depthList addObject:commentRecord];
         } else {
-            NSLog(@"Wrong depth: %ld, count = %lu", depthValue, depthList.count);
+            NSLog(@"Wrong depth: %ld, count = %lu", (long)depthValue, depthList.count);
         }
         
         NSString* date = [comment querySelector:@".datetime"].textContent;
@@ -251,10 +243,6 @@
     }
 }
 
--(BOOL) isUserReference:(HTMLElement*) element {
-    return [element.tagName isEqualToString:@"span"] && [element.attributes[@"class"] isEqualToString:@"ljuser"];
-}
-
 -(NSString*) extractUserReference:(HTMLElement*) element {
     
     NSString* user = element.textContent;
@@ -284,9 +272,9 @@
             HTMLElement* element = (HTMLElement*) node;
             if ([element.tagName isEqualToString:@"br"]) {
                 [result appendString:@"\n"];
-            } else if ([self isExcluded:element]) {
+            } else if ([BCHDWHTMLUtilities isExcluded:element]) {
                 // skip it
-            } else if ([self isUserReference:element]) {
+            } else if ([BCHDWHTMLUtilities isUserReference:element]) {
                 [result appendFormat:@"@%@", [self extractUserReference:element]];
             } else {
                 [result appendFormat:@"<%@", element.tagName];
@@ -328,12 +316,12 @@
             HTMLElement* element = (HTMLElement*) node;
             if ([element.tagName isEqualToString:@"br"]) {
                 [extract.currentText appendString:@"\n"];
-            } else if ([self isExcluded:element]) {
+            } else if ([BCHDWHTMLUtilities isExcluded:element]) {
                 // skip it
             } else if ([self isCut:element]) {
                 stop = YES;
                 break;
-            } else if ([self isUserReference:element]) {
+            } else if ([BCHDWHTMLUtilities isUserReference:element]) {
                 [extract.currentText appendString:node.textContent];
             } else if ([element.tagName isEqualToString:@"img"]) {
                 if (extract.summaryImageUrl != nil && extract.summaryImageUrl.length > 0) {
@@ -372,34 +360,17 @@
     return [element.tagName isEqualToString:@"a"] && element.attributes[@"name"] != nil && [element.attributes[@"name"] rangeOfString:@"cutid"].location == 0;
 }
 
--(NSString*) limit:(NSString*) summaryText {
-    NSError* error = nil;
-    NSRange range = NSMakeRange(0, summaryText.length);
-    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
-    NSArray* matches = [regex matchesInString:summaryText options:0 range:range];
 
-    if (matches.count > 60) {
-        NSTextCheckingResult* match = matches[59];
-        return [NSString stringWithFormat:@"%@...", [summaryText substringToIndex:match.range.location]];
-    } else {
-        return summaryText;
-    }
-}
-
--(BOOL) isExcluded:(HTMLElement*) element {
-    if (([element.tagName isEqualToString:@"div"]) && element.attributes[@"class"] != nil && [element.attributes[@"class"] rangeOfString:@"edittime"].location != NSNotFound) {
-        return YES;
-    } else if ([element.tagName isEqualToString:@"form"]) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
 
 -(void) fetchEntry:(BCHDWEntryHandle*) entryHandle {
     [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryHandle.url] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
-        BCHDWEntry* entry = [self.persistenceService entryByUrl:entryHandle.url autocreate:YES];
+        BOOL isNew = NO;
+        BCHDWEntry* entry = [self.persistenceService entryByUrl:entryHandle.url autocreate:NO];
+        if (!entry) {
+            isNew = YES;
+            entry = [self.persistenceService entryByUrl:entryHandle.url autocreate:YES];
+        }
         [entry.managedObjectContext performBlock:^{
             @try {
                 HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
@@ -442,6 +413,9 @@
                     [self processComments:document entry:entry];
                 }
                 [entry.managedObjectContext save:nil];
+                if (isNew) {
+                    [self sendNotificationAboutNewEntry:entryHandle];
+                }
             } @catch (NSException *exception) {
                 NSLog(@"******************************************");
                 NSLog(@"%@", exception.reason);
@@ -457,7 +431,25 @@
     [self.api performFunctionWithWebSession:^(NSError * _Nullable error, NSString * _Nullable session) {
         if (error == nil) {
             [self setAuthenticationCookie:session];
-            [self fetchReadingPageLight:0 friends:[NSMutableSet new]];
+            [self fetchReadingPageLight:0 max:100 friends:[NSMutableDictionary new] completion:^(NSError* error, NSDictionary* readingList) {
+                if (error) {
+                    NSLog(@"fetch error: %@", error);
+                } else {
+                    for (NSString* author in readingList) {
+                        [self getAtomFeed:author completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+                            if (error && [error.domain isEqualToString:@"org.ayizan.dreamballoon"]) {
+                                [self processEntries:[readingList objectForKey:author]];
+                            } else if (error) {
+                                NSLog(@"error: %@", error);
+                            } else {
+                                NSArray* filteredEntries = [self filterNewEntries:entries forUser:author];
+                                self.lastSyncDate = [NSDate new];
+                                [self processEntries:filteredEntries];
+                            }
+                        }];
+                    }
+                }
+            }];
         } else {
             NSLog(@"session error: %@", error);
         }
@@ -527,16 +519,20 @@
 -(void) getAtomFeed:(NSString*) user completion:(void (^)(NSError* _Nullable error, NSArray* _Nullable entryHandles)) completion {
     [self.htmlManager GET:[NSString stringWithFormat:@"https://%@.dreamwidth.org/data/atom", user] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
-        NSArray* entries = [[BCHDWAtomParser new] parse:responseObject];
-        completion(nil, entries);
-        
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) task.response;
+        if ([httpResponse.allHeaderFields[@"content-type"] rangeOfString:@"application/atom+xml"].location != NSNotFound || [httpResponse.allHeaderFields[@"content-type"] rangeOfString:@"text/xml"].location != NSNotFound) {
+            NSArray* entries = [[BCHDWAtomParser new] parse:responseObject];
+            completion(nil, entries);
+        } else {
+            NSLog(@"Can't download items for %@ (content type %@)", user, httpResponse.allHeaderFields[@"content-type"]);
+            completion([NSError errorWithDomain:@"org.ayizan.dreamballoon" code:-999 userInfo:nil], nil);
+        }
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         completion(error, nil);
     }];
 }
 
 - (void) partialSyncWithServer {
-    NSDate* date = self.lastSyncDate;
     NSLog(@"Starting partial sync with server.");
     [self getAtomFeed:self.currentUser.username completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
         if (error) {
@@ -551,11 +547,7 @@
             }
         }
     }];
-    [self.api checkFriends:date completion:^(NSError * _Nullable error, BOOL newEntries) {
-        if (error != nil && newEntries) {
-            [self fetchRecentReadingPageActivity];
-        }
-    }];
+    [self fetchRecentReadingPageActivity];
 }
 
 -(NSArray*) filterNewEntries:(NSArray*) entries forUser:(NSString*) username {
@@ -579,7 +571,7 @@
 }
 
 -(void) fullOrPartialSyncWithServer {
-    if (self.lastSyncDate == nil || [[self.lastSyncDate dateByAddingHours:1] isEarlierThanDate:[NSDate new]]) {
+    if (self.lastSyncDate == nil || [[self.lastSyncDate dateByAddingHours:4] isEarlierThanDate:[NSDate new]]) {
         [self fullSyncWithServer];
     } else {
         [self partialSyncWithServer];
@@ -678,4 +670,81 @@
         callback(error, nil);
     }];
 }
+
+-(void) scheduleBackgroundDownload:(backgroundFetchHandler)completionHandler {
+    NSTimeInterval start = [[NSDate new] timeIntervalSince1970];
+    [self.api performFunctionWithWebSession:^(NSError * _Nullable error, NSString * _Nullable session) {
+        if (error == nil) {
+            [self setAuthenticationCookie:session];
+            [self fetchReadingPageLight:0 max:0 friends:[NSMutableDictionary new] completion:^(NSError* error, NSDictionary* readingList) {
+                if (error) {
+                    completionHandler(UIBackgroundFetchResultFailed);
+                } else {
+                    BOOL newEntry = NO;
+                    BCHDWEntryHandle* itemToFetch = nil;
+                    for (NSArray* handles in readingList.allValues) {
+                        for (BCHDWEntryHandle* handle in handles) {
+                            BCHDWEntry* entry = [self.persistenceService entryByUrl:handle.url autocreate:NO];
+                            if (entry == nil) {
+                                itemToFetch = handle;
+                                newEntry = YES;
+                            }
+                        }
+                    }
+                    
+                    NSTimeInterval now = [[NSDate new] timeIntervalSince1970];
+                    if (newEntry) {
+                        NSLog(@"New things. Let's see if we can fetch them.");
+                        if (now - start < 15 * 60) {
+                            [self getAtomFeed:itemToFetch.journal completion:^(NSError * _Nullable error, NSArray * _Nullable entryHandles) {
+
+                                for (BCHDWEntryHandle* handle in entryHandles) {
+                                    if ([itemToFetch.url isEqualToString:handle.url]) {
+                                        [self fetchEntry:handle];
+                                    }
+                                }
+                            }];
+                            [NSTimer scheduledTimerWithTimeInterval:7*60 repeats:NO block:^(NSTimer * _Nonnull timer) {
+                                completionHandler(UIBackgroundFetchResultNewData);
+                            }];
+                        } else {
+                            completionHandler(UIBackgroundFetchResultNewData);
+                        }
+                    } else {
+                        NSLog(@"No new items to report on.");
+                        completionHandler(UIBackgroundFetchResultNoData);
+                    }
+                }
+            }];
+        } else {
+            completionHandler(UIBackgroundFetchResultFailed);
+        }
+    }];
+}
+
+-(void) sendNotificationAboutNewEntry:(BCHDWEntryHandle*) handle {
+    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    content.title = [NSString localizedUserNotificationStringForKey:@"New DreamBalloon Post" arguments:nil];
+    if (handle.author.length > 0 && handle.title.length > 0) {
+        content.body = [NSString localizedUserNotificationStringForKey:[NSString stringWithFormat:@"%@ has posted a new entry: %@", handle.author, handle.title]  arguments:nil];
+    } else if (handle.author.length > 0) {
+        content.body = [NSString localizedUserNotificationStringForKey:[NSString stringWithFormat:@"%@ has posted a new entry.", handle.author]  arguments:nil];
+    } else {
+        content.body = [NSString localizedUserNotificationStringForKey:@"Someone made a new post." arguments:nil];
+    }
+    content.sound = [UNNotificationSound defaultSound];
+    
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:[NSString stringWithFormat:@"%@%@", NEW_ENTRY_NOTIFICATION_ID, handle.journal]
+                                                                          content:content trigger:nil];
+    
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+        if (!error) {
+            NSLog(@"New entry notification succeeded");
+        } else {
+            NSLog(@"New entry notification failed: %@", error);
+        }
+    }];
+}
+
 @end

@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSMutableString* text;
 @property (nonatomic, strong) NSDateFormatter* isoDateFormatter;
 @property (nonatomic, strong) NSString* journalName;
+@property (nonatomic, assign) BOOL isCommunity;
 @property (nonatomic, strong) NSDate* window;
 
 @end
@@ -37,7 +38,14 @@
     self.text = [NSMutableString new];
     if ([elementName isEqualToString:@"entry"]) {
         self.currentElement = [BCHDWEntryHandle new];
-        self.currentElement.author = self.journalName;
+        if (self.isCommunity) {
+            self.currentElement.communityName = self.journalName;
+        } else {
+            self.currentElement.author = self.journalName;
+        }
+    } else if ([elementName isEqualToString:@"journal"]) {
+        self.journalName = attributeDict[@"username"];
+        self.isCommunity = [attributeDict[@"type"] isEqualToString:@"community"];
     } else if (self.currentElement != nil && [elementName isEqualToString:@"link"] && [attributeDict[@"rel"] isEqualToString:@"alternate"]) {
         self.currentElement.url = attributeDict[@"href"];
     }
@@ -48,15 +56,12 @@
         self.currentElement.creationDate = [self.isoDateFormatter dateFromString:self.text];
     } else if (self.currentElement != nil && [elementName isEqualToString:@"updated"]) {
         self.currentElement.updateDate = [self.isoDateFormatter dateFromString:self.text];
+    } else if (self.currentElement != nil && [elementName isEqualToString:@"title"]) {
+        self.currentElement.title = [NSString stringWithString:self.text];
     } else if (self.currentElement != nil && [elementName isEqualToString:@"reply-count"]) {
         self.currentElement.commentCount = [NSNumber numberWithInteger:[self.text integerValue]];
     } else if (self.currentElement != nil && [elementName isEqualToString:@"poster"]) {
         self.currentElement.author = [NSString stringWithString:self.text];
-        if (![self.currentElement.author isEqualToString:self.journalName]) {
-            self.currentElement.communityName = self.journalName;
-        }
-    } else if ([elementName isEqualToString:@"journal"]) {
-        self.journalName = [NSString stringWithString:self.text];
     } else if ([elementName isEqualToString:@"entry"]) {
         if (self.currentElement != nil && [self.currentElement.creationDate isLaterThanDate:self.window]) {
             [self.entries addObject:self.currentElement];

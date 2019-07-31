@@ -6,12 +6,17 @@
 //  Copyright © 2016 Ayizan Studios. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import "DreamwidthApi.h"
 #import "BCHDWCommentEntryData.h"
 #import "BCHDWPersistenceService.h"
 #import "BCHDWUser.h"
+
+#define NEW_ENTRY_NOTIFICATION_ID @"new-entry-"
+
+
+typedef void (^backgroundFetchHandler)(UIBackgroundFetchResult result);
 
 @interface BCHDWDreamwidthService : NSObject
 
@@ -25,5 +30,5 @@
 -(void) fetchRecentReadingPageActivity;
 -(void) syncWithServer;
 -(void) postComment:(BCHDWCommentEntryData*) comment entry:(BCHDWEntry*) entry parentComment:(BCHDWComment*) parentComment callback:(void (^) (NSError*)) callback;
-
+-(void) scheduleBackgroundDownload:(backgroundFetchHandler) completionHandler;
 @end

@@ -22,4 +22,12 @@
     
     return [NSArray arrayWithArray:result];
 }
+
+-(NSString*) journal {
+    if (self.communityName) {
+        return self.communityName;
+    } else {
+        return self.author;
+    }
+}
 @end

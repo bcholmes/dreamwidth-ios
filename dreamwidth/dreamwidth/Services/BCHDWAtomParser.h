@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BCHDWAtomParser : NSObject
 
-@property (nonatomic, strong) NSString* defaultJournalName;
-
 -(NSArray<BCHDWEntryHandle*>*) parse:(NSData*) data;
 
 @end
