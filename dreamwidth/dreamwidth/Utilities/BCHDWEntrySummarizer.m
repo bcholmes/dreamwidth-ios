@@ -8,6 +8,9 @@
 
 #import "BCHDWEntrySummarizer.h"
 
+#import "BCHDWHTMLUtilities.h"
+#import "HTMLElement+DreamBalloon.h"
+
 @implementation BCHDWSummaryExtract
 
 -(instancetype) init {
@@ -58,5 +61,64 @@
 
 
 @implementation BCHDWEntrySummarizer
+
+-(BCHDWSummaryExtract*) collectSummaryExtract:(HTMLElement*) content {
+    BCHDWSummaryExtract* result = [BCHDWSummaryExtract new];
+    [self collectSummaryExtract:content buffer:result];
+    return result;
+}
+
+
+-(BOOL) collectSummaryExtract:(HTMLElement*) content buffer:(BCHDWSummaryExtract*) extract {
+    BOOL stop = NO;
+    for (HTMLNode* node = content.firstChild; node != nil; node = node.nextSibling) {
+        if ([node isKindOfClass:[HTMLElement class]]) {
+            HTMLElement* element = (HTMLElement*) node;
+            if ([element.tagName isEqualToString:@"br"]) {
+                [extract.currentText appendString:@"\n"];
+            } else if ([BCHDWHTMLUtilities isExcluded:element]) {
+                // skip it
+            } else if ([self isCut:element]) {
+                stop = YES;
+                break;
+            } else if ([BCHDWHTMLUtilities isUserReference:element]) {
+                [extract.currentText appendString:node.textContent];
+            } else if ([element.tagName isEqualToString:@"img"]) {
+                if (extract.summaryImageUrl != nil && extract.summaryImageUrl.length > 0) {
+                    stop = YES;
+                    break;
+                } else {
+                    extract.summaryImageUrl = element.attributes[@"src"];
+                }
+            } else {
+                if (extract.currentText.length == 0) {
+                    // don't do anything
+                } else if ([element.tagName isEqualToString:@"p"] || element.isHeader) {
+                    NSString* trimmed = [extract.currentText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    [extract.currentText replaceCharactersInRange:NSMakeRange(0, extract.currentText.length) withString:trimmed];
+                    [extract.currentText appendString:@"\n\n"];
+                } else if (element.isBlockElement) {
+                    [extract.currentText appendString:@"\n"];
+                }
+                stop = [self collectSummaryExtract:element buffer:extract];
+                if (stop) {
+                    break;
+                }
+            }
+        } else if ([node isKindOfClass:[HTMLText class]]) {
+            [extract.currentText appendString:node.textContent];
+            if ([extract isMaxLength]) {
+                stop = YES;
+                break;
+            }
+        }
+    }
+    return stop;
+}
+
+-(BOOL) isCut:(HTMLElement*) element {
+    return [element.tagName isEqualToString:@"a"] && element.attributes[@"name"] != nil && [element.attributes[@"name"] rangeOfString:@"cutid"].location == 0;
+}
+
 
 @end

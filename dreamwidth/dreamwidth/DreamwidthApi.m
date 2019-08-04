@@ -17,7 +17,7 @@
 #define DREAMWIDTH_FLAT_API_URL @"https://www.dreamwidth.org/interface/flat"
 #define DREAMWIDTH_URL [NSURL URLWithString:@"https://www.dreamwidth.org/interface/flat"]
 
-@interface BCHDWSession : NSObject
+@interface BCHDWSession : NSObject<NSCoding>
 
 @property (nonatomic, strong) NSString* sessionId;
 @property (nonatomic, strong) NSDate* expiry;
@@ -27,10 +27,22 @@
 
 @implementation BCHDWSession
 
+- (id) initWithCoder:(NSCoder*)decoder {
+    if ((self = [super init])) {
+        self.sessionId = [decoder decodeObjectForKey:@"sessionId"];
+        self.expiry = [decoder decodeObjectForKey:@"expiry"];
+    }
+    return self;
+}
+
 -(BOOL) isExpired {
     return [[NSDate new] isLaterThanDate:self.expiry];
 }
 
+- (void) encodeWithCoder:(NSCoder*)encoder {
+    [encoder encodeObject:self.sessionId forKey:@"sessionId"];
+    [encoder encodeObject:self.expiry forKey:@"expiry"];
+}
 @end
 
 @interface DreamwidthApi()
@@ -44,6 +56,8 @@
 
 @implementation DreamwidthApi
 
+@synthesize session = _session;
+
 -(instancetype) init {
     if (self = [super init]) {
         self.dateFormatter = [NSDateFormatter new];
@@ -56,6 +70,25 @@
         self.manager.completionQueue = dispatch_queue_create("org.ayizan.dreamballoon.flat", DISPATCH_QUEUE_SERIAL);
     }
     return self;
+}
+
+-(void) setSession:(BCHDWSession*) session {
+    _session = session;
+    [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:session] forKey:@"session"];
+}
+
+-(BCHDWSession*) session {
+    if (_session == nil) {
+        BCHDWSession* session = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"session"]];
+        if (session != nil) {
+            _session = session;
+        }
+    }
+    return _session;
+}
+
+-(BOOL) isSessionReady {
+    return self.session != nil && !self.session.isExpired;
 }
 
 -(NSString*) version {
@@ -102,33 +135,8 @@
     return output;
 }
 
--(NSDictionary*) postHttpRequest:(NSDictionary*) requestParameters {
-    NSMutableURLRequest* post = [NSMutableURLRequest requestWithURL:DREAMWIDTH_URL];
-    [post setHTTPMethod: @"POST"];
-    [post setHTTPBody:[[self convertToString:requestParameters] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSURLResponse* response;
-    NSError* error;
-    NSData *data = [NSURLConnection sendSynchronousRequest:post returningResponse:&response error:&error];
-    if (data != nil) {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        NSLog(@"http status code for request mode %@: %lu", [requestParameters objectForKey:@"mode"], (unsigned long)httpResponse.statusCode);
-        if (httpResponse.statusCode == 200) {
-            
-            return [self createResponseMap:data];
-        } else {
-            return nil;
-        }
-    } else if (error != nil) {
-        NSLog(@"Must be an error %@ ", error.description);
-        return nil;
-    } else {
-        return nil;
-    }
-}
-
 -(void) performFunctionWithWebSession:(void (^)(NSError*, NSString*)) callback {
-    if (self.session != nil && !self.session.isExpired) {
+    if (self.isSessionReady) {
         callback(nil, self.session.sessionId);
     } else {
         [self performWithChallenge:^(NSError* error, NSString* challenge) {
@@ -168,16 +176,19 @@
     }
 }
 
--(NSDictionary*) getChallengeMap {
-    return [self postHttpRequest:@{ @"mode" : @"getchallenge", @"ver" : @"1" }];
-}
-
 -(void) performWithChallenge:(void (^) (NSError* error, NSString* challenge)) callback {
     [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:@{ @"mode" : @"getchallenge", @"ver" : @"1" } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
         if (result != nil) {
-            callback(nil, [result objectForKey:@"challenge"]);
+            NSString* success = [result objectForKey:@"success"];
+            NSString* challenge = [result objectForKey:@"challenge"];
+            if ([success isEqualToString:@"OK"] && challenge != nil) {
+                callback(nil, challenge);
+            } else {
+                NSString* message = [result objectForKey:@"errmsg"];
+                callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": message ? message : @"getchallenge failed" }], nil);
+            }
         } else {
             callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
         }
@@ -189,40 +200,37 @@
 }
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback {
-    NSDictionary* challengeMap = [self getChallengeMap];
-    if (challengeMap != nil) {
-        NSLog(@"Result is %@", [challengeMap objectForKey:@"success"]);
-        NSString* challenge = [challengeMap objectForKey:@"challenge"];
-        NSLog(@"challenge is : %@", challenge);
-        NSString* encodedPassword = [self md5:password];
-        NSString* response = [self md5:[challenge stringByAppendingString:encodedPassword]];
-        
-        NSDictionary* parameters = @{ @"mode": @"login",
-                                        @"user": userid,
-                                        @"auth_method": @"challenge",
-                                        @"auth_challenge": challenge,
-                                        @"auth_response": response,
-                                        @"getpickws": @"1",
-                                        @"getpickwurls": @"1",
-                                        @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version]
-                                      };
-        
-        NSDictionary* result = [self postHttpRequest:parameters];
-        NSString* success = [result objectForKey:@"success"];
-        if ([success isEqualToString:@"OK"]) {
-            BCHDWUser* user = [BCHDWUser parseMap:result];
-            user.username = userid;
-            user.encodedPassword = encodedPassword;
-            self.currentUser = user;
-            callback(nil, user);
-        } else {
-            callback([NSError errorWithDomain:DWErrorDomain code:DWAuthenticationFailedError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
+    [self performWithChallenge:^(NSError* error, NSString* challenge) {
+        if (error == nil) {
+            NSString* encodedPassword = [self md5:password];
+            NSString* response = [self md5:[challenge stringByAppendingString:encodedPassword]];
+            NSDictionary* parameters = @{ @"mode": @"login",
+                                            @"user": userid,
+                                            @"auth_method": @"challenge",
+                                            @"auth_challenge": challenge,
+                                            @"auth_response": response,
+                                            @"getpickws": @"1",
+                                            @"getpickwurls": @"1",
+                                            @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version]
+                                          };
+            [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
+                NSString* success = [result objectForKey:@"success"];
+                if ([success isEqualToString:@"OK"]) {
+                    BCHDWUser* user = [BCHDWUser parseMap:result];
+                    user.username = userid;
+                    user.encodedPassword = encodedPassword;
+                    self.currentUser = user;
+                    callback(nil, user);
+                } else {
+                    callback([NSError errorWithDomain:DWErrorDomain code:DWAuthenticationFailedError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
+                }
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                self.currentUser = nil;
+                callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
+            }];
         }
-        
-    } else {
-        self.currentUser = nil;
-        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
-    }
+    }];
 }
 
 - (NSString*) generateChallengeResponse:(NSString*) challenge user:(BCHDWUser*) user {
@@ -310,86 +318,6 @@
             callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
         }
     }];
-}
-
-
--(void) getReadingList:(void (^)(NSError* error, NSArray* entries)) callback {
-    [self performWithChallenge:^(NSError* error, NSString* challenge) {
-        if (error == nil) {
-            NSDictionary* parameters = @{ @"mode": @"syncitems",
-                                          @"user": self.currentUser.username,
-                                          @"auth_method": @"challenge",
-                                          @"auth_challenge": challenge,
-                                          @"auth_response": [self generateChallengeResponse:challenge user:self.currentUser],
-                                          @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
-                                          @"ver": @"1"
-                                          };
-            
-            [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                
-                NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
-                NSString* success = [result objectForKey:@"success"];
-                if ([success isEqualToString:@"OK"]) {
-
-                    NSLog(@"sync items result: %@", result);
-                    callback(nil, nil);
-
-                } else {
-                    callback([NSError errorWithDomain:DWErrorDomain code:DWSessionError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
-                }
-                
-            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"sessiongenerate failed."}], nil);
-            }];
-            NSDictionary* result = [self postHttpRequest:parameters];
-            NSLog(@"Result is %@", result);
-            callback(nil, nil);
-            
-        } else {
-            NSLog(@"Get reading list error: %@", error);
-            callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
-        }
-    }];
-}
-
--(void) postEntry:(NSString*) entryText asUser:(BCHDWUser*) user completion:(void (^)(NSError* error, NSString* url)) callback {
-    NSDictionary* challengeMap = [self getChallengeMap];
-    if (challengeMap != nil) {
-        NSString* challenge = [challengeMap objectForKey:@"challenge"];
-        NSString* response = [self md5:[challenge stringByAppendingString:user.encodedPassword]];
-        NSDate* now = [NSDate new];
-        NSDateComponents* dateComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute fromDate:now];
-        
-        NSDictionary* parameters = @{ @"mode": @"postevent",
-                                      @"user": self.currentUser.username,
-                                      @"auth_method": @"challenge",
-                                      @"auth_challenge": challenge,
-                                      @"auth_response": response,
-                                      @"subject": @"A test post",
-                                      @"event": entryText,
-                                      @"prop_picture_keyword": @"i had an accident",
-                                      @"year": [NSString stringWithFormat:@"%ld", [dateComponents year]],
-                                      @"mon": [NSString stringWithFormat:@"%ld", [dateComponents month]],
-                                      @"day": [NSString stringWithFormat:@"%ld", [dateComponents day]],
-                                      @"hour": [NSString stringWithFormat:@"%ld", [dateComponents hour]],
-                                      @"min": [NSString stringWithFormat:@"%ld", [dateComponents minute]],
-                                      @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
-                                      @"ver": @"1"
-                                      };
-        
-        NSLog(@"parameters: %@", parameters);
-        NSDictionary* result = [self postHttpRequest:parameters];
-        NSLog(@"Result is %@", result);
-        if ([@"OK" isEqualToString:[result objectForKey:@"success"]]) {
-            callback(nil, nil);
-        } else {
-            NSLog(@"Error: %@", [result objectForKey:@"errmsg"]);
-            callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"fail fail."}], nil);
-        }
-    } else {
-        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
-    }
-    
 }
 
 

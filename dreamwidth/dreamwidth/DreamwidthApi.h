@@ -24,14 +24,13 @@ typedef NS_ENUM(NSInteger, DWErrorCodes) {
 @interface DreamwidthApi : NSObject
 
 @property (nonatomic, nullable, strong) BCHDWUser* currentUser;
+@property (nonatomic, readonly) BOOL isSessionReady;
 
 -(void) loginWithUser:(NSString* _Nonnull) userid password:(NSString* _Nonnull) password andCompletion:(void (^ _Nonnull)(NSError* _Nullable error, BCHDWUser* _Nullable user)) callback;
 -(void) getEvents:(BCHDWUser* _Nonnull) user completion:(void (^ _Nonnull)(NSError* _Nullable error, NSArray* _Nullable entries)) callback;
 -(void) getEvents:(BCHDWUser* _Nonnull) user since:(NSDate* _Nonnull) date completion:(void (^ _Nonnull)(NSError*  _Nonnull error, NSArray*  _Nonnull entries)) callback;
--(void) getReadingList:(void (^ _Nonnull)(NSError* _Nullable error, NSArray* _Nullable entries)) callback;
 -(void) performFunctionWithWebSession:(void (^ _Nonnull)(NSError* _Nullable, NSString* _Nullable)) callback;
 -(BOOL) isLoggedIn;
--(void) postEntry:(NSString* _Nonnull) entryText asUser:(BCHDWUser* _Nullable) user completion:(void (^ _Nonnull)(NSError* _Nullable error, NSString* _Nullable url)) callback;
 -(void) checkFriends:(NSDate* _Nonnull) date completion:(void (^ _Nonnull)(NSError* _Nullable error, BOOL newEntries)) callback;
 
 @end

@@ -25,8 +25,10 @@
 
 @property (nonatomic, strong) DreamwidthApi* api;
 @property (nonatomic, strong) BCHDWPersistenceService* persistenceService;
+@property (nonatomic, strong) BCHDWEntrySummarizer* summarizer;
 @property (nonnull, nonatomic, strong) AFHTTPSessionManager* htmlManager;
 @property (nonnull, strong) NSDateFormatter* dateFormatter;
+@property (nonnull, strong) NSDateFormatter* entryDateFormatter;
 @property (nonnull, strong) NSDate* lastSyncDate;
 @property (nonnull, strong) NSDictionary* knownSocialMediaSites;
 @end
@@ -41,6 +43,10 @@
         self.dateFormatter = [NSDateFormatter new];
         self.dateFormatter.dateFormat = @"yyyy-MM-dd hh:mm a";
         self.dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+        self.entryDateFormatter = [NSDateFormatter new];
+        self.entryDateFormatter.dateFormat = @"'/'yyyy'/'MM'/'dd'/' hh:mm a Z";
+        self.entryDateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+        self.summarizer = [BCHDWEntrySummarizer new];
         
         self.htmlManager = [AFHTTPSessionManager manager];
         self.htmlManager.requestSerializer = [AFHTTPRequestSerializer serializer];
@@ -303,64 +309,30 @@
     return [NSString stringWithString:result];
 }
 
--(BCHDWSummaryExtract*) collectSummaryExtract:(HTMLElement*) content {
-    BCHDWSummaryExtract* result = [BCHDWSummaryExtract new];
-    [self collectSummaryExtract:content buffer:result];
-    return result;
-}
 
--(BOOL) collectSummaryExtract:(HTMLElement*) content buffer:(BCHDWSummaryExtract*) extract {
-    BOOL stop = NO;
-    for (HTMLNode* node = content.firstChild; node != nil; node = node.nextSibling) {
-        if ([node isKindOfClass:[HTMLElement class]]) {
-            HTMLElement* element = (HTMLElement*) node;
-            if ([element.tagName isEqualToString:@"br"]) {
-                [extract.currentText appendString:@"\n"];
-            } else if ([BCHDWHTMLUtilities isExcluded:element]) {
-                // skip it
-            } else if ([self isCut:element]) {
-                stop = YES;
-                break;
-            } else if ([BCHDWHTMLUtilities isUserReference:element]) {
-                [extract.currentText appendString:node.textContent];
-            } else if ([element.tagName isEqualToString:@"img"]) {
-                if (extract.summaryImageUrl != nil && extract.summaryImageUrl.length > 0) {
-                    stop = YES;
-                    break;
-                } else {
-                    extract.summaryImageUrl = element.attributes[@"src"];
-                }
-            } else {
-                if (extract.currentText.length == 0) {
-                    // don't do anything
-                } else if ([element.tagName isEqualToString:@"p"] || element.isHeader) {
-                    NSString* trimmed = [extract.currentText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                    [extract.currentText replaceCharactersInRange:NSMakeRange(0, extract.currentText.length) withString:trimmed];
-                    [extract.currentText appendString:@"\n\n"];
-                } else if (element.isBlockElement) {
-                    [extract.currentText appendString:@"\n"];
-                }
-                stop = [self collectSummaryExtract:element buffer:extract];
-                if (stop) {
-                    break;
-                }
-            }
-        } else if ([node isKindOfClass:[HTMLText class]]) {
-            [extract.currentText appendString:node.textContent];
-            if ([extract isMaxLength]) {
-                stop = YES;
-                break;
-            }
+
+- (void)extractEntryCreationDate:(HTMLDocument*) document entry:(BCHDWEntry*) entry {
+    HTMLElement* creationDate = [document querySelector:@".poster-info .datetime"];
+    NSArray* links = [creationDate querySelectorAll:@".date a"];
+    NSString* datePortion = @"";
+    for (HTMLElement* e in links) {
+        NSString* temp = e.attributes[@"href"];
+        if (temp.length > datePortion.length) {
+            datePortion = temp;
         }
     }
-    return stop;
+    NSString* timePortion = [creationDate querySelector:@".time"].textContent;
+
+    NSString* dateAsString = [NSString stringWithFormat:@"%@ %@ Z", datePortion, timePortion];
+    NSDate* date = [self.entryDateFormatter dateFromString:dateAsString];
+    if (entry.creationDate != nil) {
+        NSLog(@"entry date from ATOM: %@, from page: %@", entry.creationDate, date);
+        NSInteger offset = (date.timeIntervalSince1970 - entry.creationDate.timeIntervalSince1970) / 60.0;
+        NSInteger hour = offset / 60;
+        NSInteger minute = abs((int) offset) % 60;
+        NSLog(@"time offset %ld (%ld:%ld)", offset, hour, minute);
+    }
 }
-
--(BOOL) isCut:(HTMLElement*) element {
-    return [element.tagName isEqualToString:@"a"] && element.attributes[@"name"] != nil && [element.attributes[@"name"] rangeOfString:@"cutid"].location == 0;
-}
-
-
 
 -(void) fetchEntry:(BCHDWEntryHandle*) entryHandle {
     [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryHandle.url] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
@@ -384,11 +356,7 @@
                     entry.author = author;
 
                     if (entryHandle.creationDate == nil && entryHandle.updateDate == nil) {
-                        NSString* entryDate = [document querySelector:@".poster-info .datetime"].textContent;
-                        entry.creationDate = [self.dateFormatter dateFromString:entryDate];
-                        if (entry.updateDate == nil) {
-                            entry.updateDate = entry.creationDate;
-                        }
+                        [self extractEntryCreationDate:document entry:entry];
                     } else {
                         entry.creationDate = entryHandle.creationDate;
                         entry.updateDate = entryHandle.updateDate;
@@ -403,7 +371,7 @@
                     }
                     
                     entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
-                    BCHDWSummaryExtract* extract = [self collectSummaryExtract:[document querySelector:@".entry-content"]];
+                    BCHDWSummaryExtract* extract = [self.summarizer collectSummaryExtract:[document querySelector:@".entry-content"]];
                     NSString* temp = [extract.summaryText1 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                     entry.summaryText = temp.length > 0 ? temp : nil;
                     temp = [extract.summaryText2 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -457,18 +425,16 @@
 }
 
 -(void) loginUsingStoredCredentials:(void (^)(NSError*, BCHDWUser*))callback {
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        UYLPasswordManager* manager = [UYLPasswordManager sharedInstance];
-        NSString* userid = [manager keyForIdentifier:@"userid"];
-        NSString* password = [manager keyForIdentifier:@"password"];
+    UYLPasswordManager* manager = [UYLPasswordManager sharedInstance];
+    NSString* userid = [manager keyForIdentifier:@"userid"];
+    NSString* password = [manager keyForIdentifier:@"password"];
 
-        [self.api loginWithUser:userid password:password andCompletion:^(NSError* error, BCHDWUser* user) {
-            if (error == nil) {
-                self.currentUser = user;
-            }
-            callback(error, user);
-        }];
-    });
+    [self.api loginWithUser:userid password:password andCompletion:^(NSError* error, BCHDWUser* user) {
+        if (error == nil) {
+            self.currentUser = user;
+        }
+        callback(error, user);
+    }];
 }
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError*, BCHDWUser*))callback {
@@ -481,12 +447,14 @@
             
             [self syncWithServer];
         }
-        callback(error, user);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            callback(error, user);
+        });
     }];
 }
 
 -(void) postEntry:(NSString*) entryText completion:(void (^)(NSError* error, NSString* url)) callback {
-    [self.api postEntry:entryText asUser:self.api.currentUser completion:callback];
 }
 
 -(void) getEvents:(void (^)(NSError *, NSArray *))callback {
@@ -671,7 +639,7 @@
     }];
 }
 
--(void) scheduleBackgroundDownload:(backgroundFetchHandler)completionHandler {
+- (void)performBackgroundDownloadWithSession:(backgroundFetchHandler)completionHandler {
     NSTimeInterval start = [[NSDate new] timeIntervalSince1970];
     [self.api performFunctionWithWebSession:^(NSError * _Nullable error, NSString * _Nullable session) {
         if (error == nil) {
@@ -697,7 +665,7 @@
                         NSLog(@"New things. Let's see if we can fetch them.");
                         if (now - start < 15 * 60) {
                             [self getAtomFeed:itemToFetch.journal completion:^(NSError * _Nullable error, NSArray * _Nullable entryHandles) {
-
+                                
                                 for (BCHDWEntryHandle* handle in entryHandles) {
                                     if ([itemToFetch.url isEqualToString:handle.url]) {
                                         [self fetchEntry:handle];
@@ -720,6 +688,23 @@
             completionHandler(UIBackgroundFetchResultFailed);
         }
     }];
+}
+
+-(void) scheduleBackgroundDownload:(backgroundFetchHandler)completionHandler {
+    if (self.api.isSessionReady || self.api.currentUser) {
+        NSLog(@"session is ready; beginning download");
+        [self performBackgroundDownloadWithSession:completionHandler];
+    } else {
+        NSLog(@"We need to log in to get a session.");
+        [self loginUsingStoredCredentials:^(NSError* error, BCHDWUser* user) {
+            if (error == nil) {
+                NSLog(@"Beginning download");
+                [self performBackgroundDownloadWithSession:completionHandler];
+            } else {
+                completionHandler(UIBackgroundFetchResultFailed);
+            }
+        }];
+    }
 }
 
 -(void) sendNotificationAboutNewEntry:(BCHDWEntryHandle*) handle {

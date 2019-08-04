@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <HTMLKit/HTMLKit.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BCHDWSummaryExtract : NSObject
@@ -21,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface BCHDWEntrySummarizer : NSObject
+
+-(BCHDWSummaryExtract*) collectSummaryExtract:(HTMLElement*) content;
 
 @end
 
