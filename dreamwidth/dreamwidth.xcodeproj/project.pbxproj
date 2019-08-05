@@ -45,6 +45,7 @@
 		6375693822E34636003178E0 /* BCHDWEntryReplyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693722E34636003178E0 /* BCHDWEntryReplyTableViewCell.m */; };
 		6375693B22E3660D003178E0 /* BCHDWMainTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693A22E3660D003178E0 /* BCHDWMainTableView.m */; };
 		6375693E22E366E9003178E0 /* BCHDWFrameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375693D22E366E9003178E0 /* BCHDWFrameView.m */; };
+		638262E022F86119002E8921 /* BCHDWEntryContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 638262DF22F86119002E8921 /* BCHDWEntryContent.m */; };
 		63981CAB22DA51D80080BF25 /* HTMLElement+DreamBalloon.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CAA22DA51D80080BF25 /* HTMLElement+DreamBalloon.m */; };
 		63981CAE22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CAD22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.m */; };
 		63981CB122DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63981CB022DAB1F20080BF25 /* BCHDWEntryCollectionViewController.m */; };
@@ -156,6 +157,8 @@
 		6375693A22E3660D003178E0 /* BCHDWMainTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWMainTableView.m; sourceTree = "<group>"; };
 		6375693C22E366E9003178E0 /* BCHDWFrameView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWFrameView.h; sourceTree = "<group>"; };
 		6375693D22E366E9003178E0 /* BCHDWFrameView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWFrameView.m; sourceTree = "<group>"; };
+		638262DE22F86119002E8921 /* BCHDWEntryContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryContent.h; sourceTree = "<group>"; };
+		638262DF22F86119002E8921 /* BCHDWEntryContent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCHDWEntryContent.m; sourceTree = "<group>"; };
 		63981CA922DA51D80080BF25 /* HTMLElement+DreamBalloon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HTMLElement+DreamBalloon.h"; sourceTree = "<group>"; };
 		63981CAA22DA51D80080BF25 /* HTMLElement+DreamBalloon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HTMLElement+DreamBalloon.m"; sourceTree = "<group>"; };
 		63981CAC22DAAF000080BF25 /* BCHDWEntryCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BCHDWEntryCollectionViewCell.h; sourceTree = "<group>"; };
@@ -377,6 +380,8 @@
 				631FA59622C8D09C00FA83C8 /* BCHDWComment.m */,
 				631FA59B22C8EC3800FA83C8 /* BCHDWEntryHandle.h */,
 				631FA59C22C8EC3800FA83C8 /* BCHDWEntryHandle.m */,
+				638262DE22F86119002E8921 /* BCHDWEntryContent.h */,
+				638262DF22F86119002E8921 /* BCHDWEntryContent.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -676,6 +681,7 @@
 				633A367722F0FB98005C4248 /* NSDate+DreamBalloon.m in Sources */,
 				6345FCB91E17FBE6004B7B19 /* BCHDWComposeEntryViewController.m in Sources */,
 				633A367D22F1BF27005C4248 /* BCHDWHTMLUtilities.m in Sources */,
+				638262E022F86119002E8921 /* BCHDWEntryContent.m in Sources */,
 				6332FC0A1E159A8100E11A49 /* BCHDWTheme.m in Sources */,
 				631FA59722C8D09C00FA83C8 /* BCHDWComment.m in Sources */,
 				6302C75F22D8B4D200346552 /* BCHDWFormData.m in Sources */,

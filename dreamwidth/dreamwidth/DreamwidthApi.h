@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, DWErrorCodes) {
     DWSessionError = 1001
 };
 
-#define DWErrorDomain @"org.dreamwidth"
+#define DWErrorDomain @"org.ayizan.dreamballoon"
 
 
 @interface DreamwidthApi : NSObject

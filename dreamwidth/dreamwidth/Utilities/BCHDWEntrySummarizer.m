@@ -44,15 +44,20 @@
     } else {
         maxLength -= matches.count;
         range = NSMakeRange(0, self.summaryText2.length);
-        regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
-        matches = [regex matchesInString:self.summaryText2 options:0 range:range];
-        if (matches.count > maxLength) {
-            NSTextCheckingResult* match = matches[maxLength-1];
-            [self.summaryText2 deleteCharactersInRange:NSMakeRange(match.range.location, self.summaryText2.length - match.range.location)];
-            [self.summaryText2 appendString:@"..."];
-            return YES;
+        if (maxLength > 0) {
+            regex = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:&error];
+            matches = [regex matchesInString:self.summaryText2 options:0 range:range];
+            if (matches.count > maxLength) {
+                NSTextCheckingResult* match = matches[maxLength-1];
+                [self.summaryText2 deleteCharactersInRange:NSMakeRange(match.range.location, self.summaryText2.length - match.range.location)];
+                [self.summaryText2 appendString:@"..."];
+                return YES;
+            } else {
+                return NO;
+            }
         } else {
-            return NO;
+            [self.summaryText2 deleteCharactersInRange:range];
+            return YES;
         }
     }
 }
@@ -78,7 +83,11 @@
                 [extract.currentText appendString:@"\n"];
             } else if ([BCHDWHTMLUtilities isExcluded:element]) {
                 // skip it
+            } else if ([self isFakeCommentCountMechanism:element]) {
+                stop = YES;
+                break;
             } else if ([self isCut:element]) {
+                [extract.currentText appendString:node.textContent];
                 stop = YES;
                 break;
             } else if ([BCHDWHTMLUtilities isUserReference:element]) {
@@ -117,8 +126,11 @@
 }
 
 -(BOOL) isCut:(HTMLElement*) element {
-    return [element.tagName isEqualToString:@"a"] && element.attributes[@"name"] != nil && [element.attributes[@"name"] rangeOfString:@"cutid"].location == 0;
+    return [element.tagName isEqualToString:@"a"] && ((element.attributes[@"name"] != nil && [element.attributes[@"name"] rangeOfString:@"cutid"].location == 0) || (element.attributes[@"href"] != nil && [element.attributes[@"href"] rangeOfString:@"#cutid"].location != NSNotFound));
 }
 
+-(BOOL) isFakeCommentCountMechanism:(HTMLElement*) element {
+    return [element.tagName isEqualToString:@"img"] && element.attributes[@"src"] != nil && [element.attributes[@"src"] rangeOfString:@"https://www.dreamwidth.org/tools/commentcount"].location != NSNotFound;
+}
 
 @end

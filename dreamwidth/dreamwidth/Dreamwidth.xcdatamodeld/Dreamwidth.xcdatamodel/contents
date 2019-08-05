@@ -31,8 +31,14 @@
         <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="EntryContent" representedClassName="BCHDWEntryContent" syncable="YES">
+        <attribute name="entryText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastLoadDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Comment" positionX="-54" positionY="-9" width="128" height="210"/>
         <element name="Entry" positionX="-36" positionY="72" width="128" height="285"/>
+        <element name="EntryContent" positionX="-45" positionY="144" width="128" height="90"/>
     </elements>
 </model>

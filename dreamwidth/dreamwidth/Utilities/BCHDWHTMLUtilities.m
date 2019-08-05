@@ -15,6 +15,8 @@
         return YES;
     } else if ([element.tagName isEqualToString:@"form"]) {
         return YES;
+    } else if ([element.tagName isEqualToString:@"img"] && element.attributes[@"alt"] != nil && [element.attributes[@"alt"] rangeOfString:@" profile]"].location != NSNotFound) {
+        return YES;
     } else {
         return NO;
     }

@@ -85,7 +85,7 @@
 }
 
 - (void) fetchReadingPageLight:(NSUInteger) skip max:(NSUInteger) max friends:(NSMutableDictionary*) friendSet completion:(void (^)(NSError* error, NSDictionary* readingList)) completion {
-    [self.htmlManager GET:[NSString stringWithFormat:@"https://www.dreamwidth.org/mobile/read?skip=%lu", skip] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
+    [self.htmlManager GET:[NSString stringWithFormat:@"https://www.dreamwidth.org/mobile/read?skip=%zu", skip] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
         NSArray* items = [self findAllFriends:(NSData*) responseObject friends:friendSet];
         
@@ -97,7 +97,7 @@
             
             for (NSString* author in friendSet) {
                 [self getAtomFeed:author completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
-                    if (error && [error.domain isEqualToString:@"org.ayizan.dreamballoon"]) {
+                    if (error && [error.domain isEqualToString:DWErrorDomain]) {
                         [self processEntries:[friendSet objectForKey:author]];
                     } else if (error) {
                         NSLog(@"error: %@", error);
@@ -311,7 +311,7 @@
 
 
 
-- (void)extractEntryCreationDate:(HTMLDocument*) document entry:(BCHDWEntry*) entry {
+- (NSDate*) extractEntryCreationDate:(HTMLDocument*) document entry:(BCHDWEntry*) entry {
     HTMLElement* creationDate = [document querySelector:@".poster-info .datetime"];
     NSArray* links = [creationDate querySelectorAll:@".date a"];
     NSString* datePortion = @"";
@@ -330,8 +330,12 @@
         NSInteger offset = (date.timeIntervalSince1970 - entry.creationDate.timeIntervalSince1970) / 60.0;
         NSInteger hour = offset / 60;
         NSInteger minute = abs((int) offset) % 60;
-        NSLog(@"time offset %ld (%ld:%ld)", offset, hour, minute);
+        NSLog(@"time offset %02ld (%ld:%02ld)", offset, hour, minute);
+    } else {
+        entry.creationDate = date;
+        entry.updateDate = date;
     }
+    return date;
 }
 
 -(void) fetchEntry:(BCHDWEntryHandle*) entryHandle {
@@ -371,7 +375,10 @@
                     }
                     
                     entry.entryText = [self collectTextContent:[document querySelector:@".entry-content"]];
-                    BCHDWSummaryExtract* extract = [self.summarizer collectSummaryExtract:[document querySelector:@".entry-content"]];
+                    BCHDWSummaryExtract* extract = entryHandle.summary;
+                    if (extract == nil) {
+                        extract = [self.summarizer collectSummaryExtract:[document querySelector:@".entry-content"]];
+                    }
                     NSString* temp = [extract.summaryText1 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                     entry.summaryText = temp.length > 0 ? temp : nil;
                     temp = [extract.summaryText2 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -405,7 +412,7 @@
                 } else {
                     for (NSString* author in readingList) {
                         [self getAtomFeed:author completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
-                            if (error && [error.domain isEqualToString:@"org.ayizan.dreamballoon"]) {
+                            if (error && [error.domain isEqualToString:DWErrorDomain]) {
                                 [self processEntries:[readingList objectForKey:author]];
                             } else if (error) {
                                 NSLog(@"error: %@", error);
@@ -493,7 +500,7 @@
             completion(nil, entries);
         } else {
             NSLog(@"Can't download items for %@ (content type %@)", user, httpResponse.allHeaderFields[@"content-type"]);
-            completion([NSError errorWithDomain:@"org.ayizan.dreamballoon" code:-999 userInfo:nil], nil);
+            completion([NSError errorWithDomain:DWErrorDomain code:-999 userInfo:nil], nil);
         }
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         completion(error, nil);
@@ -724,9 +731,7 @@
     
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-        if (!error) {
-            NSLog(@"New entry notification succeeded");
-        } else {
+        if (error) {
             NSLog(@"New entry notification failed: %@", error);
         }
     }];

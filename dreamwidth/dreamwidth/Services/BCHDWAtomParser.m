@@ -62,6 +62,10 @@
         self.currentElement.commentCount = [NSNumber numberWithInteger:[self.text integerValue]];
     } else if (self.currentElement != nil && [elementName isEqualToString:@"poster"]) {
         self.currentElement.author = [NSString stringWithString:self.text];
+    } else if (self.currentElement != nil && [elementName isEqualToString:@"content"]) {
+        HTMLDocument* document = [HTMLDocument documentWithString:self.text];
+        BCHDWEntrySummarizer* summarizer = [BCHDWEntrySummarizer new];
+        self.currentElement.summary = [summarizer collectSummaryExtract:[document body]];
     } else if ([elementName isEqualToString:@"entry"]) {
         if (self.currentElement != nil && [self.currentElement.creationDate isLaterThanDate:self.window]) {
             [self.entries addObject:self.currentElement];
@@ -81,6 +85,7 @@
     NSXMLParser* parser = [[NSXMLParser alloc] initWithData:data];
     parser.shouldProcessNamespaces = YES;
     parser.shouldReportNamespacePrefixes = NO;
+    parser.shouldResolveExternalEntities = YES;
     BCHDWXmlParser* parserDelegate = [BCHDWXmlParser new];
     parser.delegate = parserDelegate;
     [parser parse];

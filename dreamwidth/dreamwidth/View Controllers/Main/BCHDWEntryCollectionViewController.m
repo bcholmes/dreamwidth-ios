@@ -81,14 +81,13 @@ static NSString * const reuseIdentifier = @"Cell";
     
     [self addChildViewController:self.appBar.headerViewController];
     self.headerImage = [UIImageView new];
-    self.headerImage.image = [UIImage imageNamed:@"announcements_header"];
+    self.headerImage.image = [UIImage imageNamed:@"banner-1"];
     self.headerImage.contentMode = UIViewContentModeScaleAspectFill;
     self.headerImage.clipsToBounds = YES;
     self.headerImage.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    CGFloat imageAspectRatio = 72.0f/120.0f;
+    CGFloat imageAspectRatio = 540.0f/960.0f;
     CGFloat screenWidth = self.view.bounds.size.width;
-    NSLog(@"screen width %f", screenWidth);
     self.appBar.headerViewController.headerView.minimumHeight = 44 + [UIApplication sharedApplication].statusBarFrame.size.height;
     self.appBar.headerViewController.headerView.maximumHeight = self.maxHeaderHeight = MIN(240, screenWidth * imageAspectRatio);
     self.headerImage.frame = self.appBar.headerViewController.headerView.bounds;

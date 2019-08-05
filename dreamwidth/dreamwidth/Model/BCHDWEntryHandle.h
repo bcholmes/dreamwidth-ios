@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "BCHDWEntrySummarizer.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BCHDWEntryHandle : NSObject
@@ -20,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, strong) NSString* author;
 @property (nonatomic, nullable, strong) NSString* communityName;
 @property (nonatomic, nullable, readonly) NSString* journal;
+@property (nonatomic, nullable, strong) BCHDWSummaryExtract* summary;
 
 +(NSArray*) parseMap:(NSDictionary* _Nonnull) map;
 
