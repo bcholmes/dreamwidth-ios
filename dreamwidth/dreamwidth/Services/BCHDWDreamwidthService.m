@@ -31,6 +31,7 @@
 @property (nonnull, strong) NSDateFormatter* entryDateFormatter;
 @property (nonnull, strong) NSDate* lastSyncDate;
 @property (nonnull, strong) NSDictionary* knownSocialMediaSites;
+@property (nonatomic, strong, nullable) dispatch_queue_t completionQueue;
 @end
 
 @implementation BCHDWDreamwidthService
@@ -52,7 +53,7 @@
         self.htmlManager.requestSerializer = [AFHTTPRequestSerializer serializer];
         [self.htmlManager.requestSerializer setValue:@"application/x-www-form-urlencoded; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
         self.htmlManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        self.htmlManager.completionQueue = dispatch_queue_create("org.ayizan.dreamballoon.html", DISPATCH_QUEUE_SERIAL);
+        self.htmlManager.completionQueue = self.completionQueue = dispatch_queue_create("org.ayizan.dreamballoon.html", DISPATCH_QUEUE_SERIAL);
         
         self.knownSocialMediaSites = @{ @"ao3.org": @"ao3", @"archiveofourown.org": @"ao3", @"blogger.com" : @"blogger", @"facebook.com": @"facebook", @"github.com": @"github", @"livejournal.com": @"livejournal", @"tumblr.com": @"tumblr", @"twitter.com" : @"twitter" };
     }
@@ -492,7 +493,20 @@
 }
 
 -(void) getAtomFeed:(NSString*) user completion:(void (^)(NSError* _Nullable error, NSArray* _Nullable entryHandles)) completion {
-    [self.htmlManager GET:[NSString stringWithFormat:@"https://%@.dreamwidth.org/data/atom", user] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    AFHTTPSessionManager* atomManager = [AFHTTPSessionManager manager];
+    [atomManager setTaskWillPerformHTTPRedirectionBlock:^NSURLRequest * _Nonnull(NSURLSession * _Nonnull session, NSURLSessionTask * _Nonnull task, NSURLResponse * _Nonnull response, NSURLRequest * _Nonnull request) {
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) response;
+        if ([httpResponse.allHeaderFields[@"Location"] rangeOfString:@"dreamwidth.org"].location != NSNotFound) {
+            return request;
+        } else {
+            return nil;
+        }
+    }];
+    atomManager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    atomManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    atomManager.completionQueue = self.completionQueue;
+
+    [atomManager GET:[NSString stringWithFormat:@"https://%@.dreamwidth.org/data/atom", user] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) task.response;
         if ([httpResponse.allHeaderFields[@"content-type"] rangeOfString:@"application/atom+xml"].location != NSNotFound || [httpResponse.allHeaderFields[@"content-type"] rangeOfString:@"text/xml"].location != NSNotFound) {
@@ -503,7 +517,13 @@
             completion([NSError errorWithDomain:DWErrorDomain code:-999 userInfo:nil], nil);
         }
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        completion(error, nil);
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) operation.response;
+        if (httpResponse.statusCode == 302) {
+            NSLog(@"Can't download items for %@ (attempted re-direct)", user);
+            completion([NSError errorWithDomain:DWErrorDomain code:-999 userInfo:nil], nil);
+        } else {
+            completion(error, nil);
+        }
     }];
 }
 
