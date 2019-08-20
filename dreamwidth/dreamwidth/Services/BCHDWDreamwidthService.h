@@ -20,7 +20,7 @@ typedef void (^backgroundFetchHandler)(UIBackgroundFetchResult result);
 
 @interface BCHDWDreamwidthService : NSObject
 
-@property (nonatomic, strong) BCHDWUser* currentUser;
+@property (nonatomic, nullable, strong) BCHDWUser* currentUser;
 
 -(instancetype) initWithApi:(DreamwidthApi*) api persistence:(BCHDWPersistenceService*) persistenceService;
 -(BOOL) isLoggedIn;
@@ -31,4 +31,5 @@ typedef void (^backgroundFetchHandler)(UIBackgroundFetchResult result);
 -(void) syncWithServer;
 -(void) postComment:(BCHDWCommentEntryData*) comment entry:(BCHDWEntry*) entry parentComment:(BCHDWComment*) parentComment callback:(void (^) (NSError*)) callback;
 -(void) scheduleBackgroundDownload:(backgroundFetchHandler) completionHandler;
+-(void) fetchEntry:(BCHDWEntryHandle* _Nonnull) entryHandle callback:(void (^ _Nullable) (NSError* _Nullable))  callback;
 @end

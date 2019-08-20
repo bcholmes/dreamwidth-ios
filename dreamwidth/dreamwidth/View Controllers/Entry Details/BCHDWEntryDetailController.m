@@ -49,6 +49,9 @@
     
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80;
+    self.refreshControl = [UIRefreshControl new];
+    [self.refreshControl addTarget:self action:@selector(refreshStuff) forControlEvents:UIControlEventValueChanged];
+    NSLog(@"refresh control %@", self.refreshControl == nil ? @"is nil" : @"is not nil");
     
     self.blocks = [[BCHDWHTMLHelper new] parseHtmlIntoAttributedStrings:self.entry.entryText];
     
@@ -62,6 +65,12 @@
     [super viewWillAppear:animated];
     self.selectedComment = nil;
     [self.navigationController setNavigationBarHidden:NO animated:animated];
+}
+
+-(void) refreshStuff {
+    [[BCHDWAppDelegate instance].dreamwidthService fetchEntry:self.entry.handle  callback:^(NSError * _Nullable error) {
+        [self.refreshControl endRefreshing];
+    }];
 }
 
 #pragma mark - Table view data source

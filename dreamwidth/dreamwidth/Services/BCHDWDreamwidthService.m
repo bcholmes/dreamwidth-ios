@@ -339,7 +339,7 @@
     return date;
 }
 
--(void) fetchEntry:(BCHDWEntryHandle*) entryHandle {
+-(void) fetchEntry:(BCHDWEntryHandle*) entryHandle callback:(void (^) (NSError*)) callback {
     [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryHandle.url] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
         BOOL isNew = NO;
@@ -397,9 +397,15 @@
                 NSLog(@"%@", exception.reason);
                 NSLog(@"******************************************");
             }
+            if (callback) {
+                callback(nil);
+            }
         }];
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"fetch entry: %@", error);
+        if (callback) {
+            callback(error);
+        }
     }];
 }
 
@@ -591,7 +597,7 @@
             [self setAuthenticationCookie:session];
             for (BCHDWEntryHandle* entry in entries) {
                 NSLog(@"Fetch data for url: %@", entry.url);
-                [self fetchEntry:entry];
+                [self fetchEntry:entry callback:nil];
             }
         }
     }];
@@ -609,7 +615,7 @@
                     
                     [self submitForm:formData callback:^(NSError* error) {
                         if (error == nil) {
-                            [self fetchEntry:entry.handle];
+                            [self fetchEntry:entry.handle callback:nil];
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 callback(nil);
                             });
@@ -695,7 +701,7 @@
                                 
                                 for (BCHDWEntryHandle* handle in entryHandles) {
                                     if ([itemToFetch.url isEqualToString:handle.url]) {
-                                        [self fetchEntry:handle];
+                                        [self fetchEntry:handle callback:nil];
                                     }
                                 }
                             }];
