@@ -144,9 +144,8 @@
                 NSDate* now = [NSDate new];
                 NSDictionary* parameters = @{ @"mode": @"sessiongenerate",
                                               @"user": self.currentUser.username,
-                                              @"auth_method": @"challenge",
-                                              @"auth_challenge": challenge,
-                                              @"auth_response": [self generateChallengeResponse:challenge user:self.currentUser],
+                                              @"auth_method": @"clear",
+                                              @"auth_response": self.currentUser.password,
                                               @"expiration": @"long",
                                               @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
                                               @"ver": @"1"
@@ -200,41 +199,30 @@
 }
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback {
-    [self performWithChallenge:^(NSError* error, NSString* challenge) {
-        if (error == nil) {
-            NSString* encodedPassword = [self md5:password];
-            NSString* response = [self md5:[challenge stringByAppendingString:encodedPassword]];
-            NSDictionary* parameters = @{ @"mode": @"login",
-                                            @"user": userid,
-                                            @"auth_method": @"challenge",
-                                            @"auth_challenge": challenge,
-                                            @"auth_response": response,
-                                            @"getpickws": @"1",
-                                            @"getpickwurls": @"1",
-                                            @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version]
-                                          };
-            [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
-                NSString* success = [result objectForKey:@"success"];
-                if ([success isEqualToString:@"OK"]) {
-                    BCHDWUser* user = [BCHDWUser parseMap:result];
-                    user.username = userid;
-                    user.encodedPassword = encodedPassword;
-                    self.currentUser = user;
-                    callback(nil, user);
-                } else {
-                    callback([NSError errorWithDomain:DWErrorDomain code:DWAuthenticationFailedError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
-                }
-            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                self.currentUser = nil;
-                callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
-            }];
+    NSDictionary* parameters = @{ @"mode": @"login",
+                                    @"user": userid,
+                                    @"auth_method": @"clear",
+                                    @"password": password,
+                                    @"getpickws": @"1",
+                                    @"getpickwurls": @"1",
+                                    @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version]
+                                  };
+    [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
+        NSString* success = [result objectForKey:@"success"];
+        if ([success isEqualToString:@"OK"]) {
+            BCHDWUser* user = [BCHDWUser parseMap:result];
+            user.username = userid;
+            user.password = password;
+            self.currentUser = user;
+            callback(nil, user);
+        } else {
+            callback([NSError errorWithDomain:DWErrorDomain code:DWAuthenticationFailedError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
         }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        self.currentUser = nil;
+        callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"getchallenge failed."}], nil);
     }];
-}
-
-- (NSString*) generateChallengeResponse:(NSString*) challenge user:(BCHDWUser*) user {
-    return [self md5:[challenge stringByAppendingString:user.encodedPassword]];
 }
 
 -(void) getEvents:(BCHDWUser*) user completion:(void (^)(NSError* error, NSArray* entries)) callback {
@@ -242,9 +230,8 @@
         if (error == nil) {
             NSDictionary* parameters = @{ @"mode": @"getevents",
                                           @"user": user.username,
-                                          @"auth_method": @"challenge",
-                                          @"auth_challenge": challenge,
-                                          @"auth_response": [self generateChallengeResponse:challenge user:user],
+                                          @"auth_method": @"clear",
+                                          @"password": user.password,
                                           @"selecttype": @"lastn",
                                           @"howmany": @"40",
                                           @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
@@ -276,9 +263,8 @@
         if (error == nil) {
             NSDictionary* parameters = @{ @"mode": @"checkfriends",
                                           @"user": self.currentUser.username,
-                                          @"auth_method": @"challenge",
-                                          @"auth_challenge": challenge,
-                                          @"auth_response": [self generateChallengeResponse:challenge user:self.currentUser],
+                                          @"auth_method": @"clear",
+                                          @"password": self.currentUser.password,
                                           @"lastupdate": [self.dateFormatter stringFromDate:date],
                                           @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
                                           @"ver": @"1"
@@ -303,9 +289,8 @@
         if (error == nil) {
             NSDictionary* parameters = @{ @"mode": @"getevents",
                                           @"user": user.username,
-                                          @"auth_method": @"challenge",
-                                          @"auth_challenge": challenge,
-                                          @"auth_response": [self generateChallengeResponse:challenge user:user],
+                                          @"auth_method": @"clear",
+                                          @"password": user.password,
                                           @"selecttype": @"syncitems",
                                           @"lastsync": [self.dateFormatter stringFromDate:date],
                                           @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
