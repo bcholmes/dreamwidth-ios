@@ -139,38 +139,33 @@
     if (self.isSessionReady) {
         callback(nil, self.session.sessionId);
     } else {
-        [self performWithChallenge:^(NSError* error, NSString* challenge) {
-            if (error == nil) {
-                NSDate* now = [NSDate new];
-                NSDictionary* parameters = @{ @"mode": @"sessiongenerate",
-                                              @"user": self.currentUser.username,
-                                              @"auth_method": @"clear",
-                                              @"auth_response": self.currentUser.password,
-                                              @"expiration": @"long",
-                                              @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
-                                              @"ver": @"1"
-                                              };
-                
-                [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                    
-                    NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
-                    NSString* success = [result objectForKey:@"success"];
-                    if ([success isEqualToString:@"OK"]) {
-                        BCHDWSession* session = [BCHDWSession new];
-                        session.expiry = [now dateByAddingDays:27];
-                        session.sessionId = [result objectForKey:@"ljsession"];
-                        self.session = session;
-                        callback(nil, session.sessionId);
-                    } else {
-                        callback([NSError errorWithDomain:DWErrorDomain code:DWSessionError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
-                    }
-                    
-                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                    callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"sessiongenerate failed."}], nil);
-                }];
+        NSDate* now = [NSDate new];
+        NSDictionary* parameters = @{ @"mode": @"sessiongenerate",
+                                      @"user": self.currentUser.username,
+                                      @"auth_method": @"clear",
+                                      @"password": self.currentUser.password,
+                                      @"expiration": @"long",
+                                      @"clientversion": [NSString stringWithFormat:@"DreamBalloon/%@", self.version],
+                                      @"ver": @"1"
+                                      };
+        
+        [self.manager POST:DREAMWIDTH_FLAT_API_URL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            NSDictionary* result = [self createResponseMap:(NSData*) responseObject];
+            NSLog(@"Web session response map %@", result);
+            NSString* success = [result objectForKey:@"success"];
+            if ([success isEqualToString:@"OK"]) {
+                BCHDWSession* session = [BCHDWSession new];
+                session.expiry = [now dateByAddingDays:27];
+                session.sessionId = [result objectForKey:@"ljsession"];
+                self.session = session;
+                callback(nil, session.sessionId);
             } else {
-                callback(error, nil);
+                callback([NSError errorWithDomain:DWErrorDomain code:DWSessionError userInfo:@{ NSLocalizedDescriptionKey : [result objectForKey:@"errmsg"] }], nil);
             }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            callback([[NSError alloc] initWithDomain:DWErrorDomain code:400 userInfo:@{@"Error reason": @"sessiongenerate failed."}], nil);
         }];
     }
 }
