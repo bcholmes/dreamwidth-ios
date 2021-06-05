@@ -186,7 +186,7 @@
 
 - (void) userNotificationCenter:(UNUserNotificationCenter*) center willPresentNotification:(UNNotification*) notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options)) completionHandler {
     if (completionHandler) {
-        completionHandler(UNNotificationPresentationOptionAlert);
+        completionHandler(UNNotificationPresentationOptionNone);
     }
 }
 

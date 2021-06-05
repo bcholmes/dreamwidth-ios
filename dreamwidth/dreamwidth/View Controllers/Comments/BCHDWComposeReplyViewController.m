@@ -104,14 +104,14 @@
             [SVProgressHUD dismiss];
             
             if (error) {
-                [MDCSnackbarManager showMessage:[MDCSnackbarMessage messageWithText:@"Ooops. We ran into a problem trying to post your comment."]];
+                [[MDCSnackbarManager new] showMessage:[MDCSnackbarMessage messageWithText:@"Ooops. We ran into a problem trying to post your comment."]];
             } else {
                 [self.navigationController popViewControllerAnimated:YES];
             }
             
         }];
     } else {
-        [MDCSnackbarManager showMessage:[MDCSnackbarMessage messageWithText:@"C'mon. You need to type something"]];
+        [[MDCSnackbarManager new]  showMessage:[MDCSnackbarMessage messageWithText:@"C'mon. You need to type something"]];
     }
 }
 @end

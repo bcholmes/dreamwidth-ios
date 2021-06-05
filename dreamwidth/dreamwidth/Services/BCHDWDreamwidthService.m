@@ -297,9 +297,10 @@
                 [result appendString:@">"];
                 [result appendString:[self collectTextContent:element]];
                 
-                if (![element.tagName isEqualToAny:@"area", @"base", @"basefont", @"bgsound", @"br", @"col", @"embed",
-                     @"frame", @"hr", @"img", @"input", @"keygen", @"link", @"menuitem", @"meta", @"param", @"source",
-                     @"track", @"wbr", nil]) {
+                NSArray* tags = @[@"area", @"base", @"basefont", @"bgsound", @"br", @"col", @"embed",
+                                  @"frame", @"hr", @"img", @"input", @"keygen", @"link", @"menuitem", @"meta", @"param", @"source",
+                                  @"track", @"wbr"];
+                if (![tags containsObject:element.tagName]) {
                     [result appendFormat:@"</%@>", element.tagName];
                 }
             }

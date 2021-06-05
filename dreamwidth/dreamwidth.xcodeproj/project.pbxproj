@@ -465,7 +465,6 @@
 				D8EA84E41AB1E6BD00B71DC4 /* Sources */,
 				D8EA84E51AB1E6BD00B71DC4 /* Frameworks */,
 				D8EA84E61AB1E6BD00B71DC4 /* Resources */,
-				E2EBC0DF2242E47FEF950DC2 /* [CP] Embed Pods Frameworks */,
 				1F9AF32B8AD46B6EE2B51E13 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -584,7 +583,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-dreamwidth/Pods-dreamwidth-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/1PasswordExtension/OnePasswordExtensionResources.bundle",
 				"${PODS_ROOT}/DateTools/DateTools/DateTools/DateTools.bundle",
 				"${PODS_ROOT}/MaterialComponents/components/AppBar/src/MaterialAppBar.bundle",
@@ -619,22 +618,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E2EBC0DF2242E47FEF950DC2 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-dreamwidth/Pods-dreamwidth-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dreamwidth/Pods-dreamwidth-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -831,7 +815,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8W5A52K7AS;
 				INFOPLIST_FILE = dreamwidth/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.ayizan.dreamballoon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -845,7 +829,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8W5A52K7AS;
 				INFOPLIST_FILE = dreamwidth/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.ayizan.dreamballoon;
 				PRODUCT_NAME = "$(TARGET_NAME)";

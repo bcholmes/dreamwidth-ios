@@ -74,7 +74,7 @@
                         } else {
                             message.text = @"That login did not go the way we wanted it to. Double-check your userid/password.";
                         }
-                        [MDCSnackbarManager showMessage:message];
+                        [[MDCSnackbarManager new] showMessage:message];
                     } else {
                         NSLog(@"Logged in as user %@", user.name);
                         [self dismissViewControllerAnimated:YES completion:nil];
