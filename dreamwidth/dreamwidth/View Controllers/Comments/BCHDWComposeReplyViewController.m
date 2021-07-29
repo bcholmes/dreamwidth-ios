@@ -114,4 +114,8 @@
         [[MDCSnackbarManager new]  showMessage:[MDCSnackbarMessage messageWithText:@"C'mon. You need to type something"]];
     }
 }
+
+-(IBAction) close:(id) button {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

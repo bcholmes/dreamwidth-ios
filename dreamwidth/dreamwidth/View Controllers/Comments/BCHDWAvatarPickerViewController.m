@@ -99,7 +99,7 @@ static NSString * const reuseIdentifier = @"avatarCell";
 */
 
 - (CGSize)collectionView:(UICollectionView*) collectionView layout:(UICollectionViewLayout*) collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath*) indexPath {
-    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) {
+    if ( [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad ) {
         CGFloat width = self.collectionView.bounds.size.width / 4.0;
         return CGSizeMake(width, width);
     } else {

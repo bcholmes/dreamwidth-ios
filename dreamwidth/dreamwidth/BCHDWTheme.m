@@ -163,6 +163,7 @@
     proxy.inkColor = [self.dreamwidthRed colorWithAlphaComponent:0.32];
     proxy.disabledAlpha = 1.0;
     proxy.uppercaseTitle = NO;
+    [proxy setBackgroundColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [proxy setTitleColor:self.dreamwidthRed forState:UIControlStateNormal];
     [proxy setTitleColor:[UIColor colorWithHex:@"888888"] forState:UIControlStateDisabled];
 }

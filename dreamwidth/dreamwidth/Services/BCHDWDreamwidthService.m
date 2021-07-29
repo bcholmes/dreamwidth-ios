@@ -513,6 +513,8 @@
     atomManager.responseSerializer = [AFHTTPResponseSerializer serializer];
     atomManager.completionQueue = self.completionQueue;
 
+    NSLog(@"user: %@", user);
+    
     [atomManager GET:[NSString stringWithFormat:@"https://%@.dreamwidth.org/data/atom", user] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) task.response;
