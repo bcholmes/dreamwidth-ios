@@ -14,27 +14,30 @@ on that front, but a solution is probably a few months off, still.
 
 In the meantime, this app uses the so-called ["flat API"](https://www.livejournal.com/doc/server/ljp.csp.flat.protocol.html)
 for login and fetching the user's entries supplemented by HTML screen-scraping
-to get reading lists, entry content and comments.
+to get reading lists, entry content and comments. I also make use of Atom feeds
+for individual entries (for example, [here's](https://dw-dev.dreamwidth.org/data/atom) the ATOM feed for dw_dev).
 
 ## Items to Be Completed
+
+This list is out-of-date. I'm trying to use issues to manage the outstanding work.
 
 1. ~~Reverse-engineer Dreamwidth's cookie-based session auth~~ DONE! The flat API
 allows me to get a session cookie and use that for some requests, turning that session
 id into the necessary cookies is pretty terrible.
 2. ~~Call the [Mobile Reading Page](https://www.dreamwidth.org/mobile/read) and get the recent Reading List~~ DONE!
-3. Fetch each page as format=light and scrape its content. IN PROGRESS!
-4. Show a fuller entry page, with comments. 90% COMPLETE
-5. Render more complex entry HTML
-6. Compose a new entry
-7. Compose a new comment
-8. Better account settings management
-9. Notifications
-10. Refresh content on a reasonable schedule.
-11. Apple will almost-certainly insist that I exclude all of the NSFW content. I have a plan for this; I just need to fiddle with the details.
+3. ~~Fetch each page as format=light and scrape its content.~~ Essentially DONE.
+4. ~~Show a fuller entry page, with comments.~~ DONE
+5. [Render more complex entry HTML](https://github.com/bcholmes/dreamwidth-ios/issues/6)
+6. [Compose a new entry](https://github.com/bcholmes/dreamwidth-ios/issues/7)
+7. [Compose a new comment](https://github.com/bcholmes/dreamwidth-ios/issues/11)
+8. [Better account settings management](https://github.com/bcholmes/dreamwidth-ios/issues/8)
+9. [Notifications](https://github.com/bcholmes/dreamwidth-ios/issues/9)
+10. [Refresh content on a reasonable schedule](https://github.com/bcholmes/dreamwidth-ios/issues/10)
+11. [Apple will almost-certainly insist that I exclude all of the NSFW content. I have a plan for this; I just need to fiddle with the details.](https://github.com/bcholmes/dreamwidth-ios/issues/4)
 
 ## Screens
 
-Here are some screenshots of work-in-progress:
+~~Here are some screenshots of work-in-progress~~ Wow, these screenshots are out-of-date:
 
 ![entries](etc/screenshots/entries.png "Entries") ![menu](etc/screenshots/menu.png "Menu") ![profile](etc/screenshots/profile.png "Profile") ![comments](etc/screenshots/comments.png "Comments")
 
