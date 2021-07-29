@@ -16,11 +16,11 @@
 
 @implementation BCHDWFormData
 
-+(BCHDWFormData*) fromHtml:(HTMLElement*) formElement {
++(BCHDWFormData*) fromHtml:(HTMLElement*) formElement button:(NSString*) buttonName {
     BCHDWFormData* result = [BCHDWFormData new];
     result.submitUrl = formElement.attributes[@"action"];
     NSMutableDictionary* properties = [NSMutableDictionary new];
-    [BCHDWFormData collectProperties:properties element:formElement];
+    [BCHDWFormData collectProperties:properties element:formElement button:buttonName];
     result.internalProperties = properties;
     return result;
 }
@@ -33,7 +33,7 @@
     [self.internalProperties addEntriesFromDictionary:properties];
 }
 
-+(void) collectProperties:(NSMutableDictionary*) properties element:(HTMLElement*) parent {
++(void) collectProperties:(NSMutableDictionary*) properties element:(HTMLElement*) parent button:(NSString*) buttonName {
     for (HTMLNode* node = parent.firstChild; node != nil; node = node.nextSibling) {
         if ([node isKindOfClass:[HTMLElement class]]) {
             HTMLElement* element = (HTMLElement*) node;
@@ -44,13 +44,13 @@
                     // skip it
                 } else if ([type isEqualToString:@"hidden"]) {
                     [properties setObject:element.attributes[@"value"] forKey:name];
-                } else if ([type isEqualToString:@"submit"] && [name isEqualToString:@"submitpost"]) {
+                } else if ([type isEqualToString:@"submit"] && [name isEqualToString:buttonName]) {
                     [properties setObject:element.attributes[@"value"] forKey:name];
                 } else if ([type isEqualToString:@"radio"] && [element.attributes[@"checked"] isEqualToString:@"checked"]) {
                     [properties setObject:element.attributes[@"value"] forKey:name];
                 }
             } else {
-                [self collectProperties:properties element:element];
+                [self collectProperties:properties element:element button:buttonName];
             }
         }
     }

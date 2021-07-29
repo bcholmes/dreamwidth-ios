@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void) addFormProperties:(NSDictionary*) properties;
 
-+(BCHDWFormData*) fromHtml:(HTMLElement*) formElement;
++(BCHDWFormData*) fromHtml:(HTMLElement*) formElement button:(NSString*) buttonName;
 
 @end
 

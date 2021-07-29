@@ -443,12 +443,25 @@
     UYLPasswordManager* manager = [UYLPasswordManager sharedInstance];
     NSString* userid = [manager keyForIdentifier:@"userid"];
     NSString* password = [manager keyForIdentifier:@"password"];
+    NSString* apiKey = [manager keyForIdentifier:@"apikey"];
 
     [self.api loginWithUser:userid password:password andCompletion:^(NSError* error, BCHDWUser* user) {
         if (error == nil) {
             self.currentUser = user;
         }
-        callback(error, user);
+        
+        if (apiKey == nil) {
+            [self generateApiKey:^(NSString * _Nullable key, NSError * _Nullable error) {
+// TODO: Figure out why this doesn't work
+//                if (error == nil && key != nil) {
+//                    [manager setValue:key forKey:@"apikey"];
+//                }
+                callback(nil, user);
+            }];
+        } else {
+        
+            callback(error, user);
+        }
     }];
 }
 
@@ -667,7 +680,7 @@
         HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
         HTMLDocument* document = [parser parseDocument];
         HTMLElement* element = [document querySelector:@"form"];
-        BCHDWFormData* formData = [BCHDWFormData fromHtml:element];
+        BCHDWFormData* formData = [BCHDWFormData fromHtml:element button:@"submitpost"];
         
         callback(nil, formData);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -764,6 +777,92 @@
             NSLog(@"New entry notification failed: %@", error);
         }
     }];
+}
+
+
+-(void) generateApiKey:(void (^ _Nullable) (NSString* _Nullable, NSError* _Nullable))  callback {
+    
+    [self.api performFunctionWithWebSession:^(NSError * _Nullable error, NSString * _Nullable session) {
+
+        if (error == nil) {
+            [self setAuthenticationCookie:session];
+            [self.htmlManager GET:@"https://www.dreamwidth.org/manage/emailpost" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                
+                HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
+                HTMLDocument* document = [parser parseDocument];
+                HTMLElement* form = [document querySelector:@"form"];
+                NSString* apiKey = [self scrapeApiKey:form];
+                
+                if (apiKey != nil) {
+                    NSLog(@"API key: %@", apiKey);
+                    callback(apiKey, nil);
+                } else {
+                    BCHDWFormData* formData = [BCHDWFormData fromHtml:form button:@"action:apikey"];
+                    [self submitGenerateApiKeyForm:formData callback:callback];
+                }
+
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                NSLog(@"error %@", error);
+                if (callback != nil) {
+                    callback(nil, error);
+                }
+            }];
+        } else {
+            NSLog(@"error %@", error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (callback != nil) {
+                    callback(nil, error);
+                }
+            });
+        }
+    }];
+}
+
+-(void) submitGenerateApiKeyForm:(BCHDWFormData*) formData callback:(void (^ _Nullable) (NSString* _Nullable, NSError* _Nullable)) callback {
+    [self.htmlManager POST:@"https://www.dreamwidth.org/manage/emailpost" parameters:formData.properties progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        HTMLParser* parser = [[HTMLParser alloc] initWithString:[[NSString alloc] initWithData:(NSData*) responseObject encoding:NSUTF8StringEncoding]];
+        HTMLDocument* document = [parser parseDocument];
+        HTMLElement* form = [document querySelector:@"form"];
+        NSString* apiKey = [self scrapeApiKey:form];
+        
+        if (apiKey != nil) {
+            NSLog(@"Generated API key: %@", apiKey);
+            callback(apiKey, nil);
+        } else {
+            // I don't know why this would happen
+            callback(nil, nil);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"error %@", error);
+        if (callback != nil) {
+            callback(nil, error);
+        }
+    }];
+}
+
+-(NSString*) scrapeApiKey:(HTMLElement*) form {
+    NSArray<HTMLElement*>* button = [form elementsMatchingSelector:attributeSelector(CSSAttributeSelectorExactMatch, @"name", @"action:apikey")];
+    if (button != nil && button.count > 0) {
+        NSString* result = nil;
+        for (HTMLElement* sibling = [button[0] previousSiblingElement]; sibling != nil; sibling = [sibling previousSiblingElement]) {
+            if ([sibling.name isEqualToString:@"table"]) {
+                NSArray* rows = [sibling querySelectorAll:@"tr"];
+                if (rows != nil && rows.count > 0) {
+                    HTMLElement* td = [rows[rows.count-1] querySelector:@"td"];
+                    if (td != nil) {
+                        result = [td.textContent stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    }
+                }
+                break;
+            } else if ([sibling.name isEqualToString:@"h1"]) {
+                break;
+            }
+        }
+        return result;
+    } else {
+        return nil;
+    }
 }
 
 @end
