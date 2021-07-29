@@ -106,7 +106,7 @@
             if (error) {
                 [[MDCSnackbarManager new] showMessage:[MDCSnackbarMessage messageWithText:@"Ooops. We ran into a problem trying to post your comment."]];
             } else {
-                [self.navigationController popViewControllerAnimated:YES];
+                [self close:nil];
             }
             
         }];

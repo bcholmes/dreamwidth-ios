@@ -339,7 +339,13 @@
                             <outlet property="delegate" destination="tml-Uh-E1P" id="s5t-UR-Adz"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="XtV-Ye-dgk"/>
+                    <navigationItem key="navigationItem" id="XtV-Ye-dgk">
+                        <barButtonItem key="rightBarButtonItem" image="gear" style="plain" id="J1W-LQ-G1z">
+                            <connections>
+                                <segue destination="tQ0-pr-tjX" kind="presentation" id="xOO-kU-qDc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="3Uv-Yq-2oK" kind="presentation" identifier="login" id="g4t-MC-VF8"/>
                         <segue destination="7O6-V8-Xt1" kind="show" identifier="detail" id="Jbj-Zn-2g3"/>
@@ -773,7 +779,7 @@
             <objects>
                 <tableViewController id="tQ0-pr-tjX" customClass="BCHDWProfileTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="L50-lP-TsL">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -883,14 +889,14 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zbw-eI-I6q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="908" y="-684"/>
+            <point key="canvasLocation" x="2044" y="-684"/>
         </scene>
         <!--Avatar Table View Controller-->
         <scene sceneID="2Gx-HE-XBB">
             <objects>
                 <tableViewController id="G9c-2g-dec" customClass="BCHDWAvatarTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="JXB-Lv-XzL">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -934,10 +940,11 @@
                             <outlet property="delegate" destination="G9c-2g-dec" id="WJg-ng-Jto"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="kvf-VR-X6h"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9CA-hj-38M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2128.8000000000002" y="-684.10794602698661"/>
+            <point key="canvasLocation" x="2967" y="-684"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dcY-4Y-Ile">
@@ -1002,7 +1009,11 @@
             <point key="canvasLocation" x="2128.8000000000002" y="30.134932533733135"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="xOO-kU-qDc"/>
+    </inferredMetricsTieBreakers>
     <resources>
+        <image name="gear" width="33" height="33"/>
         <image name="image-icon" width="375" height="300"/>
         <image name="lock-icon" width="18" height="18"/>
         <image name="onepassword-login-button" width="41" height="41"/>
