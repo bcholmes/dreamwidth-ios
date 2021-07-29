@@ -22,7 +22,7 @@ typedef void (^backgroundFetchHandler)(UIBackgroundFetchResult result);
 
 @property (nonatomic, nullable, strong) BCHDWUser* currentUser;
 
--(instancetype) initWithApi:(DreamwidthApi*) api persistence:(BCHDWPersistenceService*) persistenceService;
+-(instancetype _Nonnull ) initWithApi:(DreamwidthApi*_Nonnull) api persistence:(BCHDWPersistenceService*_Nonnull) persistenceService;
 -(BOOL) isLoggedIn;
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback;

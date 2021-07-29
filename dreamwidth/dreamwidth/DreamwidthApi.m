@@ -9,7 +9,6 @@
 #import "DreamwidthApi.h"
 
 #import <AFNetworking/AFNetworking.h>
-#import <CommonCrypto/CommonDigest.h>
 #import <NSDate-Additions/NSDate+Additions.h>
 
 #import "BCHDWEntryHandle.h"
@@ -93,20 +92,6 @@
 
 -(NSString*) version {
     return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-}
-
-- (NSString *) md5:(NSString *) input {
-    const char *cStr = [input UTF8String];
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    CC_MD5( cStr, (int) strlen(cStr), digest );
-    
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
-        [output appendFormat:@"%02x", digest[i]];
-    }
-    
-    return  output;
 }
 
 -(NSDictionary*) createResponseMap:(NSData*) data {

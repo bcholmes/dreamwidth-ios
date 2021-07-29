@@ -9,11 +9,11 @@
 #import "BCHDWDreamwidthService.h"
 
 #import <AFNetworking/AFNetworking.h>
-#import <UYLPasswordManager/UYLPasswordManager.h>
 #import <HTMLKit/HTMLKit.h>
 #import <NSDate-Additions/NSDate+Additions.h>
 #import <UserNotifications/UserNotifications.h>
 
+#import "BCHDWCredentialManager.h"
 #import "BCHDWEntryHandle.h"
 #import "BCHDWCommentEntryData.h"
 #import "BCHDWFormData.h"
@@ -21,6 +21,7 @@
 #import "BCHDWAtomParser.h"
 #import "BCHDWEntrySummarizer.h"
 #import "BCHDWHTMLUtilities.h"
+
 @interface BCHDWDreamwidthService()
 
 @property (nonatomic, strong) DreamwidthApi* api;
@@ -61,14 +62,7 @@
 }
 
 -(BOOL) isLoggedIn {
-    return self.api.currentUser != nil || [self isUseridAndPasswordStoredInKeychain];
-}
-
--(BOOL) isUseridAndPasswordStoredInKeychain {
-    UYLPasswordManager* manager = [UYLPasswordManager sharedInstance];
-    NSString* userid = [manager keyForIdentifier:@"userid"];
-    NSString* password = [manager keyForIdentifier:@"password"];
-    return userid != nil && password != nil;
+    return self.api.currentUser != nil || [BCHDWCredentialManager sharedInstance].isUseridAndPasswordStoredInKeychain;
 }
 
 - (void) setAuthenticationCookie:(NSString * _Nullable) session {
@@ -440,37 +434,22 @@
 }
 
 -(void) loginUsingStoredCredentials:(void (^)(NSError*, BCHDWUser*))callback {
-    UYLPasswordManager* manager = [UYLPasswordManager sharedInstance];
-    NSString* userid = [manager keyForIdentifier:@"userid"];
-    NSString* password = [manager keyForIdentifier:@"password"];
-    NSString* apiKey = [manager keyForIdentifier:@"apikey"];
+    NSString* userid = [BCHDWCredentialManager sharedInstance].userid;
+    NSString* password = [BCHDWCredentialManager sharedInstance].password;
 
     [self.api loginWithUser:userid password:password andCompletion:^(NSError* error, BCHDWUser* user) {
         if (error == nil) {
             self.currentUser = user;
         }
-        
-        if (apiKey == nil) {
-            [self generateApiKey:^(NSString * _Nullable key, NSError * _Nullable error) {
-// TODO: Figure out why this doesn't work
-//                if (error == nil && key != nil) {
-//                    [manager setValue:key forKey:@"apikey"];
-//                }
-                callback(nil, user);
-            }];
-        } else {
-        
-            callback(error, user);
-        }
+        callback(error, user);
     }];
 }
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError*, BCHDWUser*))callback {
     [self.api loginWithUser:userid password:password andCompletion:^(NSError* error, BCHDWUser* user) {
         if (error == nil) {
-            UYLPasswordManager* manager = [UYLPasswordManager sharedInstance];
-            [manager registerKey:userid forIdentifier:@"userid"];
-            [manager registerKey:password forIdentifier:@"password"];
+            [BCHDWCredentialManager sharedInstance].userid = userid;
+            [BCHDWCredentialManager sharedInstance].password = password;
             self.currentUser = user;
             
             [self syncWithServer];
@@ -481,6 +460,22 @@
         });
     }];
 }
+
+-(void) performFunctionWithApiKey:(void (^)(NSString*, NSError*)) callback {
+    if ([BCHDWCredentialManager sharedInstance].isApiKeyAvailable) {
+        callback([BCHDWCredentialManager sharedInstance].apiKey, nil);
+    } else {
+        [self generateApiKey:^(NSString* apiKey, NSError* error) {
+            if (error == nil && apiKey != nil) {
+                [BCHDWCredentialManager sharedInstance].apiKey = apiKey;
+                callback(apiKey, nil);
+            } else {
+                callback(nil, error == nil ? [NSError errorWithDomain:DWErrorDomain code:-999 userInfo:nil] : error);
+            }
+        }];
+    }
+}
+
 
 -(void) postEntry:(NSString*) entryText completion:(void (^)(NSError* error, NSString* url)) callback {
 }
