@@ -31,6 +31,7 @@ typedef void (^backgroundFetchHandler)(UIBackgroundFetchResult result);
 -(void) syncWithServer;
 -(void) postComment:(BCHDWCommentEntryData*) comment entry:(BCHDWEntry*) entry parentComment:(BCHDWComment*) parentComment callback:(void (^) (NSError*)) callback;
 -(void) scheduleBackgroundDownload:(backgroundFetchHandler) completionHandler;
+-(void) refreshEntry:(BCHDWEntryHandle* _Nonnull) entryHandle callback:(void (^ _Nullable) (NSError* _Nullable))  callback;
 -(void) fetchEntry:(BCHDWEntryHandle* _Nonnull) entryHandle callback:(void (^ _Nullable) (NSError* _Nullable))  callback;
 -(void) generateApiKey:(void (^ _Nullable) (NSString* _Nullable, NSError* _Nullable))  callback;
 

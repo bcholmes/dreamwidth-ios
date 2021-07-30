@@ -51,7 +51,6 @@
     self.tableView.estimatedRowHeight = 80;
     self.refreshControl = [UIRefreshControl new];
     [self.refreshControl addTarget:self action:@selector(refreshStuff) forControlEvents:UIControlEventValueChanged];
-    NSLog(@"refresh control %@", self.refreshControl == nil ? @"is nil" : @"is not nil");
     
     self.blocks = [[BCHDWHTMLHelper new] parseHtmlIntoAttributedStrings:self.entry.entryText];
     
@@ -68,8 +67,14 @@
 }
 
 -(void) refreshStuff {
-    [[BCHDWAppDelegate instance].dreamwidthService fetchEntry:self.entry.handle  callback:^(NSError * _Nullable error) {
-        [self.refreshControl endRefreshing];
+    [[BCHDWAppDelegate instance].dreamwidthService refreshEntry:self.entry.handle  callback:^(NSError * _Nullable error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+            [self.refreshControl endRefreshing];
+            if (error == nil) {
+                [self.tableView reloadData];
+            }
+        });
     }];
 }
 

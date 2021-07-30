@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BCHDWEntryHandle : NSObject
 
+@property (nonatomic, nullable, readonly) NSString* entryId;
 @property (nonatomic, nullable, strong) NSString* url;
 @property (nonatomic, nullable, strong) NSString* title;
 @property (nonatomic, nullable, strong) NSDate* creationDate;

@@ -23,6 +23,15 @@
     return [NSArray arrayWithArray:result];
 }
 
+-(NSString*) entryId {
+    if (self.url == nil) {
+        return nil;
+    } else {
+        NSString* entryId = [[self.url lastPathComponent] stringByDeletingPathExtension];
+        return entryId;
+    }
+}
+
 -(NSString*) journal {
     if (self.communityName) {
         return self.communityName;

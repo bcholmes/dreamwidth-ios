@@ -91,7 +91,7 @@
             
             
             for (NSString* author in friendSet) {
-                [self getAtomFeed:author completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+                [self getAtomFeed:author entryId:nil completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
                     if (error && [error.domain isEqualToString:DWErrorDomain]) {
                         [self processEntries:[friendSet objectForKey:author]];
                     } else if (error) {
@@ -334,6 +334,15 @@
     return date;
 }
 
+-(void) refreshEntry:(BCHDWEntryHandle*) entryHandle callback:(void (^) (NSError*)) callback {
+    NSLog(@"Refreshing entry %@", entryHandle.entryId);
+    [self getAtomFeed:entryHandle.journal entryId:entryHandle.entryId completion:^(NSError * _Nullable error, NSArray * _Nullable entryHandles) {
+        if (error == nil) {
+            [self processEntries:entryHandles];
+        }
+        callback(error);
+    }];
+}
 -(void) fetchEntry:(BCHDWEntryHandle*) entryHandle callback:(void (^) (NSError*)) callback {
     [self.htmlManager GET:[NSString stringWithFormat:@"%@?format=light&expand_all=1", entryHandle.url] parameters:nil progress:nil success:^(NSURLSessionTask* task, id responseObject) {
 
@@ -413,7 +422,7 @@
                     NSLog(@"fetch error: %@", error);
                 } else {
                     for (NSString* author in readingList) {
-                        [self getAtomFeed:author completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+                        [self getAtomFeed:author entryId:nil completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
                             if (error && [error.domain isEqualToString:DWErrorDomain]) {
                                 [self processEntries:[readingList objectForKey:author]];
                             } else if (error) {
@@ -496,7 +505,7 @@
 
 - (void) fullSyncWithServer {
     NSLog(@"Starting full sync with server.");
-    [self getAtomFeed:self.currentUser.username completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+    [self getAtomFeed:self.currentUser.username entryId:nil completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
         if (error) {
             NSLog(@"error: %@", error);
         } else {
@@ -507,7 +516,7 @@
     [self fetchRecentReadingPageActivity];
 }
 
--(void) getAtomFeed:(NSString*) user completion:(void (^)(NSError* _Nullable error, NSArray* _Nullable entryHandles)) completion {
+-(void) getAtomFeed:(NSString*) user entryId:(NSString*) entryId completion:(void (^)(NSError* _Nullable error, NSArray* _Nullable entryHandles)) completion {
     AFHTTPSessionManager* atomManager = [AFHTTPSessionManager manager];
     [atomManager setTaskWillPerformHTTPRedirectionBlock:^NSURLRequest * _Nonnull(NSURLSession * _Nonnull session, NSURLSessionTask * _Nonnull task, NSURLResponse * _Nonnull response, NSURLRequest * _Nonnull request) {
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) response;
@@ -521,9 +530,12 @@
     atomManager.responseSerializer = [AFHTTPResponseSerializer serializer];
     atomManager.completionQueue = self.completionQueue;
 
-    NSLog(@"user: %@", user);
+    NSString* url = [NSString stringWithFormat:@"https://%@.dreamwidth.org/data/atom", user];
+    if (entryId != nil) {
+        url = [NSString stringWithFormat:@"https://%@.dreamwidth.org/data/atom?itemid=%@", user, entryId];
+    }
     
-    [atomManager GET:[NSString stringWithFormat:@"https://%@.dreamwidth.org/data/atom", user] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [atomManager GET:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) task.response;
         if ([httpResponse.allHeaderFields[@"content-type"] rangeOfString:@"application/atom+xml"].location != NSNotFound || [httpResponse.allHeaderFields[@"content-type"] rangeOfString:@"text/xml"].location != NSNotFound) {
@@ -546,7 +558,7 @@
 
 - (void) partialSyncWithServer {
     NSLog(@"Starting partial sync with server.");
-    [self getAtomFeed:self.currentUser.username completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
+    [self getAtomFeed:self.currentUser.username entryId:nil completion:^(NSError * _Nullable error, NSArray * _Nullable entries) {
         if (error) {
             NSLog(@"error: %@", error);
         } else {
@@ -708,7 +720,7 @@
                     if (newEntry) {
                         NSLog(@"New things. Let's see if we can fetch them.");
                         if (now - start < 15 * 60) {
-                            [self getAtomFeed:itemToFetch.journal completion:^(NSError * _Nullable error, NSArray * _Nullable entryHandles) {
+                            [self getAtomFeed:itemToFetch.journal entryId:nil completion:^(NSError * _Nullable error, NSArray * _Nullable entryHandles) {
                                 
                                 for (BCHDWEntryHandle* handle in entryHandles) {
                                     if ([itemToFetch.url isEqualToString:handle.url]) {
