@@ -12,10 +12,9 @@ most recent first.
 [some progress](https://github.com/dreamwidth/dw-free/pull/2265)
 on that front, but a solution is probably a few months off, still.
 
-In the meantime, this app uses the so-called ["flat API"](https://www.livejournal.com/doc/server/ljp.csp.flat.protocol.html)
-for login and fetching the user's entries supplemented by HTML screen-scraping
-to get reading lists, entry content and comments. I also make use of Atom feeds
-for individual entries (for example, [here's](https://dw-dev.dreamwidth.org/data/atom) the ATOM feed for dw_dev).
+Getting data from Dreamwidth is complex -- especially if you want to be able to work with the most
+common types of data such as comments and the like. I have an approach to [interfacing with Dreamwidth](INTERFACING.md),
+but I'm abundantly clear that the interface is messy.
 
 ## Items to Be Completed
 
@@ -34,6 +33,10 @@ id into the necessary cookies is pretty terrible.
 9. [Notifications](https://github.com/bcholmes/dreamwidth-ios/issues/9)
 10. [Refresh content on a reasonable schedule](https://github.com/bcholmes/dreamwidth-ios/issues/10)
 11. [Apple will almost-certainly insist that I exclude all of the NSFW content. I have a plan for this; I just need to fiddle with the details.](https://github.com/bcholmes/dreamwidth-ios/issues/4)
+
+## Other Items to be Resolved
+
+I'm a long-time Dreamwidth paid member, and as a result, I'm not required to see ads, and I get fairly speedy servers. Dreamwidth has a free model that is subsidized by ads, and if people using the app can avoid seeing the ads, then Dreamwidth's corporate masters might not like the mobile app. At some point, I'll probably need to have a conversation with them.
 
 ## Screens
 

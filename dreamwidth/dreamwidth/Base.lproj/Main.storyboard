@@ -665,9 +665,9 @@
                                                     <constraint firstAttribute="height" constant="80" id="xgg-Im-8Iz"/>
                                                 </constraints>
                                             </imageView>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="49A-wp-PgS">
-                                                <rect key="frame" x="320" y="16" width="39" height="30"/>
-                                                <state key="normal" title="Close"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="49A-wp-PgS">
+                                                <rect key="frame" x="329" y="16" width="30" height="30"/>
+                                                <state key="normal" image="close-button"/>
                                                 <connections>
                                                     <action selector="close:" destination="5bP-Gt-HXN" eventType="touchUpInside" id="YeA-Vt-bAx"/>
                                                 </connections>
@@ -1013,6 +1013,7 @@
         <segue reference="xOO-kU-qDc"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="close-button" width="30" height="30"/>
         <image name="gear" width="33" height="33"/>
         <image name="image-icon" width="375" height="300"/>
         <image name="lock-icon" width="18" height="18"/>

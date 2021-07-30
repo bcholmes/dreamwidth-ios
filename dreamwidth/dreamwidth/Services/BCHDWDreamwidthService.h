@@ -27,7 +27,6 @@ typedef void (^backgroundFetchHandler)(UIBackgroundFetchResult result);
 
 -(void) loginWithUser:(NSString*) userid password:(NSString*) password andCompletion:(void (^)(NSError* error, BCHDWUser* user)) callback;
 -(void) postEntry:(NSString*) entryText completion:(void (^)(NSError* error, NSString* url)) callback;
--(void) fetchRecentReadingPageActivity;
 -(void) syncWithServer;
 -(void) postComment:(BCHDWCommentEntryData*) comment entry:(BCHDWEntry*) entry parentComment:(BCHDWComment*) parentComment callback:(void (^) (NSError*)) callback;
 -(void) scheduleBackgroundDownload:(backgroundFetchHandler) completionHandler;

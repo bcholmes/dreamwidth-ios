@@ -68,6 +68,7 @@
 
 -(void) refreshStuff {
     [[BCHDWAppDelegate instance].dreamwidthService refreshEntry:self.entry.handle  callback:^(NSError * _Nullable error) {
+        [self.entry.managedObjectContext refreshObject:self.entry mergeChanges:NO];
         dispatch_async(dispatch_get_main_queue(), ^{
 
             [self.refreshControl endRefreshing];
