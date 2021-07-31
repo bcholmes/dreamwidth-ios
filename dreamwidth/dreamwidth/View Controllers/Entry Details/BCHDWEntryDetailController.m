@@ -18,6 +18,7 @@
 #import "BCHDWCommentComposer.h"
 #import "BCHDWCommentTableViewCell.h"
 #import "BCHDWComposeReplyViewController.h"
+#import "BCHDWEntryLikedTableCell.h"
 #import "BCHDWEntryReplyTableViewCell.h"
 #import "BCHDWHTMLHelper.h"
 #import "BCHDWImageBlockTableViewCell.h"
@@ -145,37 +146,44 @@
             return cell;
         }
     } else {
-        BCHDWCommentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"comment" forIndexPath:indexPath];
         BCHDWComment* comment = self.fetchedResultsController.fetchedObjects[indexPath.row];
-        
-        if (comment.subject == nil || comment.subject.length == 0) {
-            cell.subjectLabel.hidden = YES;
+        if (comment.isLike) {
+            BCHDWEntryLikedTableCell* cell = [tableView dequeueReusableCellWithIdentifier:@"likedCell" forIndexPath:indexPath];
+            cell.byLabel.text = [NSString stringWithFormat:@"by %@", comment.author];
+            cell.dateLabel.text = [comment.creationDate timeAgoSinceNow];
+            return cell;
         } else {
-            cell.subjectLabel.text = comment.subject;
-            cell.subjectLabel.hidden = NO;
+            BCHDWCommentTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"comment" forIndexPath:indexPath];
+            
+            if (comment.subject == nil || comment.subject.length == 0) {
+                cell.subjectLabel.hidden = YES;
+            } else {
+                cell.subjectLabel.text = comment.subject;
+                cell.subjectLabel.hidden = NO;
+            }
+            NSMutableAttributedString* labelText = [[[BCHDWUserStringHelper new] userLabel:comment.author font:cell.authorLabel.font] mutableCopy];
+            if (comment.replyTo != nil) {
+                [labelText appendAttributedString:[[NSAttributedString alloc] initWithString:@" > " attributes:@{ NSFontAttributeName : cell.authorLabel.font }]];
+                [labelText appendAttributedString:[[BCHDWUserStringHelper new] userLabel:comment.replyTo.author font:cell.authorLabel.font]];
+            }
+            
+            cell.authorLabel.textColor = nil;
+            cell.authorLabel.attributedText = labelText;
+            cell.dateLabel.text = [comment.creationDate timeAgoSinceNow];
+            
+            if (comment.avatarUrl != nil) {
+                [cell.avatarImageView setImageWithURL:[NSURL URLWithString:comment.avatarUrl] placeholderImage:[UIImage imageNamed:@"user"]];
+            } else {
+                cell.avatarImageView.image = nil;
+            }
+            
+            cell.composer = self;
+            cell.comment = comment;
+            cell.leftConstraint.constant = 16 + (comment.depthAsInteger - 1) * 8;
+            [self populateHtmlContent:comment.commentText stackView:cell.stackView];
+            
+            return cell;
         }
-        NSMutableAttributedString* labelText = [[[BCHDWUserStringHelper new] userLabel:comment.author font:cell.authorLabel.font] mutableCopy];
-        if (comment.replyTo != nil) {
-            [labelText appendAttributedString:[[NSAttributedString alloc] initWithString:@" > " attributes:@{ NSFontAttributeName : cell.authorLabel.font }]];
-            [labelText appendAttributedString:[[BCHDWUserStringHelper new] userLabel:comment.replyTo.author font:cell.authorLabel.font]];
-        }
-        
-        cell.authorLabel.textColor = nil;
-        cell.authorLabel.attributedText = labelText;
-        cell.dateLabel.text = [comment.creationDate timeAgoSinceNow];
-        
-        if (comment.avatarUrl != nil) {
-            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:comment.avatarUrl] placeholderImage:[UIImage imageNamed:@"user"]];
-        } else {
-            cell.avatarImageView.image = nil;
-        }
-        
-        cell.composer = self;
-        cell.comment = comment;
-        cell.leftConstraint.constant = 16 + (comment.depthAsInteger - 1) * 8;
-        [self populateHtmlContent:comment.commentText stackView:cell.stackView];
-        
-        return cell;
     }
 }
 
