@@ -8,6 +8,12 @@
 
 #import "BCHDWEntryReplyTableViewCell.h"
 
+@interface BCHDWEntryReplyTableViewCell ()
+
+@property (nonatomic, weak) IBOutlet UIButton* likeButton;
+
+@end
+
 @implementation BCHDWEntryReplyTableViewCell
 
 - (void)awakeFromNib {
@@ -27,6 +33,11 @@
 
 -(IBAction) like:(id)sender {
     [self.composer like];
+}
+
+-(void) setIsLiked:(BOOL)isLiked {
+    _isLiked = isLiked;
+    [self.likeButton setImage:isLiked ? [UIImage imageNamed:@"heart-selected"] : [UIImage imageNamed:@"heart-nonselected"]  forState:UIControlStateNormal];
 }
 
 

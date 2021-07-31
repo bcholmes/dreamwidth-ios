@@ -555,6 +555,9 @@
                                         <constraint firstAttribute="trailing" secondItem="hbf-8q-LKg" secondAttribute="trailing" constant="16" id="wP8-jR-hTL"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="likeButton" destination="36q-qD-LnS" id="7FI-tP-Dcc"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="textBlockCell" id="yoW-PP-wIX" customClass="BCHDWTextBlockTableViewCell">
                                 <rect key="frame" x="0.0" y="305.5" width="375" height="33"/>

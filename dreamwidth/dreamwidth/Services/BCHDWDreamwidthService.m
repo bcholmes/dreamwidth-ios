@@ -226,7 +226,9 @@
             commentRecord.subject = title.textContent;
         }
         
-        commentRecord.commentText = [self collectTextContent:[comment querySelector:@".comment-content"]];
+        HTMLElement* commentContent = [comment querySelector:@".comment-content"];
+        commentRecord.commentText = [self collectTextContent:commentContent];
+        commentRecord.isLike = [self isCommentLike:commentContent];
         
         if (newestComment == nil || [newestComment isEarlierThanDate:commentRecord.creationDate]) {
             newestComment = commentRecord.creationDate;
@@ -242,6 +244,10 @@
     if (newestComment != nil && [newestComment isLaterThanDate:entry.lastActivityDate]) {
         entry.lastActivityDate = newestComment;
     }
+}
+
+-(BOOL) isCommentLike:(HTMLElement*) content {
+    return (content.childElementsCount == 1 && [content querySelector:@"span[data-like='true']"] != nil);
 }
 
 -(NSString*) extractUserReference:(HTMLElement*) element {

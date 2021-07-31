@@ -113,6 +113,7 @@
     } else if (indexPath.section == 0 && indexPath.row == self.blocks.count + 1) {
         BCHDWEntryReplyTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"replyCell" forIndexPath:indexPath];
         cell.composer = self;
+        cell.isLiked = [self isLiked];
         return cell;
     } else if (indexPath.section == 0) {
         BCHDWBlock* block = self.blocks[indexPath.row-1];
@@ -232,6 +233,18 @@
     }];
 }
 
+-(BOOL) isLiked {
+    NSString* author = [BCHDWAppDelegate instance].dreamwidthService.currentUser.username;
+    NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Comment"];
+    fetchRequest.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[ [NSPredicate predicateWithFormat:@"liked == YES"], [NSPredicate predicateWithFormat:@"author == %@", author], [NSPredicate predicateWithFormat:@"entry == %@", self.entry] ]];
+    NSError* error = nil;
+    NSArray* results = [[BCHDWAppDelegate instance].managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (error == nil) {
+        return results.count > 0;
+    } else {
+        return false;
+    }
+}
 
 #pragma mark - Navigation
 

@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSInteger lastOrderPart;
 @property (nonatomic, readonly) NSInteger depthAsInteger;
+@property (nonatomic, assign) BOOL isLike;
 
 @end
 

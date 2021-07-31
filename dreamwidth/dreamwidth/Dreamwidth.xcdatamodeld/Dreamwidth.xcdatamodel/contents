@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14492.1" systemVersion="18G84" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20F71" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Comment" representedClassName="BCHDWComment" syncable="YES">
-        <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="avatarUrl" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="commentId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="commentText" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="depth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="orderKey" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="subject" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="entry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Entry" syncable="YES"/>
-        <relationship name="replyTo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Comment" syncable="YES"/>
+        <attribute name="author" optional="YES" attributeType="String"/>
+        <attribute name="avatarUrl" optional="YES" attributeType="String"/>
+        <attribute name="commentId" optional="YES" attributeType="String"/>
+        <attribute name="commentText" optional="YES" attributeType="String"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="depth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="liked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="orderKey" optional="YES" attributeType="String"/>
+        <attribute name="subject" optional="YES" attributeType="String"/>
+        <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="entry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Entry"/>
+        <relationship name="replyTo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Comment"/>
     </entity>
     <entity name="Entry" representedClassName="BCHDWEntry" syncable="YES">
-        <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="avatarUrl" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="community" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="entryId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="entryText" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastActivityDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="lockedFlag" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="numberOfComments" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="rating" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="subject" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="summaryImageUrl" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="summaryText" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="summaryText2" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="author" optional="YES" attributeType="String"/>
+        <attribute name="avatarUrl" optional="YES" attributeType="String"/>
+        <attribute name="community" optional="YES" attributeType="String"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="entryId" optional="YES" attributeType="String"/>
+        <attribute name="entryText" optional="YES" attributeType="String"/>
+        <attribute name="lastActivityDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lockedFlag" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="numberOfComments" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="rating" optional="YES" attributeType="String"/>
+        <attribute name="subject" optional="YES" attributeType="String"/>
+        <attribute name="summaryImageUrl" optional="YES" attributeType="String"/>
+        <attribute name="summaryText" optional="YES" attributeType="String"/>
+        <attribute name="summaryText2" optional="YES" attributeType="String"/>
+        <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
     <entity name="EntryContent" representedClassName="BCHDWEntryContent" syncable="YES">
-        <attribute name="entryText" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastLoadDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="entryText" optional="YES" attributeType="String"/>
+        <attribute name="lastLoadDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Comment" positionX="-54" positionY="-9" width="128" height="210"/>
+        <element name="Comment" positionX="-54" positionY="-9" width="128" height="209"/>
         <element name="Entry" positionX="-36" positionY="72" width="128" height="285"/>
         <element name="EntryContent" positionX="-45" positionY="144" width="128" height="90"/>
     </elements>

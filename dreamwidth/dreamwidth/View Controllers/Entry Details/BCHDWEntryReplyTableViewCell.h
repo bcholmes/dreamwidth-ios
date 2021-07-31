@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface BCHDWEntryReplyTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) NSObject<BCHDWCommentComposer>* composer;
+@property (nonatomic, assign) BOOL isLiked;
 
 @end
 

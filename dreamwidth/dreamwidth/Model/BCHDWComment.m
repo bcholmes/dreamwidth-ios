@@ -8,9 +8,15 @@
 
 #import "BCHDWComment.h"
 
+@interface BCHDWComment ()
+
+@property (nonatomic, strong) NSNumber* liked;
+
+@end
+
 @implementation BCHDWComment
 
-@dynamic avatarUrl, commentId, commentText, author, creationDate, depth, replyTo, subject, entry, orderKey;
+@dynamic avatarUrl, commentId, commentText, author, creationDate, depth, replyTo, subject, entry, orderKey, liked;
 
 -(NSInteger) lastOrderPart {
     if (self.orderKey != nil) {
@@ -26,6 +32,14 @@
 
 -(NSInteger) depthAsInteger {
     return [self.depth integerValue];
+}
+
+-(BOOL) isLike {
+    return self.liked == nil ? NO : [self.liked boolValue];
+}
+
+-(void) setIsLike:(BOOL)isLike {
+    self.liked = [NSNumber numberWithBool:isLike];
 }
 
 @end
