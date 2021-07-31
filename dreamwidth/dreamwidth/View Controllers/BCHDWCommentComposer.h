@@ -13,6 +13,7 @@
 
 @protocol BCHDWCommentComposer <NSObject>
 
+-(void) like;
 -(void) reply:(BCHDWComment*) comment;
 
 @end

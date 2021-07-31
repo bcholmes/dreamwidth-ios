@@ -25,4 +25,9 @@
     [self.composer reply:nil];
 }
 
+-(IBAction) like:(id)sender {
+    [self.composer like];
+}
+
+
 @end

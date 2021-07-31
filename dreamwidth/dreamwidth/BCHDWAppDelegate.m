@@ -53,7 +53,7 @@
     self.persistentService = [[BCHDWPersistenceService alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.dreamwidthService = [[BCHDWDreamwidthService alloc] initWithApi:self.dreamwidthApi persistence:self.persistentService];
     [BCHDWTheme instance];
-    [self setUpRevealController];
+//    [self setUpRevealController];
     
     [UIApplication.sharedApplication setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     return YES;

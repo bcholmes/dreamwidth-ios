@@ -322,11 +322,9 @@
     NSString* dateAsString = [NSString stringWithFormat:@"%@ %@ Z", datePortion, timePortion];
     NSDate* date = [self.entryDateFormatter dateFromString:dateAsString];
     if (entry.creationDate != nil) {
-        NSLog(@"entry date from ATOM: %@, from page: %@", entry.creationDate, date);
         NSInteger offset = (date.timeIntervalSince1970 - entry.creationDate.timeIntervalSince1970) / 60.0;
         NSInteger hour = offset / 60;
         NSInteger minute = abs((int) offset) % 60;
-        NSLog(@"time offset %02ld (%ld:%02ld)", offset, hour, minute);
     } else {
         entry.creationDate = date;
         entry.updateDate = date;
@@ -624,6 +622,14 @@
             }
         }
     }];
+}
+
+#pragma mark - comments
+
+-(void) postLike:(BCHDWEntry* _Nonnull) entry callback:(void (^ _Nonnull) (NSError* _Nullable)) callback {
+    BCHDWCommentEntryData* data = [BCHDWCommentEntryData new];
+    data.commentText = [NSString stringWithFormat:@"<span title=\"Liked by %@ via Dream Balloon\" data-like=\"true\" data-source=\"DreamBalloon\">&#10084;&#65039;</span>", self.currentUser.username];
+    [self postComment:data entry:entry parentComment:nil callback:callback];
 }
 
 -(void) postComment:(BCHDWCommentEntryData*) comment entry:(BCHDWEntry*) entry parentComment:(BCHDWComment*) parentComment callback:(void (^) (NSError*)) callback {

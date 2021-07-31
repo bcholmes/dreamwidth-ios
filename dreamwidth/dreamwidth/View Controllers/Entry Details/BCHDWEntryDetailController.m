@@ -11,6 +11,8 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <CoreData/CoreData.h>
 #import <DateTools/NSDate+DateTools.h>
+#import <SVProgressHUD/SVProgressHUD.h>
+#import <MaterialComponents/MaterialSnackbar.h>
 
 #import "BCHDWAppDelegate.h"
 #import "BCHDWCommentComposer.h"
@@ -217,6 +219,19 @@
     self.selectedComment = comment;
     [self performSegueWithIdentifier:@"comment" sender:nil];
 }
+
+-(void) like {
+    [SVProgressHUD show];
+    [[BCHDWAppDelegate instance].dreamwidthService postLike:self.entry callback:^(NSError * _Nullable error) {
+        [SVProgressHUD dismiss];
+
+        if (error != nil) {
+            [[MDCSnackbarManager new] showMessage:[MDCSnackbarMessage messageWithText:@"Ooops. We ran into a problem trying to post your like."]];
+        }
+        [self refreshStuff];
+    }];
+}
+
 
 #pragma mark - Navigation
 
